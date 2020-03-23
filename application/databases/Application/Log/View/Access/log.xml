@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DOCUMENT_ELEMENT table_name="log" creation_time="1584955411" modified_time="1584955411" table_version="0.04" module_version="1.00" table_class="Application_Log_View_Access_Log" creation_ip="0">
-  <RECORDS autoId="49">
+  <RECORDS autoId="51">
     <TABLE_ROW ROW_ID="1">
       <TABLE_FIELD FIELD_KEY="total_run_time"><![CDATA[2.29]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="ip"><![CDATA[{&quot;REMOTE_ADDR&quot;:&quot;::1&quot;,&quot;HTTP_CLIENT_IP&quot;:&quot;&quot;,&quot;HTTP_X_FORWARDED_FOR&quot;:&quot;&quot;}]]></TABLE_FIELD>
@@ -1243,6 +1243,58 @@
       <TABLE_FIELD FIELD_KEY="utm_content"><![CDATA[]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="log_id"><![CDATA[1584964731-0-48]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="creation_time"><![CDATA[1584964731]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="modified_time"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__user_id"><![CDATA[1554892638.1731]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__update_user_id"><![CDATA[null]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__user_agent_id"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__ip"><![CDATA[{&quot;REMOTE_ADDR&quot;:&quot;::1&quot;,&quot;HTTP_CLIENT_IP&quot;:&quot;&quot;,&quot;HTTP_X_FORWARDED_FOR&quot;:&quot;&quot;}]]></TABLE_FIELD>
+    </TABLE_ROW>
+    <TABLE_ROW ROW_ID="49">
+      <TABLE_FIELD FIELD_KEY="total_run_time"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="ip"><![CDATA[{&quot;REMOTE_ADDR&quot;:&quot;::1&quot;,&quot;HTTP_CLIENT_IP&quot;:&quot;&quot;,&quot;HTTP_X_FORWARDED_FOR&quot;:&quot;&quot;}]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="request_time"><![CDATA[2020-03-23 12:04:49]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="request"><![CDATA[[]]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="NPS"><![CDATA[22]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="referal_domain"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="uri"><![CDATA[Workplace_Screenshot_Save]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="user_id"><![CDATA[1554892638.1731]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="username"><![CDATA[joywealth]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="http_host"><![CDATA[localhost:8888]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="http_user_agent"><![CDATA[Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="request_method"><![CDATA[GET]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="http_referer"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="utm_source"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="utm_medium"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="utm_campaign"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="utm_content"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="log_id"><![CDATA[1584965089-0-49]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="creation_time"><![CDATA[1584965089]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="modified_time"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__user_id"><![CDATA[1554892638.1731]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__update_user_id"><![CDATA[null]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__user_agent_id"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__ip"><![CDATA[{&quot;REMOTE_ADDR&quot;:&quot;::1&quot;,&quot;HTTP_CLIENT_IP&quot;:&quot;&quot;,&quot;HTTP_X_FORWARDED_FOR&quot;:&quot;&quot;}]]></TABLE_FIELD>
+    </TABLE_ROW>
+    <TABLE_ROW ROW_ID="50">
+      <TABLE_FIELD FIELD_KEY="total_run_time"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="ip"><![CDATA[{&quot;REMOTE_ADDR&quot;:&quot;::1&quot;,&quot;HTTP_CLIENT_IP&quot;:&quot;&quot;,&quot;HTTP_X_FORWARDED_FOR&quot;:&quot;&quot;}]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="request_time"><![CDATA[2020-03-23 12:41:15]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="request"><![CDATA[[]]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="NPS"><![CDATA[43]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="referal_domain"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="uri"><![CDATA[Workplace_Screenshot_Save]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="user_id"><![CDATA[1554892638.1731]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="username"><![CDATA[joywealth]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="http_host"><![CDATA[localhost:8888]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="http_user_agent"><![CDATA[Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:74.0) Gecko/20100101 Firefox/74.0]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="request_method"><![CDATA[GET]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="http_referer"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="utm_source"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="utm_medium"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="utm_campaign"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="utm_content"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="log_id"><![CDATA[1584967275-0-50]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="creation_time"><![CDATA[1584967275]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="modified_time"><![CDATA[]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="__user_id"><![CDATA[1554892638.1731]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="__update_user_id"><![CDATA[null]]></TABLE_FIELD>
