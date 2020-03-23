@@ -36,7 +36,7 @@ class Workplace extends PageCarton_Widget
     /**
      * Returns user info from auth token
      * 
-     * @param VOID
+     * @param void
      * @return boolean
      * 
      */
