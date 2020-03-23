@@ -51,7 +51,7 @@ class Workplace_Keylog_Save extends Workplace
                             'user_id' => $_POST['user_id'],
                             'window_title' => $_POST['window_title'] 
                         );            
-            Workplace_Keylog_Table()->insert( $data );
+            Workplace_Keylog_Table::getInstance()->insert( $data );
             $this->_objectData['goodnews'] = 'Keylog successfully saved.';
 
              // end of widget process
