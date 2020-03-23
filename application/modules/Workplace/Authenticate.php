@@ -34,6 +34,25 @@ class Workplace_Authenticate extends PageCarton_Widget
 	protected static $_objectTitle = 'Authenticate Client'; 
 
     /**
+     * Returns user info from auth token
+     * 
+     */
+	public function getAuthUserInfo( array $authInfo )
+    {
+        $table = Workplace_Authenticate_Table::getInstance();
+
+        $userIdentifier = array( 
+            'user_id' => $authInfo['user_id'],
+            'auth_token' => $authInfo['auth_token'],
+        );
+        if( ! $auth = $table->selectOne( null, $userIdentifier ) )
+        {
+            return false;
+        }
+
+    }
+
+    /**
      * Performs the whole widget running process
      * 
      */
@@ -48,7 +67,7 @@ class Workplace_Authenticate extends PageCarton_Widget
                 'password' => $_POST['password'],
             );
             
-            if( $userInfo = Ayoola_Access::login( $authInfo ) )
+            if( $userInfo = Ayoola_Access_Login::localLogin( $authInfo ) )
             {
                 $authToken = md5( uniqid( json_encode( $authInfo ), true ) );
 
