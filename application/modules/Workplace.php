@@ -6,17 +6,17 @@
  * LICENSE
  *
  * @category   PageCarton
- * @package    Workplace_Keylog
+ * @package    Workplace
  * @copyright  Copyright (c) 2020 PageCarton (http://www.pagecarton.org)
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @version    $Id: Keylog.php Monday 23rd of March 2020 09:39AM ayoola@ayoo.la $
+ * @version    $Id: Workplace.php Monday 23rd of March 2020 11:34AM ayoola@ayoo.la $
  */
 
 /**
  * @see PageCarton_Widget
  */
 
-class Workplace_Keylog extends Workplace
+class Workplace extends PageCarton_Widget
 {
 	
     /**
@@ -31,7 +31,25 @@ class Workplace_Keylog extends Workplace
      * 
      * @var string 
      */
-	protected static $_objectTitle = 'Logged Keys'; 
+	protected static $_objectTitle = 'Comeriver Workplace'; 
+
+    /**
+     * Returns user info from auth token
+     * 
+     * @param VOID
+     * @return boolean
+     * 
+     */
+	public function authenticate()
+    {
+        if( Workplace_Authenticate::getAuthUserInfo( $_REQUEST ) )
+        {
+            $this->_objectData['authenticated'] = true;
+            return false;
+        }
+        $this->_objectData['authenticated'] = false;
+        return false;
+    }
 
     /**
      * Performs the whole widget running process

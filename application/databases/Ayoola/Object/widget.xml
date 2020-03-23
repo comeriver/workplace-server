@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <DOCUMENT_ELEMENT table_name="widget" creation_time="1584956168" modified_time="1584956168" table_version="0.0" module_version="1.00" table_class="Ayoola_Object_Widget" creation_ip="0">
-  <RECORDS autoId="6">
+  <RECORDS autoId="7">
     <TABLE_ROW ROW_ID="1">
       <TABLE_FIELD FIELD_KEY="class_name"><![CDATA[Workplace_Authenticate]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="widget_id"><![CDATA[1584956168-0-1]]></TABLE_FIELD>
@@ -45,6 +45,16 @@
       <TABLE_FIELD FIELD_KEY="class_name"><![CDATA[Workplace_Keylog_Save]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="widget_id"><![CDATA[1584956429-0-5]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="creation_time"><![CDATA[1584956429]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="modified_time"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__user_id"><![CDATA[1554892638.1731]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__update_user_id"><![CDATA[null]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__user_agent_id"><![CDATA[]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="__ip"><![CDATA[{&quot;REMOTE_ADDR&quot;:&quot;::1&quot;,&quot;HTTP_CLIENT_IP&quot;:&quot;&quot;,&quot;HTTP_X_FORWARDED_FOR&quot;:&quot;&quot;}]]></TABLE_FIELD>
+    </TABLE_ROW>
+    <TABLE_ROW ROW_ID="6">
+      <TABLE_FIELD FIELD_KEY="class_name"><![CDATA[Workplace]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="widget_id"><![CDATA[1584963268-0-6]]></TABLE_FIELD>
+      <TABLE_FIELD FIELD_KEY="creation_time"><![CDATA[1584963268]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="modified_time"><![CDATA[]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="__user_id"><![CDATA[1554892638.1731]]></TABLE_FIELD>
       <TABLE_FIELD FIELD_KEY="__update_user_id"><![CDATA[null]]></TABLE_FIELD>

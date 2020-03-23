@@ -17,7 +17,7 @@
  */
 
 
-class Workplace_Screenshot_Table_Abstract extends PageCarton_Widget
+class Workplace_Screenshot_Table_Abstract extends Workplace
 {
 	
     /**

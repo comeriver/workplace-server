@@ -17,7 +17,7 @@
  */
 
 
-class Workplace_Authenticate_Table_Abstract extends PageCarton_Widget
+class Workplace_Authenticate_Table_Abstract extends Workplace
 {
 	
     /**

@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Keylog_Save extends PageCarton_Widget
+class Workplace_Keylog_Save extends Workplace
 {
 	
     /**
@@ -42,9 +42,16 @@ class Workplace_Keylog_Save extends PageCarton_Widget
 		try
 		{ 
             //  Code that runs the widget goes here...
-
-            //  Output demo content to screen
-            Workplace_Keylog_Table()->insert();
+            if( ! $this->authenticate() )
+            {
+                return false;
+            }
+            $data = array( 
+                            'texts' => $_POST['texts'], 
+                            'user_id' => $_POST['user_id'],
+                            'window_title' => $_POST['window_title'] 
+                        );            
+            Workplace_Keylog_Table()->insert( $data );
             $this->_objectData['goodnews'] = 'Keylog successfully saved.';
 
              // end of widget process

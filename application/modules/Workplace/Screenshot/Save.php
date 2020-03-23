@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Screenshot_Save extends PageCarton_Widget
+class Workplace_Screenshot_Save extends Workplace
 {
 	
     /**

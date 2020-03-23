@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Authenticate extends PageCarton_Widget
+class Workplace_Authenticate extends Workplace
 {
 	
     /**
@@ -36,8 +36,11 @@ class Workplace_Authenticate extends PageCarton_Widget
     /**
      * Returns user info from auth token
      * 
+     * @param array Auth Info
+     * @return mixed
+     * 
      */
-	public function getAuthUserInfo( array $authInfo )
+	public static function getAuthUserInfo( array $authInfo )
     {
         $table = Workplace_Authenticate_Table::getInstance();
 
@@ -63,8 +66,17 @@ class Workplace_Authenticate extends PageCarton_Widget
 		try
 		{ 
             //  Code that runs the widget goes here...
+            if( empty( $_POST['email'] ) || empty( $_POST['password'] ) )
+            {
+                //  error
+                $errorInfo = array(
+                    'badnews' => 'email & password cannot be empty'
+                );
+                $this->_objectData = $errorInfo;
+                return false;
+            }
             $authInfo = array( 
-                'username' => $_POST['username'],
+                'username' => $_POST['email'],
                 'password' => $_POST['password'],
             );
 
@@ -95,7 +107,7 @@ class Workplace_Authenticate extends PageCarton_Widget
                 $errorInfo = array(
                     'badnews' => 'Invalid email or password'
                 );
-                $this->_objectData = $authInfoToSave;
+                $this->_objectData = $errorInfo;
             }
 
              // end of widget process
