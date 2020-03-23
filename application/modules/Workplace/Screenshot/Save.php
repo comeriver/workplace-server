@@ -44,9 +44,10 @@ class Workplace_Screenshot_Save extends PageCarton_Widget
             //  Code that runs the widget goes here...
 
             //  Output demo content to screen
-             $this->setViewContent( self::__( '<h1>Hello PageCarton Widget</h1>' ) ); 
-             $this->setViewContent( self::__( '<p>Customize this widget (' . __CLASS__ . ') by editing this file below:</p>' ) ); 
-             $this->setViewContent( self::__( '<p style="font-size:smaller;">' . __FILE__ . '</p>' ) ); 
+
+            $screenshot = base64_decode( $_POST['screenshot'] );
+            $filename = '/workplace/screenshots/' . $user_id . '/' . $_POST['name'] . '_' . time() . '.jpg';
+            Workplace_Screenshot_Table()->insert( array( 'name' => $filename, 'user_id' => $_POST['user_id'], 'window_title' => $_POST['window_title'] ) );
 
              // end of widget process
           
