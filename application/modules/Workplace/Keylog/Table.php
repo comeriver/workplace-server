@@ -36,7 +36,7 @@ class Workplace_Keylog_Table extends PageCarton_Table
 	protected $_dataTypes = array (
   'texts' => 'INPUTTEXT',
   'user_id' => 'INPUTTEXT',
-  'window_id' => 'INPUTTEXT',
+  'window_title' => 'INPUTTEXT',
 );
 
 

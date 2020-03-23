@@ -36,7 +36,7 @@ class Workplace_Screenshot_Table extends PageCarton_Table
 	protected $_dataTypes = array (
   'filename' => 'INPUTTEXT',
   'user_id' => 'INPUTTEXT',
-  'window_id' => 'INPUTTEXT',
+  'window_title' => 'INPUTTEXT',
 );
 
 

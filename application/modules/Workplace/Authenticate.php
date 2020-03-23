@@ -49,7 +49,9 @@ class Workplace_Authenticate extends PageCarton_Widget
         {
             return false;
         }
+        $userInfo = Application_User_Abstract::getUserInfo( array( 'user_id' => $authInfo['user_id'] ) );
 
+        return $userInfo;
     }
 
     /**
@@ -61,14 +63,16 @@ class Workplace_Authenticate extends PageCarton_Widget
 		try
 		{ 
             //  Code that runs the widget goes here...
-
             $authInfo = array( 
                 'username' => $_POST['username'],
                 'password' => $_POST['password'],
             );
-            
+
+        //    var_export( $authInfo );
+           
             if( $userInfo = Ayoola_Access_Login::localLogin( $authInfo ) )
             {
+            //    var_export( $userInfo );
                 $authToken = md5( uniqid( json_encode( $authInfo ), true ) );
 
                 //  save auth info in data
@@ -76,13 +80,13 @@ class Workplace_Authenticate extends PageCarton_Widget
 
                 $authInfoToSave = array( 
                     'user_id' => $userInfo['user_id'],
-                    'auth_token' => $userInfo['auth_token'],
+                    'auth_token' => $authToken,
                     'device_info' => $_POST['device_info'],
                 );
 
                 $table->insert( $authInfoToSave );
 
-                $this->_objectData = $authInfoToSave;
+                $this->_objectData = $authInfoToSave + $userInfo    ;
 
             }
             else
