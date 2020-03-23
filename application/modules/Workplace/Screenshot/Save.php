@@ -42,6 +42,10 @@ class Workplace_Screenshot_Save extends Workplace
 		try
 		{ 
             //  Code that runs the widget goes here...
+            if( ! $this->authenticate() )
+            {
+                return false;
+            }
 
             //  Output demo content to screen
 
