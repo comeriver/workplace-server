@@ -43,10 +43,37 @@ class Workplace_Authenticate extends PageCarton_Widget
 		{ 
             //  Code that runs the widget goes here...
 
-            //  Output demo content to screen
-             $this->setViewContent( self::__( '<h1>Hello PageCarton Widget</h1>' ) ); 
-             $this->setViewContent( self::__( '<p>Customize this widget (' . __CLASS__ . ') by editing this file below:</p>' ) ); 
-             $this->setViewContent( self::__( '<p style="font-size:smaller;">' . __FILE__ . '</p>' ) ); 
+            $authInfo = array( 
+                'username' => $_POST['username'],
+                'password' => $_POST['password'],
+            );
+            
+            if( $userInfo = Ayoola_Access::login( $authInfo ) )
+            {
+                $authToken = md5( uniqid( json_encode( $authInfo ), true ) );
+
+                //  save auth info in data
+                $table = Workplace_Authenticate_Table::getInstance();
+
+                $authInfoToSave = array( 
+                    'user_id' => $userInfo['user_id'],
+                    'auth_token' => $userInfo['auth_token'],
+                    'device_info' => $_POST['device_info'],
+                );
+
+                $table->insert( $authInfoToSave );
+
+                $this->_objectData = $authInfoToSave;
+
+            }
+            else
+            {
+                //  error
+                $errorInfo = array(
+                    'badnews' => 'Invalid email or password'
+                );
+                $this->_objectData = $authInfoToSave;
+            }
 
              // end of widget process
           
