@@ -44,9 +44,8 @@ class Workplace_Keylog_Save extends PageCarton_Widget
             //  Code that runs the widget goes here...
 
             //  Output demo content to screen
-             $this->setViewContent( self::__( '<h1>Hello PageCarton Widget</h1>' ) ); 
-             $this->setViewContent( self::__( '<p>Customize this widget (' . __CLASS__ . ') by editing this file below:</p>' ) ); 
-             $this->setViewContent( self::__( '<p style="font-size:smaller;">' . __FILE__ . '</p>' ) ); 
+            Workplace_Keylog_Table()->insert();
+            $this->_objectData['goodnews'] = 'Keylog successfully saved.';
 
              // end of widget process
           

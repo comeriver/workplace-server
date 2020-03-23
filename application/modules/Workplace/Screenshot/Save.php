@@ -47,7 +47,11 @@ class Workplace_Screenshot_Save extends PageCarton_Widget
 
             $screenshot = base64_decode( $_POST['screenshot'] );
             $filename = '/workplace/screenshots/' . $user_id . '/' . $_POST['name'] . '_' . time() . '.jpg';
-            Workplace_Screenshot_Table()->insert( array( 'name' => $filename, 'user_id' => $_POST['user_id'], 'window_title' => $_POST['window_title'] ) );
+            if( Workplace_Screenshot_Table()->insert( array( 'name' => $filename, 'user_id' => $_POST['user_id'], 'window_title' => $_POST['window_title'] ) ) )
+            {
+                $this->_objectData['goodnews'] = 'Screenshot successfully saved.';
+            }
+
 
              // end of widget process
           
