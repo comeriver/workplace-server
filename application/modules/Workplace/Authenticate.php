@@ -66,6 +66,7 @@ class Workplace_Authenticate extends Workplace
 		try
 		{ 
             //  Code that runs the widget goes here...
+        //    var_export( $_POST );
             if( empty( $_POST['email'] ) || empty( $_POST['password'] ) )
             {
                 //  error
@@ -76,7 +77,7 @@ class Workplace_Authenticate extends Workplace
                 return false;
             }
             $authInfo = array( 
-                'username' => $_POST['email'],
+                'email' => $_POST['email'],
                 'password' => $_POST['password'],
             );
 
