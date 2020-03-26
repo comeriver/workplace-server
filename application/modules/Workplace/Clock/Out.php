@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Clock_Out extends PageCarton_Widget
+class Workplace_Clock_Out extends Workplace
 {
 	
     /**
