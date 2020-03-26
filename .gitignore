@@ -13,3 +13,4 @@ application/databases/Ayoola/Object/dbase.xml
 application/databases/Ayoola/Object/widget.xml
 application/databases/PageCarton/Cron/Run/table.xml
 application/databases/Workplace/Authenticate/table.xml
+application/databases/Workplace/Keylog/table.xml

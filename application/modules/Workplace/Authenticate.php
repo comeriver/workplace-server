@@ -48,11 +48,14 @@ class Workplace_Authenticate extends Workplace
             'user_id' => $authInfo['user_id'],
             'auth_token' => $authInfo['auth_token'],
         );
+    //    var_export( $userIdentifier  );
+    //    var_export( $table->select()  );
         if( ! $auth = $table->selectOne( null, $userIdentifier ) )
         {
             return false;
         }
-        $userInfo = Application_User_Abstract::getUserInfo( array( 'user_id' => $authInfo['user_id'] ) );
+    //    var_export( Application_User_Abstract::getUserInfo( array( 'user_id' => $authInfo['user_id'] ) ) );
+        $userInfo = Application_User_Abstract::getUserInfo( array( 'email' => $auth['email'] ) );
 
         return $userInfo;
     }
@@ -67,6 +70,8 @@ class Workplace_Authenticate extends Workplace
 		{ 
             //  Code that runs the widget goes here...
         //    var_export( $_POST );
+        //    $_POST['email'] = 'zzzzzzxxz@xx.com';
+        //    $_POST['password'] = 'zzzzzzxxz@xx.com';
             if( empty( $_POST['email'] ) || empty( $_POST['password'] ) )
             {
                 //  error
@@ -92,14 +97,17 @@ class Workplace_Authenticate extends Workplace
                 $table = Workplace_Authenticate_Table::getInstance();
 
                 $authInfoToSave = array( 
-                    'user_id' => $userInfo['user_id'],
+                    'user_id' => strval( $userInfo['user_id'] ),
+                    'email' => strval( $userInfo['email'] ),
                     'auth_token' => $authToken,
                     'device_info' => $_POST['device_info'],
                 );
+            //    var_export( $authInfoToSave );
 
                 $table->insert( $authInfoToSave );
 
                 $this->_objectData = $authInfoToSave + $userInfo    ;
+            //    var_export( $this->_objectData  );
 
             }
             else

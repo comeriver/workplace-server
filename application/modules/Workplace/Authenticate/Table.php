@@ -25,7 +25,7 @@ class Workplace_Authenticate_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.0';  
+    protected $_tableVersion = '0.1';  
 
     /**
      * Table data types and declaration
@@ -36,6 +36,7 @@ class Workplace_Authenticate_Table extends PageCarton_Table
 	protected $_dataTypes = array (
   'user_id' => 'INPUTTEXT',
   'auth_token' => 'INPUTTEXT',
+  'email' => 'INPUTTEXT',
   'device_info' => 'INPUTTEXT',
 );
 

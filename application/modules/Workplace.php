@@ -42,10 +42,10 @@ class Workplace extends PageCarton_Widget
      */
 	public function authenticate()
     {
-        if( Workplace_Authenticate::getAuthUserInfo( $_REQUEST ) )
+        if( $x = Workplace_Authenticate::getAuthUserInfo( $_REQUEST ) )
         {
             $this->_objectData['authenticated'] = true;
-            return false;
+            return true;
         }
         $this->_objectData['authenticated'] = false;
         return false;
