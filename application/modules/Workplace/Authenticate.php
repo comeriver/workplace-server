@@ -98,7 +98,7 @@ class Workplace_Authenticate extends Workplace
 
                 $authInfoToSave = array( 
                     'user_id' => strval( $userInfo['user_id'] ),
-                    'email' => strval( $userInfo['email'] ),
+                    'email' => strtolower( $userInfo['email'] ),
                     'auth_token' => $authToken,
                     'device_info' => $_POST['device_info'],
                 );

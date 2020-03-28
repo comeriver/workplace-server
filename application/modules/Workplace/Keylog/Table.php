@@ -25,7 +25,7 @@ class Workplace_Keylog_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.0';  
+    protected $_tableVersion = '0.1';  
 
     /**
      * Table data types and declaration

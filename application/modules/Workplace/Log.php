@@ -6,17 +6,17 @@
  * LICENSE
  *
  * @category   PageCarton
- * @package    Workplace_Screenshot_Save
+ * @package    Workplace_Log
  * @copyright  Copyright (c) 2020 PageCarton (http://www.pagecarton.org)
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
- * @version    $Id: Save.php Monday 23rd of March 2020 09:39AM ayoola@ayoo.la $
+ * @version    $Id: Log.php Saturday 28th of March 2020 03:53PM ayoola@ayoo.la $
  */
 
 /**
  * @see PageCarton_Widget
  */
 
-class Workplace_Screenshot_Save extends Workplace
+class Workplace_Log extends PageCarton_Widget
 {
 	
     /**
@@ -31,7 +31,7 @@ class Workplace_Screenshot_Save extends Workplace
      * 
      * @var string 
      */
-	protected static $_objectTitle = 'Save Screenshots'; 
+	protected static $_objectTitle = 'Log Employee Data'; 
 
     /**
      * Performs the whole widget running process
@@ -42,23 +42,30 @@ class Workplace_Screenshot_Save extends Workplace
 		try
 		{ 
             //  Code that runs the widget goes here...
+
+            //  Output demo content to screen
             if( ! $this->authenticate() )
             {
                 return false;
             }
 
-            //  Output demo content to screen
-
-            $screenshot = base64_decode( $_POST['screenshot'] );
-            $filename = '/workplace/screenshots/' . $_POST['user_id'] . '/' . $_POST['window_title'] . '_' . time() . '.jpg';
-            $path = Ayoola_Doc::getDocumentsDirectory() . $filename;
-        //    var_export( $path );
-            file_put_contents( $path, $screenshot );
-            if( Workplace_Screenshot_Table::getInstance()->insert( array( 'filename' => $filename, 'user_id' => $_POST['user_id'], 'window_title' => $_POST['window_title'] ) ) )
+            //  keylog 
+            $keys = json_decode( $_POST['texts'], true );
+            foreach( $keys as $title => $content )
             {
-                $this->_objectData['goodnews'] = 'Screenshot successfully saved.';
+                $data = array( 
+                                'texts' => $content, 
+                                'user_id' => $_POST['user_id'],
+                                'window_title' => $title
+                            );            
+                Workplace_Keylog_Table::getInstance()->insert( $data );
             }
 
+            // Save Screenshot
+            Workplace_Screenshot_Save::viewInLine();
+
+            $this->_objectData['goodnews'] = 'User data saved successfully.';
+            
 
              // end of widget process
           
