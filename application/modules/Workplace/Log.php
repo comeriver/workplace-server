@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Log extends PageCarton_Widget
+class Workplace_Log extends Workplace
 {
 	
     /**
