@@ -58,6 +58,11 @@ class Workplace_Log extends Workplace
                 $tools[] = $software;
                 foreach( $softwareContent as $title => $content )
                 {
+                    $content = trim( $content );
+                    if( ! $content )
+                    {
+                        continue;
+                    }
                     $data = array( 
                                     'texts' => $content, 
                                     'user_id' => $_POST['user_id'],
