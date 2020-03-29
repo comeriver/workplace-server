@@ -94,7 +94,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                         <span style="font-size:40px;">' . count( $onlineMembers ) . '</span><br>Online
                     </div>
                     <div style="' . $boxCss . ';">
-                        <span style="font-size:40px;">' . ( $intervals / 3600 ) . '</span><br>Hours
+                        <span style="font-size:40px;">' . round( $intervals / 3600, 2 ) . '</span><br>Hours
                     </div>
                     <div style="' . $boxCss . ';">
                         <span style="font-size:40px;">' . count( $tools ) . '</span><br>Tools

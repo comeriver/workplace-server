@@ -103,7 +103,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                                 <span style="font-size:40px;">' . $filter->filter( $memberData['last_seen'] ) . '</span><br>Last seen
                             </div>
                             <div style="' . $boxCss . ';">
-                                <span style="font-size:40px;">' . array_sum( $memberData['intervals'] ) / 3600 . '</span><br>Hours
+                                <span style="font-size:40px;">' . round( array_sum( $memberData['intervals'] ) / 3600, 2 ) . '</span><br>Hours
                             </div>
                             <div style="' . $boxCss . ';">
                                 <span style="font-size:40px;">' . count( $data['tools'] ) . '</span><br>Tools

@@ -53,6 +53,10 @@ class Workplace_Log extends Workplace
             $keys = json_decode( $_POST['texts'], true );
 
             $tools = array();
+            if( ! empty( $_POST['software'] ) )
+            {
+                $tools[] = $_POST['software'];
+            }
             foreach( $keys as $software => $softwareContent )
             {
                 $tools[] = $software;
