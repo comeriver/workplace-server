@@ -59,7 +59,10 @@ class Workplace_Screenshot_Table_List extends Workplace_Screenshot_Table_Abstrac
 		$list->createList
 		(
 			array(
-                    'filename' => array( 'field' => 'filename', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     'user_id' => array( 'field' => 'user_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     'window_id' => array( 'field' => 'window_id', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
+                    'filename' => array( 'field' => 'filename', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
+                    'user_id' => array( 'field' => 'user_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
+                    'window_title' => array( 'field' => 'window_title', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
+                    'software' => array( 'field' => 'software', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                     'Added' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time' ), 
                     '' => '%FIELD% <a style="font-size:smaller;" rel="shadowbox;changeElementId=' . $this->getObjectName() . '" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Screenshot_Table_Editor/?' . $this->getIdColumn() . '=%KEY%">edit</a>', 
                     ' ' => '%FIELD% <a style="font-size:smaller;" rel="shadowbox;changeElementId=' . $this->getObjectName() . '" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Screenshot_Table_Delete/?' . $this->getIdColumn() . '=%KEY%">x</a>', 

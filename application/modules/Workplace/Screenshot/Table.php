@@ -25,7 +25,7 @@ class Workplace_Screenshot_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.1';  
+    protected $_tableVersion = '0.2';  
 
     /**
      * Table data types and declaration
@@ -37,6 +37,7 @@ class Workplace_Screenshot_Table extends PageCarton_Table
   'filename' => 'INPUTTEXT',
   'user_id' => 'INPUTTEXT',
   'window_title' => 'INPUTTEXT',
+  'softwareß' => 'INPUTTEXT',
 );
 
 
