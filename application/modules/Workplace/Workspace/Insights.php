@@ -57,12 +57,12 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 {
                     continue;
                 }
-                if( empty( $data['member_info'][$userInfo['email']]['authorized'] ) )
+                if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
                 {
                 //    break;
                 }
 
-                $memberData = $data['member_info'][$userInfo['email']];
+                $memberData = $data['member_data'][$userInfo['email']];
                 if( $time - $memberData['last_seen'] < 120 )
                 {
                     $onlineMembers[] = $userInfo['email'];

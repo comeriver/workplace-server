@@ -72,7 +72,7 @@ class Workplace_Log extends Workplace
             Workplace_Screenshot_Save::viewInLine();
 
             //  log online
-            $where = array( 'email' => $userInfo['email'] );
+            $where = array( 'members' => $userInfo['email'] );
             if( $_POST['workspace_id'] )
             {
                 $where['workspace_id'] = $_POST['workspace_id'];
@@ -87,23 +87,23 @@ class Workplace_Log extends Workplace
             $count = 0;
             $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
         //    var_export( $workspaces );
-        
+            
             foreach( $workspaces as $workspace )
             {
-                if( empty( $workspace['member_info'][$userInfo['email']]['authorized'] ) )
+                if( empty( $workspace['member_data'][$userInfo['email']]['authorized'] ) )
                 {
                 //    continue;
                 }
                 $count++;
-                $updated = $workspace['member_info'][$userInfo['email']];
+                $updated = $workspace['member_data'][$userInfo['email']];
                 $updated['last_seen'] = $time;
                 $updated['log'][] = $updated['last_seen'];
                 $updated['work_time'][$year][$month][$day][] = $logIntervals;
                 $updated['intervals'][] = $logIntervals;
                 $updated['tools'] = $tools;
                 
-                $workspace['member_info'][$userInfo['email']] = $updated;
-                Workplace_Workspace::getInstance()->update( array( 'member_info' => $workspace['member_info'] ), $where + array( 'workspace_id' => $workspace['workspace_id'] ) );
+                $workspace['member_data'][$userInfo['email']] = $updated;
+                Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $where + array( 'workspace_id' => $workspace['workspace_id'] ) );
             }
             $this->_objectData['goodnews'] = 'Work data logged successfully on ' . $count . ' workspaces.';
              // end of widget process

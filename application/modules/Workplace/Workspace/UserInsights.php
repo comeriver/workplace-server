@@ -56,11 +56,11 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     $filter = new Ayoola_Filter_Time();
                     if( $_REQUEST['username'] AND $userInfo = self::getUserInfo( array( 'username' => strtolower( $_REQUEST['username'] ) ) ) )
                     {
-                        if( empty( $data['member_info'][$userInfo['email']]['authorized'] ) )
+                        if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
                         {
                         //    break;
                         }
-                        $memberData = $data['member_info'][$userInfo['email']];
+                        $memberData = $data['member_data'][$userInfo['email']];
                         //    var_export( $userInfo );
                         $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, array( 'user_id' => $userInfo['user_id'] ) );
 
