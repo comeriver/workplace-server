@@ -70,6 +70,7 @@ class Workplace_Log extends Workplace
                     $data = array( 
                                     'texts' => $content, 
                                     'user_id' => $_POST['user_id'],
+                                    'workspace_id' => $_POST['workspace_id'],
                                     'software' => $software,
                                     'window_title' => $title
                                 );            

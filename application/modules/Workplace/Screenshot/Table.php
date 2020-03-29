@@ -37,6 +37,7 @@ class Workplace_Screenshot_Table extends PageCarton_Table
   'filename' => 'INPUTTEXT',
   'user_id' => 'INPUTTEXT',
   'window_title' => 'INPUTTEXT',
+  'workspace_id' => 'INPUTTEXT',
   'software' => 'INPUTTEXT',
 );
 

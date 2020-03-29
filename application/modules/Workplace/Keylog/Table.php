@@ -38,6 +38,8 @@ class Workplace_Keylog_Table extends PageCarton_Table
   'user_id' => 'INPUTTEXT',
   'window_title' => 'INPUTTEXT',
   'software' => 'INPUTTEXT',
+  'workspace_id' => 'INPUTTEXT',
+
 );
 
 
