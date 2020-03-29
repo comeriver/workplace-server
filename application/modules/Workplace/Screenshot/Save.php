@@ -50,9 +50,10 @@ class Workplace_Screenshot_Save extends Workplace
             //  Output demo content to screen
 
             $screenshot = base64_decode( $_POST['screenshot'] );
-            $filename = '/workplace/screenshots/' . $_POST['user_id'] . '/' . $_POST['window_title'] . '_' . time() . '.jpg';
+            $filename = '/workplace/screenshots/' . $_POST['user_id'] . '/' . md5( $_POST['window_title'] ) . '_' . time() . '.jpg';
             $path = Ayoola_Doc::getDocumentsDirectory() . $filename;
-        //    var_export( $path );
+            Ayoola_Doc::createDirectory( dirname( $path ) );
+            //    var_export( $path );
             file_put_contents( $path, $screenshot );
             if( Workplace_Screenshot_Table::getInstance()->insert( array( 'filename' => $filename, 'user_id' => $_POST['user_id'], 'window_title' => $_POST['window_title'] ) ) )
             {
