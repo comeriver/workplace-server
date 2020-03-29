@@ -106,7 +106,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                                 <span style="font-size:40px;">' . round( array_sum( $memberData['intervals'] ) / 3600, 2 ) . '</span><br>Hours
                             </div>
                             <div style="' . $boxCss . ';">
-                                <span style="font-size:40px;">' . count( $data['tools'] ) . '</span><br>Tools
+                                <span style="font-size:40px;">' . count( $memberData['tools'] ) . '</span><br>Tools
                             </div>
                         </div>
                         </div>
