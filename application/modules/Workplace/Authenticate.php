@@ -105,7 +105,8 @@ class Workplace_Authenticate extends Workplace
 
                 $table->insert( $authInfoToSave );
 
-                $this->_objectData = $authInfoToSave + $userInfo    ;
+                $settings = Workplace_Settings::retrieve() ? : array();
+                $this->_objectData = $authInfoToSave + $userInfo + $settings;
             //    var_export( $this->_objectData  );
 
             }
