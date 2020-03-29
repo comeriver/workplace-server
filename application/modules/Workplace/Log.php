@@ -86,7 +86,8 @@ class Workplace_Log extends Workplace
 
             $count = 0;
             $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
-            var_export( $workspaces );
+        //    var_export( $workspaces );
+        
             foreach( $workspaces as $workspace )
             {
                 if( empty( $workspace['member_info'][$userInfo['email']]['authorized'] ) )
