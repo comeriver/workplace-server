@@ -78,8 +78,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             }
             $tools = array_unique( $tools );
 
-             $this->setViewContent( '<h1>Workspace Insights</h1>'); 
-             $this->setViewContent( '<h2>Team ' . $data['name'] . '</h2>'); 
+             $this->setViewContent( '<h1>Workspace Insights for Team ' . $data['name'] . '</h1>'); 
              $html = '
              <div style="display:flex;flex-direction:row;" >
                 <div style="' . $boxCss . ';">
