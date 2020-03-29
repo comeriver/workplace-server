@@ -48,7 +48,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                 if( ! $data = $this->getIdentifierData() ){ return false; }
 
                 $boxCss = 'padding:2em; background-color:grey; color:white; border: 1px groove #eee;flex-basis:100%;';
-                $this->setViewContent( '<h1>Team ' . $data['name'] . ' Member Insight</h1>'); 
+                $this->setViewContent( '<br><h1>Team ' . $data['name'] . ' Member Insight</h1><br>'); 
    
 
                 do
