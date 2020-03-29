@@ -17,7 +17,7 @@
  */
 
 
-class Workplace_Workspace_Abstract extends PageCarton_Widget
+class Workplace_Workspace_Abstract extends Workplace
 {
 	
     /**

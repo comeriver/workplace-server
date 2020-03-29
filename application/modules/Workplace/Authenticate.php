@@ -55,8 +55,7 @@ class Workplace_Authenticate extends Workplace
             return false;
         }
     //    var_export( Application_User_Abstract::getUserInfo( array( 'user_id' => $authInfo['user_id'] ) ) );
-        $userInfo = Application_User_Abstract::getUserInfo( array( 'email' => $auth['email'] ) );
-
+        $userInfo = self::getUserInfo( array( 'email' => $auth['email'] ) );
         return $userInfo;
     }
 

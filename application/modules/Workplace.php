@@ -37,7 +37,7 @@ class Workplace extends PageCarton_Widget
      * Returns user info from auth token
      * 
      * @param void
-     * @return boolean
+     * @return mixed
      * 
      */
 	public function authenticate()
@@ -45,10 +45,29 @@ class Workplace extends PageCarton_Widget
         if( $x = Workplace_Authenticate::getAuthUserInfo( $_REQUEST ) )
         {
             $this->_objectData['authenticated'] = true;
-            return true;
+            return x;
         }
         $this->_objectData['authenticated'] = false;
         return false;
     }
+
+    /**
+     * 
+     * 
+     */
+	public static function getUserInfo( array $identifier )
+    {
+        if( ! $userInfo = Application_User_Abstract::getUsers( $identifier ) )
+        {
+            return false;
+        }
+
+        $userInfo = array_pop( $userInfo );
+        $userInfo = $userInfo['user_information'];
+        $userInfo['user_id'] = strval( $userInfo['user_id'] );
+        $userInfo['email'] = strtolower( $userInfo['email'] );
+        return $userInfo;
+    }
+
 	// END OF CLASS
 }

@@ -1,13 +1,8 @@
 application/databases/PageCarton/Cron/Run/table.xml
-application/databases/Application/Log/View/Error/log.xml
 application/databases/Workplace/Authenticate/table.xml
 application/databases/Workplace/Screenshot/table.xml
 application/databases/Ayoola/Extension/Import/table.xml
 application/databases/Application/notification.xml
-application/databases/Application/Log/View/Access/log.xml
-application/databases/Application/Log/View/Access/__/log/0/0/0.xml
-application/databases/Application/Log/View/SignIn/log.xml
-application/databases/Application/Log/View/SignOut/log.xml
 application/databases/Ayoola/Access/localuser.xml
 application/databases/Ayoola/Object/dbase.xml
 application/databases/Ayoola/Object/widget.xml
@@ -16,5 +11,5 @@ application/databases/Workplace/Authenticate/table.xml
 application/databases/Workplace/Keylog/table.xml
 application/databases/Application/__/
 application/databases/workspace.xml
-application/databases/Application/Log/View/Access/__/log/0/0/1.xml
+application/databases/Application/Log/
 application/databases/Workplace/workspace.xml

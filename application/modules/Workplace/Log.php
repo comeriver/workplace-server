@@ -44,29 +44,66 @@ class Workplace_Log extends Workplace
             //  Code that runs the widget goes here...
 
             //  Output demo content to screen
-            if( ! $this->authenticate() )
+            if( ! $userInfo = $this->authenticate() )
             {
                 return false;
             }
 
             //  keylog 
             $keys = json_decode( $_POST['texts'], true );
-            foreach( $keys as $title => $content )
+
+            $tools = array();
+            foreach( $keys as $software => $softwareContent )
             {
-                $data = array( 
-                                'texts' => $content, 
-                                'user_id' => $_POST['user_id'],
-                                'window_title' => $title
-                            );            
-                Workplace_Keylog_Table::getInstance()->insert( $data );
+                $tools[] = $software;
+                foreach( $softwareContent as $title => $content )
+                {
+                    $data = array( 
+                                    'texts' => $content, 
+                                    'user_id' => $_POST['user_id'],
+                                    'software' => $software,
+                                    'window_title' => $title
+                                );            
+                    Workplace_Keylog_Table::getInstance()->insert( $data );
+                }
             }
 
             // Save Screenshot
             Workplace_Screenshot_Save::viewInLine();
 
-            $this->_objectData['goodnews'] = 'User data saved successfully.';
-            
+            //  log online
+            $where = array( 'email' => $userInfo['email'] );
+            if( $_POST['workspace_id'] )
+            {
+                $where['workspace_id'] = $_POST['workspace_id'];
+            }
+            $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
 
+            $time = time();
+            $year = date( 'Y' );
+            $month = date( 'M' );
+            $day = date( 'd' );
+
+            $count = 0;
+            $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 5;
+            foreach( $workspaces as $workspace )
+            {
+                if( empty( $workspace['member_info'][$userInfo['email']]['authorized'] ) )
+                {
+                    continue;
+                }
+                $count++;
+                $updated = $workspace['member_info'][$userInfo['email']];
+                $updated['last_seen'] = $time;
+                $updated['log'][] = $updated['last_seen'];
+                $updated['work_time'][$year][$month][$day][] = $logIntervals;
+                $updated['intervals'][] = $logIntervals;
+                $updated['tools'] = $tools;
+                
+                $workspace['member_info'][$userInfo['email']] = $updated;
+                Workplace_Workspace::getInstance()->update( array( 'member_info' => $workspace['member_info'] ), $where + array( 'workspace_id' => $workspace['workspace_id'] ) );
+            }
+            $this->_objectData['goodnews'] = 'Work data logged successfully on ' . $count . ' workspaces.';
              // end of widget process
           
 		}  

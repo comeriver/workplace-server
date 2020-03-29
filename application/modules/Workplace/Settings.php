@@ -20,8 +20,6 @@
 class Workplace_Settings extends PageCarton_Settings
 {
 
-
-	
     /**
      * creates the form for creating and editing
      * 
@@ -55,18 +53,8 @@ class Workplace_Settings extends PageCarton_Settings
 
 
         //  Sample Text Field Retrieving E-mail Address
-		$fieldset->addElement( array( 'name' => 'screenshot_interval', 'label' => 'Screenshot Interval (Secs)', 'value' => @$settings['screenshot_interval'], 'type' => 'InputText' ) );
-		$fieldset->addElement( array( 'name' => 'texts_interval', 'label' => 'Screenshot Interval (Secs)', 'value' => @$settings['texts_interval'], 'type' => 'InputText' ) );
-
-
-        //  Check box
-		$options = array( 
-							'option_value1' => 'Option 1', 
-							'option_value2' => 'Option 2', 
-							);
-		$fieldset->addElement( array( 'name' => 'other_options', 'label' => 'Other Options', 'value' => @$settings['other_options'], 'type' => 'Checkbox' ), $options );
-		
-		$fieldset->addLegend( 'Sample Plugin Settings' ); 
+		$fieldset->addElement( array( 'name' => 'log_interval', 'label' => 'Member log Interval (Secs)', 'value' => @$settings['log_interval'], 'type' => 'InputText' ) );
+		$fieldset->addLegend( 'Workplace Settings' ); 
                
 		$form->addFieldset( $fieldset );
 		$this->setForm( $form );
