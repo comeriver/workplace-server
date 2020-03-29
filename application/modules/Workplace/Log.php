@@ -75,7 +75,7 @@ class Workplace_Log extends Workplace
             $where = array( 'members' => $userInfo['email'] );
             if( $_POST['workspace_id'] )
             {
-                $where['workspace_id'] = $_POST['workspace_id'];
+                $where['workspace_id'] = $_POST['workspace_id'];   
             }
             $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
 
@@ -85,9 +85,8 @@ class Workplace_Log extends Workplace
             $day = date( 'd' );
 
             $count = 0;
-            $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
+            $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 5;
         //    var_export( $workspaces );
-            
             foreach( $workspaces as $workspace )
             {
                 if( empty( $workspace['member_data'][$userInfo['email']]['authorized'] ) )
@@ -103,7 +102,11 @@ class Workplace_Log extends Workplace
                 $updated['tools'] = $tools;
                 
                 $workspace['member_data'][$userInfo['email']] = $updated;
-                Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $where + array( 'workspace_id' => $workspace['workspace_id'] ) );
+                $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
+            //    var_export( $toWhere );
+                $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $toWhere );
+            //    var_export( $result );
+            //    var_export( $toWhere );
             }
             $this->_objectData['goodnews'] = 'Work data logged successfully on ' . $count . ' workspaces.';
              // end of widget process
@@ -112,7 +115,9 @@ class Workplace_Log extends Workplace
 		catch( Exception $e )
         { 
             //  Alert! Clear the all other content and display whats below.
-        //    $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
+        //    var_export( $e->getMessage() );
+
+            $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
             $this->setViewContent( self::__( '<p class="badnews">Theres an error in the code</p>' ) ); 
             return false; 
         }
