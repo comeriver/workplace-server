@@ -46,7 +46,7 @@ class Workplace_Workspace_Abstract extends Workplace
      *
      * @var boolean
      */
-	protected static $_accessLevel = array( 99, 98 );
+	protected static $_accessLevel = array( 1, 98 );
 
 
     /**
