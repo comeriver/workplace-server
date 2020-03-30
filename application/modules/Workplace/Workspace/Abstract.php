@@ -77,7 +77,7 @@ If you agree to join this team, you will need to install a software on your work
 
 To deny this invitation, just ignore this email. 
 
-To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', click this link: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . $email . '&auth_token=' . $workspaceInfo['member_data'][$email]['auth_token'] . '. 
+To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', click this link: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . $email . '&auth_token=' . $workspaceInfo['member_data'][$email]['auth_token'] . '&. 
             ';
         //    echo $mailInfo['body'];
             self::sendMail( $mailInfo );
