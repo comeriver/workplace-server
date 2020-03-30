@@ -48,7 +48,23 @@ class Workplace_Workspace_Creator extends Workplace_Workspace_Abstract
 			if( $info = $this->insertDb( $values ) )
 			{ 
                 $values += $info;
-				$this->setViewContent(  '' . self::__( '<div class="goodnews">Workspace was created successfully. </div>' ) . '', true  ); 
+                $this->setViewContent(  '' . self::__( '<div class="goodnews">Workspace was created successfully. </div>' ) . '', true  ); 
+                
+                //  feedback
+                $mailInfo = array();
+                $mailInfo['to'] = Ayoola_Application::getUserInfo( 'email' );
+                $mailInfo['subject'] = 'You have created a Team  Workspace for "' . $values['name'] . '"';
+                $mailInfo['body'] = 'Hey!
+    
+    You have just created a workspace for "' . $values['name'] . '" team on ' . Ayoola_Page::getDefaultDomain() . '. ' . $values['name'] . ' would now use this tool to help team members stay productive. 
+    
+    You can now begin to add team members to the workspace. When members agree to join the team on the workspace, they will need to install a software on their work computer/device so that the software will help aggregate some data about how work is done. In no time, your dashboard will be so full of insights. 
+        
+    To update this team information and members, go to: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Editor?workspace_id=' . $info['workspace_id'] . '. 
+                ';
+            //    echo $mailInfo['body'];
+                self::sendMail( $mailInfo );
+    
                 self::mailMembers( $values );
 			}
 

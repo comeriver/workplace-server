@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Workspace_Join extends PageCarton_Widget
+class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
 {
 	
     /**
@@ -44,9 +44,78 @@ class Workplace_Workspace_Join extends PageCarton_Widget
             //  Code that runs the widget goes here...
 
             //  Output demo content to screen
-             $this->setViewContent( self::__( '<h1>Hello PageCarton Widget</h1>' ) ); 
-             $this->setViewContent( self::__( '<p>Customize this widget (' . __CLASS__ . ') by editing this file below:</p>' ) ); 
-             $this->setViewContent( self::__( '<p style="font-size:smaller;">' . __FILE__ . '</p>' ) ); 
+
+            // save to main site
+            @$email = $_REQUEST['email'];
+            $activeWorkspace = false;
+            $where = array( 'members' => $email );
+            if( ! empty( $email ) AND $workspaces = Workplace_Workspace::getInstance()->select( null, $where ) )
+            {
+                foreach( $workspaces as $workspace )
+                {
+                    if( $workspace['member_data'][$email]['auth_token'] === $_REQUEST['auth_token'] )
+                    {
+                        if( @$_REQUEST['authorized'] )
+                        {
+                            switch( @$_REQUEST['authorized'] )
+                            {
+                                case 99:
+                                    $workspace['member_data'][$email]['authorized'] = true;
+                                break;
+                                case 32:
+                                    $workspace['member_data'][$email]['authorized'] = false;
+                                break;
+                            }
+                            $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
+                            $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $toWhere );
+                        }
+                        $activeWorkspace = $workspace;
+                    }
+                }
+            }
+            if( empty( $activeWorkspace ) )
+            {
+                $this->setViewContent( '<br><h2 class="badnews">You do not have any active invitation to any workspace</h2><br>' ); 
+                return false;
+            }
+
+            $this->setViewContent( '<br><h1>Join ' . $activeWorkspace['name'] . ' on Workplace</h1><br>' ); 
+            $this->setViewContent( '<p>Workplace help teams around the world stay productive when working on the computer. Here are the easy steps to join ' . $activeWorkspace['name'] . ' team workspace</p><br>' ); 
+            $steps = null;
+            if( empty( $activeWorkspace['member_data'][$email]['authorized'] ) )
+            {
+                $steps .= '<li>Authorize ' . $activeWorkspace['name'] . ' access to your work data. <a onclick="location.search+=\'&authorized=99\';" href="javascript:;">Authorize Now!</a></li>';
+            }
+            else
+            {
+                $steps .= '<li style="text-decoration: line-through;">You have granted ' . $activeWorkspace['name'] . ' access to your work data. <a onclick="location.search+=\'&authorized=32\';" href="javascript:;">De-Authorize Now!</a></li>';
+            }
+            if( Ayoola_Application::getUserInfo( 'username' ) )
+            {
+                $steps .= '<li style="text-decoration: line-through;">You are already logged into an account ' . Ayoola_Application::getUserInfo( 'email' ) . '</li>';
+            }
+            else
+            {
+                $steps .= '<li>Create an account if you don\'t have an existing Workplace account or Sign in to existing account. <a target="_blank" onclick="this.href += \'?previous_url=\' + encodeURIComponent( location );"  href="' . Ayoola_Application::getUrlPrefix() . '/accounts/signup">Create an account!</a></li>';
+            }
+            $doneCss = null;
+            if( ! empty( $activeWorkspace['member_data'][$email]['last_seen'] ) )
+            {
+                $doneCss = 'style="text-decoration: line-through;"';
+            }
+            $steps .= '
+            
+            <li ' . $doneCss . '>Download/Install Workplace Client to your Work Computer. <a  target="_blank" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Downloads"> Go to Downloads</a></li>
+            <li ' . $doneCss . '>Login to Workplace Client Software on your Work Computer everytime you want to Work</li>';
+    
+            $html = '
+            <ol>
+                ' . $steps . '
+            </ol>
+            ';
+
+            $this->setViewContent( $html ); 
+            $this->setViewContent( '<p>Once you complete all the steps, everything will appear striked out.</p><br>' ); 
 
              // end of widget process
           

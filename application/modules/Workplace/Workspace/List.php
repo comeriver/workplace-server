@@ -61,8 +61,7 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
 			array(
                 //    'user_id' => array( 'field' => 'user_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
                     'name' => array( 'field' => 'name', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
-                    'members' => array( 'field' => 'members', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
-                //    'member_data' => array( 'field' => 'member_data', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
+                    'members' => array( 'field' => 'members', 'value' =>  '%FIELD%  <a style="font-size:smaller;" rel="shadowbox;changeElementId=' . $this->getObjectName() . '" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Editor/?' . $this->getIdColumn() . '=%KEY%">edit</a><br>', 'filter' =>  '' ),                     
                     'Added' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time' ), 
                     array( 'field' => 'workspace_id', 'value' =>  '<a style="font-size:smaller;" rel="shadowbox;changeElementId=' . $this->getObjectName() . '" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Insights/?' . $this->getIdColumn() . '=%KEY%">Insights</a>' ), 
                     '' => '%FIELD% <a style="font-size:smaller;" rel="shadowbox;changeElementId=' . $this->getObjectName() . '" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Editor/?' . $this->getIdColumn() . '=%KEY%">edit</a>', 
