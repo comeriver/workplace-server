@@ -101,7 +101,7 @@ class Workplace_Log extends Workplace
             {
                 if( empty( $workspace['member_data'][$userInfo['email']]['authorized'] ) )
                 {
-                //    continue;
+                    continue;
                 }
                 $count++;
                 $updated = $workspace['member_data'][$userInfo['email']];

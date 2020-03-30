@@ -59,7 +59,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 }
                 if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
                 {
-                //    break;
+                    break;
                 }
 
                 $memberData = $data['member_data'][$userInfo['email']];
