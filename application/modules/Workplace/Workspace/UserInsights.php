@@ -24,7 +24,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
      *
      * @var boolean
      */
-	protected static $_accessLevel = array( 0 );
+	protected static $_accessLevel = array( 1 );
 	
     /**
      * 
@@ -44,7 +44,6 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
             try
             { 
                 //  Code that runs the widget goes here...
-    
                 if( ! $data = $this->getIdentifierData() ){ return false; }
 
                 $boxCss = 'padding:2em; background-color:#333; color:white; border: 1px groove #ccc;flex-basis:100%;';
