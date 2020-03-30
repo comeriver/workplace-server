@@ -47,7 +47,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
     
                 if( ! $data = $this->getIdentifierData() ){ return false; }
 
-                $boxCss = 'padding:2em; background-color:grey; color:white; border: 1px groove #eee;flex-basis:100%;';
+                $boxCss = 'padding:2em; background-color:#333; color:white; border: 1px groove #ccc;flex-basis:100%;';
                 $this->setViewContent( '<br><h1>Team ' . $data['name'] . ' Member Insight</h1><br>'); 
    
 
@@ -72,6 +72,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                         $mainBg .= 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshots[0]['filename'] . '?width=600&height=600 ); background-size:cover;';
                         $shots = null;
                         $count = array();
+
                         foreach( $screenshots as $screenshot )
                         {   
                         //   var_export( $screenshot );
@@ -100,7 +101,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                         </div>
                         <div style="display:flex;flex-direction:column; align-content:space-between;flex-basis:100%" >
                             <div  style="' . $boxCss . ';" >
-                                <span style="font-size:40px;">' . $filter->filter( $memberData['last_seen'] ) . '</span><br>Last seen
+                                <span style="font-size:40px;">' . ( $filter->filter( $memberData['last_seen'] ) ? : '...' ) . '</span><br>Last seen
                             </div>
                             <div style="' . $boxCss . ';">
                                 <span style="font-size:40px;">' . round( array_sum( $memberData['intervals'] ) / 3600, 2 ) . '</span><br>Hours
@@ -109,7 +110,23 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                                 <span style="font-size:40px;">' . count( $memberData['tools'] ) . '</span><br>Tools
                             </div>
                         </div>
+                        <div style="display:flex;flex-direction:column; align-content:space-between;flex-basis:100%" >
+                            <div  style="' . $boxCss . ';" >
+                                <a style="color:inherit;" href="tel://' . $userInfo['phone_number'] . '"><span style="font-size:40px;" class="fa fa-phone"></span><br> <br>
+                                Call ' . $userInfo['phone_number'] . '</a>
+                            </div>
+                            <div style="' . $boxCss . ';">
+                                <a target="_blank" style="color:inherit;" href="http://api.whatsapp.com/send' . $userInfo['whatsapp'] . '"><i style="font-size:40px;" class="fa fa-whatsapp"></i><br> <br>
+                                WhatsApp ' . $userInfo['whatsapp'] . '</a>
+                            </div>
+                            <div style="' . $boxCss . ';">
+                                <a style="color:inherit;" href="mailto:' . $userInfo['email'] . '"><i style="font-size:40px;" class="fa fa-envelope"></i><br> <br>
+                                Email ' . $userInfo['email'] . '</a>
+                            </div>
                         </div>
+                        
+                        </div>
+                        <div style="' . $boxCss . ';">Recent Highlights (' . count( $count ) .  ')</div>
                         <div style="display:flex;flex-direction:row;">
                             ' . $shots . '
                         </div>
