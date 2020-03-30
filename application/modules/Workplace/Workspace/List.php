@@ -43,6 +43,11 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
      */
     protected function createList()
     {
+        if( ! self::hasPriviledge( 98 ) )
+        {
+            $this->_dbWhereClause['user_id'] = strval( Ayoola_Application::getUserInfo( 'user_id' ) );
+        //    var_export( $this->_dbWhereClause );
+        }
 		require_once 'Ayoola/Paginator.php';
 		$list = new Ayoola_Paginator();
 		$list->pageName = $this->getObjectName();
