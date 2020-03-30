@@ -13,3 +13,7 @@ application/databases/Application/__/
 application/databases/workspace.xml
 application/databases/Application/Log/
 application/databases/Workplace/workspace.xml
+application/databases/Application/Article/
+application/databases/Application/Profile/
+application/databases/Ayoola/Doc/
+application/module_files/
