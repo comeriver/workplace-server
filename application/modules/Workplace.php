@@ -52,6 +52,30 @@ class Workplace extends PageCarton_Widget
     }
 
     /**
+     * Returns user info from auth token
+     * 
+     * @param void
+     * @return mixed
+     * 
+     */
+	public static function getAuthWorkspaces( $email )
+    {
+        $activeWorkspaces = array();
+        $where = array( 'members' => $email );
+        $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
+        
+        foreach( $workspaces as $workspace )
+        {
+            if( ! empty( $workspace['member_data'][$email]['authorized'] ) )
+            {
+                $activeWorkspaces += $workspace;
+            }
+        }
+        return $activeWorkspaces;
+
+    }
+
+    /**
      * 
      * 
      */

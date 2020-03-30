@@ -104,9 +104,18 @@ class Workplace_Authenticate extends Workplace
             //    var_export( $authInfoToSave );
 
                 $table->insert( $authInfoToSave );
+                $myWorkspaces = self::getAuthWorkspaces( $email );
+
+                if( $myWorkspacesId = array_column( $myWorkspaces, 'workspace_id' ) )
+                {
+                    $myWorkspaces= array( 'workspace_id' => $myWorkspacesId );
+                }
 
                 $settings = Workplace_Settings::retrieve() ? : array();
-                $this->_objectData = $authInfoToSave + $userInfo + $settings;
+                $this->_objectData += $authInfoToSave;
+                $this->_objectData += $userInfo;
+                $this->_objectData += $settings;
+                $this->_objectData += $myWorkspaces;
             //    var_export( $this->_objectData  );
 
             }
