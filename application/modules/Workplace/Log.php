@@ -95,7 +95,7 @@ class Workplace_Log extends Workplace
             $day = date( 'd' );
 
             $count = 0;
-            $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 5;
+            $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
         //    var_export( $workspaces );
             foreach( $workspaces as $workspace )
             {
