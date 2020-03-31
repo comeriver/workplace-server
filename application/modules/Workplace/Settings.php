@@ -54,6 +54,7 @@ class Workplace_Settings extends PageCarton_Settings
 
         //  Sample Text Field Retrieving E-mail Address
 		$fieldset->addElement( array( 'name' => 'log_interval', 'label' => 'Member log Interval (Secs)', 'value' => @$settings['log_interval'], 'type' => 'InputText' ) );
+		$fieldset->addElement( array( 'name' => 'cost_per_sec', 'label' => 'How much charge to put on Workspace per sec', 'value' => @$settings['cost_per_sec'], 'type' => 'InputText' ) );
 		$fieldset->addLegend( 'Workplace Settings' ); 
                
 		$form->addFieldset( $fieldset );

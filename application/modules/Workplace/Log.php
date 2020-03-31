@@ -96,6 +96,7 @@ class Workplace_Log extends Workplace
 
             $count = 0;
             $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
+            $fees = Workplace_Settings::retrieve( 'cost_per_sec' ) ? : 0;
         //    var_export( $workspaces );
             foreach( $workspaces as $workspace )
             {
@@ -110,6 +111,7 @@ class Workplace_Log extends Workplace
                 $updated['work_time'][$year][$month][$day][] = $logIntervals;
                 $updated['intervals'][] = $logIntervals;
                 $updated['tools'] = $tools;
+                $updated['balance'] = ( is_empty( $updated['balance'] ) || ! is_numeric( $updated['balance'] ) ? 0 : $updated['balance'] ) + ( $fees * $logIntervals );
                 
                 $workspace['member_data'][$userInfo['email']] = $updated;
                 $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
@@ -117,6 +119,7 @@ class Workplace_Log extends Workplace
                 $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $toWhere );
             //    var_export( $result );
             //    var_export( $toWhere );
+                
             }
             $this->_objectData['goodnews'] = 'Work data logged successfully on ' . $count . ' workspaces.';
              // end of widget process
