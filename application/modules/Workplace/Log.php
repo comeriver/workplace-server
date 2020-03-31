@@ -83,11 +83,13 @@ class Workplace_Log extends Workplace
 
             //  log online
             $where = array( 'members' => $userInfo['email'] );
-            if( $_POST['workspace_id'] )
+            if( $_POST['workspaces'] )
             {
-                $where['workspace_id'] = $_POST['workspace_id'];   
+                $where['workspace_id'] = json_decode( $_POST['workspaces'], true );   
             }
+        //    var_export( $where );
             $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
+        //    var_export( $workspaces );
 
             $time = time();
             $year = date( 'Y' );
