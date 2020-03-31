@@ -69,8 +69,6 @@ class Workplace_Authenticate extends Workplace
 		{ 
             //  Code that runs the widget goes here...
         //    var_export( $_POST );
-        //    $_POST['email'] = 'zzzzzzxxz@xx.com';
-        //    $_POST['password'] = 'zzzzzzxxz@xx.com';
             if( empty( $_POST['email'] ) || empty( $_POST['password'] ) )
             {
                 //  error
@@ -106,7 +104,7 @@ class Workplace_Authenticate extends Workplace
                 $table->insert( $authInfoToSave );
                 $myWorkspaces = array();
 
-                foreach( self::getAuthWorkspaces( $email ) as $workspace )
+                foreach( self::getAuthWorkspaces( $userInfo['email'] ) as $workspace )
                 {
                     $myWorkspaces[] = array( $workspace['workspace_id'] => $workspace['name'] );
                 }

@@ -63,12 +63,11 @@ class Workplace extends PageCarton_Widget
         $activeWorkspaces = array();
         $where = array( 'members' => $email );
         $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
-        
         foreach( $workspaces as $workspace )
         {
             if( ! empty( $workspace['member_data'][$email]['authorized'] ) )
             {
-                $activeWorkspaces += $workspace;
+                $activeWorkspaces[] = $workspace;
             }
         }
         return $activeWorkspaces;
