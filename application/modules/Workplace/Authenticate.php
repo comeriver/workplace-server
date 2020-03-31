@@ -110,6 +110,8 @@ class Workplace_Authenticate extends Workplace
                 }
                 $otherSettings = array( 'workspaces' => $myWorkspaces );
                 $otherSettings['intervals'] = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
+                $otherSettings['supported_versions'] = self::$_supportedClientVersions;
+                $otherSettings['current_stable_version'] = self::$_currentStableClientVersion;
 
                 $settings = Workplace_Settings::retrieve() ? : array();
                 $this->_objectData += $authInfoToSave;

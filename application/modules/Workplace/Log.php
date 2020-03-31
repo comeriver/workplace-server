@@ -123,14 +123,17 @@ class Workplace_Log extends Workplace
             //    var_export( $toWhere );
                 
             }
+            $otherSettings = array();
+            $otherSettings['supported_versions'] = self::$_supportedClientVersions;
+            $otherSettings['current_stable_version'] = self::$_currentStableClientVersion;
             $this->_objectData['goodnews'] = 'Work data logged successfully on ' . $count . ' workspaces.';
-             // end of widget process
+            $this->_objectData += $otherSettings;
+            // end of widget process
           
 		}  
 		catch( Exception $e )
         { 
             //  Alert! Clear the all other content and display whats below.
-        //    var_export( $e->getMessage() );
 
             $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
             $this->setViewContent( self::__( '<p class="badnews">Theres an error in the code</p>' ) ); 

@@ -22,9 +22,28 @@ class Workplace extends PageCarton_Widget
     /**
      * Access level for player. Defaults to everyone
      *
-     * @var boolean
+     * @var array
      */
 	protected static $_accessLevel = array( 0 );
+	
+    /**
+     * Supported client versions. 
+     * Clients versions not in this list will be asked to update immediately
+     *
+     * @var array
+     */
+	protected static $_supportedClientVersions = array( 
+        '0.1.0',
+        '0.1.1',
+     );
+	
+    /**
+     * Current Stable Version
+     * Changing this version will prompt clients with older version to update
+     *
+     * @var string
+     */
+	protected static $_currentStableClientVersion = '0.1.1';
 	
     /**
      * 
