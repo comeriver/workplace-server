@@ -110,14 +110,14 @@ class Workplace_Authenticate extends Workplace
                 {
                     $myWorkspaces[] = array( $workspace['workspace_id'] => $workspace['name'] );
                 }
-                $myWorkspaces= array( 'workspaces' => $myWorkspaces );
-                
+                $otherSettings = array( 'workspaces' => $myWorkspaces );
+                $otherSettings['intervals'] = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
 
                 $settings = Workplace_Settings::retrieve() ? : array();
                 $this->_objectData += $authInfoToSave;
                 $this->_objectData += $userInfo;
                 $this->_objectData += $settings;
-                $this->_objectData += $myWorkspaces;
+                $this->_objectData += $otherSettings;
             //    var_export( $this->_objectData  );
 
             }
