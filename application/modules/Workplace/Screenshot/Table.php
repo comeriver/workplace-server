@@ -25,7 +25,7 @@ class Workplace_Screenshot_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.5';  
+    protected $_tableVersion = '0.7';  
 
     /**
      * Table data types and declaration
