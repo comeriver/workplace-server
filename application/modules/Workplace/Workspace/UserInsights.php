@@ -61,7 +61,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                         }
                         $memberData = $data['member_data'][$userInfo['email']];
                         //    var_export( $userInfo );
-                        $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, array( 'user_id' => $userInfo['user_id'] ) );
+                        $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] ) );
 
                         $mainBg = 'background-color:grey;';
                         if( empty( $screenshots[0]['filename'] ) )
