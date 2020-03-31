@@ -61,6 +61,7 @@ class Workplace_Keylog_Table_List extends Workplace_Keylog_Table_Abstract
 			array(
                     'texts' => array( 'field' => 'texts', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
                     'user_id' => array( 'field' => 'user_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
+                    'workspace_id' => array( 'field' => 'workspace_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
                     'window_title' => array( 'field' => 'window_title', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                     'software' => array( 'field' => 'software', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                     'Added' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time' ), 

@@ -61,6 +61,7 @@ class Workplace_Screenshot_Table_List extends Workplace_Screenshot_Table_Abstrac
 			array(
                     'filename' => array( 'field' => 'filename', 'value' =>  '<a target="_blank" href="%FIELD%"><img src="%FIELD%?width=60&height=60" alt=""></a>', 'filter' =>  '' ),                     
                     'user_id' => array( 'field' => 'user_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
+                    'workspace_id' => array( 'field' => 'workspace_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
                     'window_title' => array( 'field' => 'window_title', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                     'software' => array( 'field' => 'software', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                     'Added' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time' ), 
