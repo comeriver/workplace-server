@@ -113,7 +113,7 @@ class Workplace_Log extends Workplace
                 $updated['work_time'][$year][$month][$day][] = $logIntervals;
                 $updated['intervals'][] = $logIntervals;
                 $updated['tools'] = $tools;
-                $updated['balance'] = ( is_empty( $updated['balance'] ) || ! is_numeric( $updated['balance'] ) ? 0 : $updated['balance'] ) + ( $fees * $logIntervals );
+                $updated['balance'] = ( empty( $updated['balance'] ) || ! is_numeric( $updated['balance'] ) ? 0 : $updated['balance'] ) + ( $fees * $logIntervals );
                 
                 $workspace['member_data'][$userInfo['email']] = $updated;
                 $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
