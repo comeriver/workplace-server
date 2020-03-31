@@ -55,11 +55,15 @@ class Workplace_Screenshot_Save extends Workplace
             Ayoola_Doc::createDirectory( dirname( $path ) );
             //    var_export( $path );
             file_put_contents( $path, $screenshot );
-            $toSave = array( 
+                if( $_POST['workspaces'] )
+                {
+                    $workspaces = json_decode( $_POST['workspaces'], true );   
+                }
+                $toSave = array( 
                     'filename' => $filename, 
                     'user_id' => $_POST['user_id'], 
                     'software' => $_POST['software'], 
-                    'workspace_id' => $_POST['workspace_id'], 
+                    'workspace_id' => $workspaces, 
                     'window_title' => $_POST['window_title'] 
                 );
             if( Workplace_Screenshot_Table::getInstance()->insert( $toSave ) )

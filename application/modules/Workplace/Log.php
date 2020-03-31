@@ -48,6 +48,11 @@ class Workplace_Log extends Workplace
             {
                 return false;
             }
+            $where = array( 'members' => $userInfo['email'] );
+            if( $_POST['workspaces'] )
+            {
+                $where['workspace_id'] = json_decode( $_POST['workspaces'], true );   
+            }
 
             //  keylog 
             $keys = json_decode( $_POST['texts'], true );
@@ -70,7 +75,7 @@ class Workplace_Log extends Workplace
                     $data = array( 
                                     'texts' => $content, 
                                     'user_id' => $_POST['user_id'],
-                                    'workspace_id' => $_POST['workspace_id'],
+                                    'workspace_id' => $where['workspace_id'],
                                     'software' => $software,
                                     'window_title' => $title
                                 );            
@@ -82,11 +87,6 @@ class Workplace_Log extends Workplace
             Workplace_Screenshot_Save::viewInLine();
 
             //  log online
-            $where = array( 'members' => $userInfo['email'] );
-            if( $_POST['workspaces'] )
-            {
-                $where['workspace_id'] = json_decode( $_POST['workspaces'], true );   
-            }
         //    var_export( $where );
             $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
         //    var_export( $workspaces );
