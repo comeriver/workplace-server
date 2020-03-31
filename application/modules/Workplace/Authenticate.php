@@ -106,7 +106,7 @@ class Workplace_Authenticate extends Workplace
 
                 foreach( self::getAuthWorkspaces( $userInfo['email'] ) as $workspace )
                 {
-                    $myWorkspaces[$workspace['workspace_id']] = $workspace['name'];
+                    $myWorkspaces[] = array( 'workspace_id' => $workspace['workspace_id'], 'name' => $workspace['name'] );
                 }
                 $otherSettings = array( 'workspaces' => $myWorkspaces );
                 $otherSettings['intervals'] = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
