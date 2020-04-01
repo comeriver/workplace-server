@@ -35,6 +35,7 @@ class Workplace extends PageCarton_Widget
 	protected static $_supportedClientVersions = array( 
         '0.1.0',
         '0.1.1',
+        '0.1.2',
      );
 	
     /**
@@ -43,7 +44,7 @@ class Workplace extends PageCarton_Widget
      *
      * @var string
      */
-	protected static $_currentStableClientVersion = '0.1.1';
+	protected static $_currentStableClientVersion = '0.1.2';
 	
     /**
      * 

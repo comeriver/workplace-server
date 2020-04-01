@@ -125,7 +125,7 @@ class Workplace_Authenticate extends Workplace
             {
                 //  error
                 $errorInfo = array(
-                    'badnews' => 'Invalid email or password'
+                    'badnews' => 'Invalid email or password. You can reset your password on ' . Ayoola_Page::getDefaultDomain()
                 );
                 $this->_objectData = $errorInfo;
             }
