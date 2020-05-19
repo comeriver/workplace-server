@@ -44,7 +44,7 @@ class Workplace_Workspace_Invite extends Workplace_Workspace_Join
             if( ! $data = $this->getIdentifierData() ){ return false; }
             
             $where = array( 'workspace_id' => $data['workspace_id'] );
-            if( empty( $data['workspace_token'] ) )
+            if( empty( $data['workspace_token'] ) || ! empty( $_GET['x_revoke'] ) )
             {
                 $update['workspace_token'] = md5( json_encode( $data ) . uniqid() );
                 $data['workspace_token'] = $update['workspace_token'];
@@ -54,7 +54,8 @@ class Workplace_Workspace_Invite extends Workplace_Workspace_Join
             $this->setViewContent( self::__( '<h2>Invite Link for ' . $data['name'] . '</h2>' ) ); 
             $this->setViewContent( self::__( '<p>Copy and share this invite link to members for them to join this workspace</p>' ) ); 
             $link = '' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?workspace_id=' . $data['workspace_id'] . '&workspace_token=' . $data['workspace_token'] . '';
-            $this->setViewContent( '<textarea style="width:100%; padding:1em;" rows="1">' . $link . '</textarea>' ); 
+            $this->setViewContent( '<textarea style="width:100%; padding:1em;margin:1em 0;" rows="1">' . $link . '</textarea>' );
+            $this->setViewContent( '<a href="javascript:" onclick="location.search=location.search + \'&x_revoke=1\'" class="pc-btn">Revoke Link</a>' ); 
             
 
              // end of widget process
