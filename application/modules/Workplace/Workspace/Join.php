@@ -49,7 +49,33 @@ class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
             @$email = $_REQUEST['email'];
             $activeWorkspace = false;
             $where = array( 'members' => $email );
-            if( ! empty( $email ) AND $workspaces = Workplace_Workspace::getInstance()->select( null, $where ) )
+            if( ! empty( $_REQUEST['workspace_token'] ) && ! empty( $_REQUEST['workspace_id'] ) )
+            {
+                $where = array( 'workspace_id' => $_REQUEST['workspace_id'], 'workspace_token' => $_REQUEST['workspace_token']  );
+                $workspace = Workplace_Workspace::getInstance()->selectOne( null, $where );
+                @$email = Ayoola_Application::getUserInfo( 'email' );
+                if( @$_REQUEST['authorized'] && $email )
+                { 
+
+                    switch( @$_REQUEST['authorized'] )
+                    {
+                        case 99:
+                            $workspace['member_data'][$email]['authorized'] = true;
+                        break;
+                        case 32:
+                            $workspace['member_data'][$email]['authorized'] = false;
+                        break;
+                    }
+                    $update['members'] = $workspace['members'];
+                    $update['members'][] = $email;
+                    $update['member_data'] = $workspace['member_data'];
+                    $update['members'] = array_unique( $update['members'] );
+
+                    $result = Workplace_Workspace::getInstance()->update( $update, $where );
+                }
+                $activeWorkspace = $workspace;
+            }
+            elseif( ! empty( $email ) AND $workspaces = Workplace_Workspace::getInstance()->select( null, $where ) )
             {
                 foreach( $workspaces as $workspace )
                 {
@@ -82,6 +108,14 @@ class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
             $this->setViewContent( '<br><h1>Join ' . $activeWorkspace['name'] . ' on Workplace</h1><br>' ); 
             $this->setViewContent( '<p>Workplace help teams around the world stay productive when working on the computer. Here are the easy steps to join ' . $activeWorkspace['name'] . ' team workspace</p><br>' ); 
             $steps = null;
+            if( Ayoola_Application::getUserInfo( 'username' ) )
+            {
+                $steps .= '<li style="text-decoration: line-through;">You are already logged into an account ' . Ayoola_Application::getUserInfo( 'email' ) . '</li>';
+            }
+            else
+            {
+                $steps .= '<li>Create an account if you don\'t have an existing Workplace account or <a onclick="this.href += \'?previous_url=\' + encodeURIComponent( location );"  href="' . Ayoola_Application::getUrlPrefix() . '/account/signin">Sign in to existing account</a> or <a onclick="this.href += \'?previous_url=\' + encodeURIComponent( location );"  href="' . Ayoola_Application::getUrlPrefix() . '/accounts/signup">Create an account!</a></li>';
+            }
             if( empty( $activeWorkspace['member_data'][$email]['authorized'] ) )
             {
                 $steps .= '<li>Authorize ' . $activeWorkspace['name'] . ' access to your work data. <a onclick="location.search+=\'&authorized=99\';" href="javascript:;">Authorize Now!</a></li>';
@@ -89,14 +123,6 @@ class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
             else
             {
                 $steps .= '<li style="text-decoration: line-through;">You have granted ' . $activeWorkspace['name'] . ' access to your work data. <a onclick="location.search+=\'&authorized=32\';" href="javascript:;">De-Authorize Now!</a></li>';
-            }
-            if( Ayoola_Application::getUserInfo( 'username' ) )
-            {
-                $steps .= '<li style="text-decoration: line-through;">You are already logged into an account ' . Ayoola_Application::getUserInfo( 'email' ) . '</li>';
-            }
-            else
-            {
-                $steps .= '<li>Create an account if you don\'t have an existing Workplace account or Sign in to existing account. <a target="_blank" onclick="this.href += \'?previous_url=\' + encodeURIComponent( location );"  href="' . Ayoola_Application::getUrlPrefix() . '/accounts/signup">Create an account!</a></li>';
             }
             $doneCss = null;
             if( ! empty( $activeWorkspace['member_data'][$email]['last_seen'] ) )
