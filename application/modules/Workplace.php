@@ -81,7 +81,7 @@ class Workplace extends PageCarton_Widget
 	public static function getAuthWorkspaces( $email )
     {
         $activeWorkspaces = array();
-        $where = array( 'members' => $email );
+        $where = array( 'members' => strtolower( $email ) );
         $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
         foreach( $workspaces as $workspace )
         {

@@ -88,6 +88,7 @@ class Workplace_Authenticate extends Workplace
             if( $userInfo = Ayoola_Access_Login::localLogin( $authInfo ) )
             {
             //    var_export( $userInfo );
+                $userInfo['email'] = strtolower( $userInfo['email'] );
                 $authToken = md5( uniqid( json_encode( $authInfo ), true ) );
 
                 //  save auth info in data
