@@ -112,16 +112,12 @@ class Workplace_Log extends Workplace
                 $updated['log'][] = $updated['last_seen'];
                 $updated['work_time'][$year][$month][$day][] = $logIntervals;
                 $updated['intervals'][] = $logIntervals;
-                $updated['tools'] = $tools;
+                $updated['tools'] = $tools + ( is_array( $updated['tools'] ) ? $updated['tools'] : array() );
                 $updated['balance'] = ( empty( $updated['balance'] ) || ! is_numeric( $updated['balance'] ) ? 0 : $updated['balance'] ) + ( $fees * $logIntervals );
                 
                 $workspace['member_data'][$userInfo['email']] = $updated;
                 $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
-            //    var_export( $toWhere );
                 $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $toWhere );
-            //    var_export( $result );
-            //    var_export( $toWhere );
-                
             }
             $otherSettings = array();
             $otherSettings['supported_versions'] = self::$_supportedClientVersions;
