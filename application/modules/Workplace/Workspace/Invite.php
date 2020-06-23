@@ -24,7 +24,7 @@ class Workplace_Workspace_Invite extends Workplace_Workspace_Join
      *
      * @var boolean
      */
-	protected static $_accessLevel = array( 99 );
+	protected static $_accessLevel = array( 1, 98 );
 	
     /**
      * 
