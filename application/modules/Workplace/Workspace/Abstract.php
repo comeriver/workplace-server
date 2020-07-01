@@ -19,7 +19,7 @@
 
 class Workplace_Workspace_Abstract extends Workplace
 {
-	
+
     /**
      * Identifier for the column to edit
      * 
@@ -71,14 +71,14 @@ class Workplace_Workspace_Abstract extends Workplace
             $mailInfo['subject'] = 'You have been added to "' . $workspaceInfo['name'] . '" Workspace';
             $mailInfo['body'] = 'Hey!
 
-You have just been invited to join "' . $workspaceInfo['name'] . '" team on ' . Ayoola_Page::getDefaultDomain() . '. ' . $workspaceInfo['name'] . ' uses this tool to help team members stay productive. 
+            You have just been invited to join "' . $workspaceInfo['name'] . '" team on ' . Ayoola_Page::getDefaultDomain() . '. ' . $workspaceInfo['name'] . ' uses this tool to help team members stay productive. 
 
-If you agree to join this team, you will need to install a software on your work computer/device so that we could aggregate some data about how you work on the team for analytical purposes. 
+            If you agree to join this team, you will need to install a software on your work computer/device so that we could aggregate some data about how you work on the team for analytical purposes. 
 
-To deny this invitation, just ignore this email. 
+            To deny this invitation, just ignore this email. 
 
-To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', click this link: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . $email . '&auth_token=' . $workspaceInfo['member_data'][$email]['auth_token'] . '&. 
-            ';
+            To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', click this link: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . $email . '&auth_token=' . $workspaceInfo['member_data'][$email]['auth_token'] . '&. 
+                        ';
         //    echo $mailInfo['body'];
             self::sendMail( $mailInfo );
         }
@@ -99,56 +99,84 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
      */
 	public function createForm( $submitValue = null, $legend = null, Array $values = null )  
     {
-		//	Form to create a new page
+		    //	Form to create a new page
         $form = new Ayoola_Form( array( 'name' => $this->getObjectName(), 'data-not-playable' => true ) );
-		$form->submitValue = $submitValue ;
-//		$form->oneFieldSetAtATime = true;
+		    $form->submitValue = $submitValue ;
+        //		$form->oneFieldSetAtATime = true;
 
-		$fieldset = new Ayoola_Form_Element;
+	    	$fieldset = new Ayoola_Form_Element;
         $fieldset->addElement( array( 'name' => 'name', 'label' => 'Team Name', 'type' => 'InputText', 'value' => @$values['name'] ) );         
 
-		$i = 0;
-		//	Build a separate demo form for the previous group
-		$subform = new Ayoola_Form( array( 'name' => 'xx...' )  );
-		$subform->setParameter( array( 'no_fieldset' => true, 'no_form_element' => true ) );
-		$subform->wrapForm = false;
-		do
-		{
-				
-			$subfield = new Ayoola_Form_Element; 
-			$subfield->allowDuplication = true;
-			$subfield->duplicationData = array( 'add' => '+ Add New Member', 'remove' => '- Remove Member', 'counter' => 'category_counter', );
-			$subfield->container = 'span';
-			$subfield->wrapper = 'white-background';
-		
-            $subfield->addElement( array( 'name' => 'members', 'label' => '', 'title' => 'Enter member email', 'placeholder' => 'e.g. example@gmail.com', 'type' => 'InputText', 'multiple' => 'multiple', 'value' => @$values['members'][$i], ) ); 
-            $options = array(
-                '' => 'Member',
-                'admin' => 'Admin',
-                'Owner' => 'Owner',
-            );
-			$subfield->addElement( array( 'name' => 'privileges', 'label' => '', 'type' => 'Select', 'multiple' => 'multiple', 'value' => @$values['privileges'][$i], ), $options ); 
+	    	$i = 0;
+	    	//	Build a separate demo form for the previous group
+        $subform = new Ayoola_Form( array( 'name' => 'xx...' )  );
+        $subform->setParameter( array( 'no_fieldset' => true, 'no_form_element' => true ) );
+        $subform->wrapForm = false;
+            do
+            {
+                    
+                  $subfield = new Ayoola_Form_Element; 
+                  $subfield->allowDuplication = true;
+                  $subfield->duplicationData = array( 'add' => '+ Add New Member', 'remove' => '- Remove Member', 'counter' => 'category_counter', );
+                  $subfield->container = 'span';
+                  $subfield->wrapper = 'white-background';
+                
+                  $subfield->addElement( array( 'name' => 'members', 'label' => '', 'title' => 'Enter member email', 'placeholder' => 'e.g. example@gmail.com', 'type' => 'InputText', 'multiple' => 'multiple', 'value' => @$values['members'][$i], ) ); 
+                        $options = array(
+                            '' => 'Member',
+                            'admin' => 'Admin',
+                            'Owner' => 'Owner',
+                        );
+                  $subfield->addElement( array( 'name' => 'privileges', 'label' => '', 'type' => 'Select', 'multiple' => 'multiple', 'value' => @$values['privileges'][$i], ), $options ); 
 
-			$i++;
-			$subform->addFieldset( $subfield );
-		}
-		while( isset( $values['members'][$i] ) );    
+                  $i++;
+                  $subform->addFieldset( $subfield );
+            }
+            while( isset( $values['members'][$i] ) );    
 
-		$fieldset->allowDuplication = false;    
-		$fieldset->container = 'span';
-		
-		//	add previous categories if available
-	//	$fieldset->addLegend( 'Create personal categories to use for posts ' );						  
-		$fieldset->addElement( array( 'name' => 'xxx', 'type' => 'Html', 'value' => '', 'data-pc-element-whitelist-group' => 'xxx' ), array( 'html' => '<p>Add team members</p>' . $subform->view(), 'fields' => 'members,privileges' ) );	
-        $fieldset->addRequirement( 'name', array( 'NotEmpty' => null ) );
-    //    $fieldset->addRequirement( 'members', array( 'NotEmpty' => null ) );
+            $fieldset->allowDuplication = false;    
+            $fieldset->container = 'span';
+            
+            //	add previous categories if available
+            //	$fieldset->addLegend( 'Create personal categories to use for posts ' );						  
+            $fieldset->addElement( array( 'name' => 'xxx', 'type' => 'Html', 'value' => '', 'data-pc-element-whitelist-group' => 'xxx' ), array( 'html' => '<p>Add team members</p>' . $subform->view(), 'fields' => 'members,privileges' ) );	
+                $fieldset->addRequirement( 'name', array( 'NotEmpty' => null ) );
+            //    $fieldset->addRequirement( 'members', array( 'NotEmpty' => null ) );
 
 
 
-		$fieldset->addLegend( $legend );
-		$form->addFieldset( $fieldset );   
-		$this->setForm( $form );
+            $fieldset->addLegend( $legend );
+            $form->addFieldset( $fieldset );   
+            $this->setForm( $form );
+        
+      
     } 
 
-	// END OF CLASS
+ 
+  public function createmessageform( $submitValue = null, $legend = null, Array $values = null )  
+    {
+        //	Form to create a new page
+            $form = new Ayoola_Form( array( 'name' => $this->getObjectName(), 'data-not-playable' => true ) );
+            $form->submitValue = $submitValue ;
+
+
+
+
+            // 	$fieldset->addLegend( $legend );
+            $fieldset = new Ayoola_Form_Element;
+
+            if( ! $data = $this->getIdentifierData() ){ return false; }
+
+            $fieldset->addElement( array( 'name' => 'message', 'label' => 'message', 'placeholder' => 'Start typing your message to @', 'type' => 'TextArea', 'value' => @$values['message'] ) );
+            $fieldset->addRequirement( 'message', array( 'WordCount' => array( 3, 1000 ) ) );
+            
+            $fieldset->addElement( array( 'name' => 'to', 'placeholder' => '', 'type' => 'InputText', 'value' => $data['name']) );
+            $fieldset->addLegend( $legend );
+            $form->addFieldset( $fieldset );   
+            $this->setForm( $form );
+  
+    } 
+    
 }
+  
+  // END OF CLASS

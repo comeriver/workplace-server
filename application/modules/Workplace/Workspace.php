@@ -37,6 +37,7 @@ class Workplace_Workspace extends PageCarton_Table
   'user_id' => 'INPUTTEXT',
   'name' => 'INPUTTEXT',
   'members' => 'JSON',
+  'message' => 'INPUTTEXT',
   'privileges' => 'JSON',
   'member_data' => 'JSON',
   'balance' => 'INPUTTEXT',

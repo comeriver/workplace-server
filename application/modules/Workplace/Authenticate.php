@@ -17,8 +17,8 @@
  */
 
 class Workplace_Authenticate extends Workplace
-{
-	
+
+	{
     /**
      * Access level for player. Defaults to everyone
      *
@@ -104,12 +104,22 @@ class Workplace_Authenticate extends Workplace
 
                 $table->insert( $authInfoToSave );
                 $myWorkspaces = array();
+               
 
                 foreach( self::getAuthWorkspaces( $userInfo['email'] ) as $workspace )
                 {
-                    $myWorkspaces[] = array( $workspace['workspace_id'] => $workspace['name'] );
+
+                  $d= Array($workspace['name']['message']);
+                  $myWorkspaces[] = array("id"=> $workspace['workspace_id'] ,"name"=> $workspace['name'],"msg"=>$workspace['message'] );
+               
+                  
+                      //  $myMessage=$workspace['message'];
+                  
+                    
                 }
                 $otherSettings = array( 'workspaces' => $myWorkspaces );
+                // $otherSettings['messages'] = $myMessage ;
+            
                 $otherSettings['intervals'] = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
                 $otherSettings['supported_versions'] = self::$_supportedClientVersions;
                 $otherSettings['current_stable_version'] = self::$_currentStableClientVersion;
@@ -119,6 +129,7 @@ class Workplace_Authenticate extends Workplace
                 $this->_objectData += $userInfo;
                 $this->_objectData += $settings;
                 $this->_objectData += $otherSettings;
+             
             //    var_export( $this->_objectData  );
 
             }
