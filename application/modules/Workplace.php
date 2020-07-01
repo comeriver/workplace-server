@@ -94,7 +94,7 @@ class Workplace extends PageCarton_Widget
         return $activeWorkspaces;
 
     }
-
+  
     /**
      * 
      * 
