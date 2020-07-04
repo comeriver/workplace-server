@@ -64,6 +64,25 @@ class Workplace_Log extends Workplace
             }
             foreach( $keys as $software => $softwareContent )
             {
+                //  Fix browsers dynamic title
+                if( stripos( $software, ' - ' ) !== false )
+                {
+                    if( $softwareA = explode( ' - ', $software ) )
+                    {
+                        $software = array_pop( $softwareA );
+                    }
+
+                }
+
+                //  Fix slack dynamic title
+                if( stripos( $software, ' | ' ) !== false )
+                {
+                    if( $softwareA = explode( ' - ', $software ) )
+                    {
+                        $software = array_unshift( $softwareA );
+                    }
+
+                }
                 $tools[] = $software;
                 foreach( $softwareContent as $title => $content )
                 {
@@ -112,7 +131,7 @@ class Workplace_Log extends Workplace
                 $updated['log'][] = $updated['last_seen'];
                 $updated['work_time'][$year][$month][$day][] = $logIntervals;
                 $updated['intervals'][] = $logIntervals;
-                $updated['tools'] = $tools + ( is_array( $updated['tools'] ) ? $updated['tools'] : array() );
+                $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
                 $updated['balance'] = ( empty( $updated['balance'] ) || ! is_numeric( $updated['balance'] ) ? 0 : $updated['balance'] ) + ( $fees * $logIntervals );
                 
                 $workspace['member_data'][$userInfo['email']] = $updated;

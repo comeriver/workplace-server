@@ -59,7 +59,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 }
                 if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
                 {
-                    break;
+                    continue;
                 }
 
                 $memberData = $data['member_data'][$userInfo['email']];
@@ -69,7 +69,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 }
                 if( is_array( $memberData['tools'] ) )
                 {
-                    $tools += $memberData['tools'];
+                    $tools = array_merge( $tools, $memberData['tools'] );
                 }
                 
                 $intervals += array_sum( $memberData['intervals'] );
