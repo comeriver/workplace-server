@@ -18,3 +18,17 @@ application/databases/Application/Profile/
 application/databases/Ayoola/Doc/
 application/module_files/
 .trash
+application/modules/NativeApp/
+application/modules/ProjectManager
+application/pages/*/make-project-paymentcontent.*
+application/modules/NativeApp.php
+application/modules/ProjectManager.php
+application/databases/*/__/*/extensions/
+application/databases/*/*/__/dbase/extensions/project_manager.xml
+application/databases/*/*/__/*/extensions/project_manager.xml
+application/databases/*/*/*/__/*/extensions/project_manager.xml
+application/databases/Ayoola/Page/page.xml
+application/pages/data-backup/
+extensions/
+application/pages/*/*managed-project*.*
+application/pages/*/make-project-payment*.*
