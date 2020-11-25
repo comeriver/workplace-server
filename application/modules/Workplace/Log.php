@@ -34,12 +34,49 @@ class Workplace_Log extends Workplace
 	protected static $_objectTitle = 'Log Employee Data'; 
 
     /**
+     * 
+     * 
+     */
+    public static function sanitizeToolName( $software )
+    {    
+        if( stripos( $software, ' - ' ) !== false )
+        {
+            if( $softwareA = array_map( 'trim', explode( ' - ', $software ) ) )
+            {
+                $software = array_pop( $softwareA );
+            }
+
+        }
+
+        //  Fix slack dynamic title
+        if( stripos( $software, ' | ' ) !== false )
+        {
+            if( $softwareA = array_map( 'trim', explode( ' - ', $software ) ) )
+            {
+                $software = array_unshift( $softwareA );
+            }
+
+        }
+
+        //  Fix slack dynamic title
+        if( stripos( $software, '(' ) !== false )
+        {
+            if( $softwareA = array_map( 'trim', explode( '(', $software ) ) )
+            {
+                $software = array_unshift( $softwareA );
+            }
+
+        }
+        return $software;
+    }
+
+    /**
      * Performs the whole widget running process
      * 
      */
-	public function init()
-    {    
-		try
+     public function init()
+     {    
+          try
 		{ 
             //  Code that runs the widget goes here...
 
@@ -65,25 +102,8 @@ class Workplace_Log extends Workplace
             foreach( $keys as $software => $softwareContent )
             {
                 //  Fix browsers dynamic title
-                if( stripos( $software, ' - ' ) !== false )
-                {
-                    if( $softwareA = explode( ' - ', $software ) )
-                    {
-                        $software = array_pop( $softwareA );
-                    }
 
-                }
-
-                //  Fix slack dynamic title
-                if( stripos( $software, ' | ' ) !== false )
-                {
-                    if( $softwareA = explode( ' - ', $software ) )
-                    {
-                        $software = array_unshift( $softwareA );
-                    }
-
-                }
-                $tools[] = $software;
+                $tools[] = self::sanitizeToolName( $software );
                 foreach( $softwareContent as $title => $content )
                 {
                     $content = trim( $content );
@@ -128,11 +148,15 @@ class Workplace_Log extends Workplace
                 $count++;
                 $updated = $workspace['member_data'][$userInfo['email']];
                 $updated['last_seen'] = $time;
-                $updated['log'][] = $updated['last_seen'];
-                $updated['work_time'][$year][$month][$day][] = $logIntervals;
-                $updated['intervals'][] = $logIntervals;
-                $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
-                $updated['balance'] = ( empty( $updated['balance'] ) || ! is_numeric( $updated['balance'] ) ? 0 : $updated['balance'] ) + ( $fees * $logIntervals );
+            //    $updated['log'] = $updated['log']++;
+                unset( $updated['work_time'] );
+                unset( $updated['tools'] );
+                unset( $updated['intervals'] );
+                unset( $updated['log'] );
+            //    $updated['work_time'][$year][$month][$day][] = $logIntervals;
+            //    $updated['intervals'][] = $logIntervals;
+             //   $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
+            //    $updated['balance'] = ( empty( $updated['balance'] ) || ! is_numeric( $updated['balance'] ) ? 0 : $updated['balance'] ) + ( $fees * $logIntervals );
                 
                 $workspace['member_data'][$userInfo['email']] = $updated;
                 $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
