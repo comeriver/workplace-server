@@ -45,9 +45,8 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
     {
         if( ! self::hasPriviledge( 98 ) )
         {
-        //    $this->_dbWhereClause['members'] = strval( Ayoola_Application::getUserInfo( 'email' ) );
+            $this->_dbWhereClause['members'] = strval( Ayoola_Application::getUserInfo( 'email' ) );
         }
-        $this->_dbWhereClause['members'] = strval( Ayoola_Application::getUserInfo( 'email' ) );
 		require_once 'Ayoola/Paginator.php';
 		$list = new Ayoola_Paginator();
 		$list->pageName = $this->getObjectName();
