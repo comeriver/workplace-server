@@ -31,7 +31,9 @@ class Workplace_Workspace_Editor extends Workplace_Workspace_Abstract
 			if( ! $data = $this->getIdentifierData() ){ return false; }
 			$this->createForm( 'Save', 'Edit Workspace', $data );
 			$this->setViewContent( $this->getForm()->view(), true );
-			if( ! $values = $this->getForm()->getValues() ){ return false; }
+            if( ! $values = $this->getForm()->getValues() ){ return false; }
+            
+            self::sanitizeMembersList( $values );
 
 
             if( $this->updateDb( $values ) )

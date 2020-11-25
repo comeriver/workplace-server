@@ -44,6 +44,8 @@ class Workplace_Workspace_Creator extends Workplace_Workspace_Abstract
 
 
             // members 
+            self::sanitizeMembersList( $values );
+
 		//	if( ! $this->insertDb() ){ return false; }
 			if( $info = $this->insertDb( $values ) )
 			{ 

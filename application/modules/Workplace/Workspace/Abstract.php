@@ -50,6 +50,36 @@ class Workplace_Workspace_Abstract extends Workplace
 
 
     /**
+     * 
+     * @param array Workspace Info
+     */
+	public static function sanitizeMembersList( array & $values = null )  
+    {
+        $myEmail = strtolower( Ayoola_Application::getUserInfo( 'email' ) );
+        if( empty( $values['members'] ) || ! is_array( $values['members'] ) )
+        {
+            $values['members'] = array();
+        }
+        if( ! in_array( $myEmail, $values['members'] ) )
+        {
+            $values['members'][] = $myEmail;
+            $values['privileges'][] = 'owner';
+        }
+        $found = array();
+        foreach( $values['members'] as $id => $member )
+        {
+            $values['members'][$id] = trim( strtolower( $member ) );
+            if( ! empty( $found[$values['members'][$id]] ) )
+            {
+                unset( $values['members'][$id] );
+                unset( $values['privileges'][$id] );
+            }
+            $found[$values['members'][$id]] = true;
+        }
+    }
+
+
+    /**
      * Send email to workspace members
      * 
      * @param array Workspace Info
@@ -125,7 +155,7 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
             $options = array(
                 '' => 'Member',
                 'admin' => 'Admin',
-                'Owner' => 'Owner',
+                'owner' => 'Owner',
             );
 			$subfield->addElement( array( 'name' => 'privileges', 'label' => '', 'type' => 'Select', 'multiple' => 'multiple', 'value' => @$values['privileges'][$i], ), $options ); 
 
