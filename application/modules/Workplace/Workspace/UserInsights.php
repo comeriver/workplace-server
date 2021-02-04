@@ -44,11 +44,14 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
             try
             { 
                 //  Code that runs the widget goes here...
-                if( ! $data = $this->getIdentifierData() ){ return false; }
-
-                $boxCss = 'padding:2em; background-color:#333; color:white; border: 1px groove #ccc;flex-basis:25%;';
-                $this->setViewContent( '<br><h1>Team ' . $data['name'] . ' Member Insight</h1><br>'); 
+                if( ! $data = $this->getIdentifierData() )
+                { 
+                    $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid workspace data</div>' ) . '', true  ); 
+                    return false; 
+                }
+                self::includeScripts();
    
+                $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
 
                 do
                 {
@@ -71,73 +74,29 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     //    var_export( $userInfo );
                     $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] ) );
 
-                    $mainBg = 'background-color:grey;';
-                    if( empty( $screenshots[0]['filename'] ) )
-                    {
-                        $screenshots[0]['filename'] = '/img/logo.png';
-                    }
-                    $mainBg .= 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshots[0]['filename'] . '?width=600&height=600 ); background-size:cover;';
-                    $shots = null;
-                    $count = array();
 
-                    foreach( $screenshots as $screenshot )
-                    {   
-                    //   var_export( $screenshot );
-                        if( ! empty( $count[$screenshot['software']] ) || empty( $screenshot['creation_time'] ) )
-                        {
-                            //  one software screenshot
-                            continue;
-                        }
-                        $count[$screenshot['software']] = true;
-                        $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;';
-                        $shots .= 
-                        ( 
-                            '<a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Screenshot?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" style="height:500px;' . $boxCss . ';' . $bg . '">
-                            ' . $screenshot['window_title'] . ' (' . $filter->filter( $screenshot['creation_time'] ) . ')
-                            </a>' 
-                        );
-                    }
+
 
                     $name = ( $userInfo['firstname'] ? : $userInfo['username'] ) ? : $userInfo['email'];
                     $html = '
-                    <div style="display:flex;flex-direction:row;" >
-                    <div style="' . $boxCss . '; ' . $mainBg . '">
-                        <div style="padding:2em;">
-                            <div style="font-size:68px;">' . $name . '</div>' . ( $userInfo['email'] ) . '
-                        </div>
+                    <div style="display:flex;align-content:space-between;flex-basis:100%" >
+                    <div class="box-css">
+                        <span style="font-size:40px;">' . $name . '</span><br>' . ( $userInfo['email'] ) . '
                     </div>
-                    <div style="display:flex;flex-direction:column; align-content:space-between;flex-basis:100%" >
-                        <div  style="' . $boxCss . ';" >
-                            <span style="font-size:40px;">' . ( $filter->filter( $memberData['last_seen'] ) ? : '...' ) . '</span><br>Last seen
-                        </div>
-                        <div style="' . $boxCss . ';">
-                            <span style="font-size:40px;">' . round( array_sum( $memberData['intervals'] ) / 3600, 2 ) . '</span><br>Hours
-                        </div>
-                        <div style="' . $boxCss . ';">
-                            <span style="font-size:40px;">' . count( $memberData['tools'] ) . '</span><br>Tools
-                        </div>
+                    <div class="box-css">
+                        <span style="font-size:40px;">' . ( $filter->filter( $memberData['last_seen'] ) ? : '...' ) . '</span><br>Last Seen
                     </div>
-                    <div style="display:flex;flex-direction:column; align-content:space-between;flex-basis:100%" >
-                        <div  style="' . $boxCss . ';" >
-                            <a style="color:inherit;" href="tel://' . $userInfo['phone_number'] . '"><span style="font-size:40px;" class="fa fa-phone"></span><br> <br>
-                            Call ' . $userInfo['phone_number'] . '</a>
-                        </div>
-                        <div style="' . $boxCss . ';">
-                            <a target="_blank" style="color:inherit;" href="http://api.whatsapp.com/send' . $userInfo['whatsapp'] . '"><i style="font-size:40px;" class="fa fa-whatsapp"></i><br> <br>
-                            WhatsApp ' . $userInfo['whatsapp'] . '</a>
-                        </div>
-                        <div style="' . $boxCss . ';">
-                            <a style="color:inherit;" href="mailto:' . $userInfo['email'] . '"><i style="font-size:40px;" class="fa fa-envelope"></i><br> <br>
-                            Email ' . $userInfo['email'] . '</a>
-                        </div>
+                    <div class="box-css">
+                        <span style="font-size:40px;">' . round( ( $memberData['log'] * $logIntervals ) / 3600, 2 ) . '</span><br>Hours
                     </div>
-                    
+                    <div class="box-css">
+                        <span style="font-size:40px;">' . count( $memberData['tools'] ) . '</span><br>Tools
                     </div>
-                    <div style="' . $boxCss . ';">Recent Highlights (' . count( $count ) .  ')</div>
-                    <div style="display:flex;flex-direction:row;flex-wrap:wrap;">
-                        ' . $shots . '
-                    </div>
+                </div>
+                ' . self::showScreenshots( $screenshots, $data ) . '
                     ';
+                    $this->setViewContent( $this->includeTitle( $data ) ); 
+
                     $this->setViewContent( $html ); 
                     
                 }

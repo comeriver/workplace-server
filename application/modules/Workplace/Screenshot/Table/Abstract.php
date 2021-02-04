@@ -64,8 +64,11 @@ class Workplace_Screenshot_Table_Abstract extends Workplace
 //		$form->oneFieldSetAtATime = true;
 
 		$fieldset = new Ayoola_Form_Element;
-	//	$fieldset->placeholderInPlaceOfLabel = false;       
-        $fieldset->addElement( array( 'name' => 'filename', 'type' => 'InputText', 'value' => @$values['filename'] ) );         $fieldset->addElement( array( 'name' => 'user_id', 'type' => 'InputText', 'value' => @$values['user_id'] ) );         $fieldset->addElement( array( 'name' => 'window_id', 'type' => 'InputText', 'value' => @$values['window_id'] ) ); 
+        $fieldset->addElement( array( 'name' => 'filename', 'type' => 'InputText', 'value' => @$values['filename'] ) );         
+        $fieldset->addElement( array( 'name' => 'user_id', 'type' => 'InputText', 'value' => @$values['user_id'] ) );         
+        $fieldset->addElement( array( 'name' => 'window_title', 'type' => 'InputText', 'value' => @$values['window_title'] ) ); 
+        $fieldset->addElement( array( 'name' => 'software', 'type' => 'InputText', 'value' => @$values['software'] ) ); 
+        $fieldset->addElement( array( 'name' => 'workspace_id', 'type' => 'MultipleInputText', 'value' => @$values['workspace_id'] ) ); 
 
 		$fieldset->addLegend( $legend );
 		$form->addFieldset( $fieldset );   

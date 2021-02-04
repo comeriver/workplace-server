@@ -43,16 +43,21 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
 		{ 
             //  Code that runs the widget goes here...
 
-            if( ! $data = $this->getIdentifierData() ){ return false; }
+            if( ! $data = $this->getIdentifierData() )
+            { 
+                $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid workspace data</div>' ) . '', true  ); 
+                return false; 
+            }
+            self::includeScripts();
             $memberList = null;
-            $boxCss = 'padding:2em; background-color:grey; color:white; border: 1px groove #eee;flex-basis:100%;';
             $time = time();
             $onlineMembers = array();
             $tools = array();
             $intervals = 0;
+            $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
+
             foreach( $data['members'] as $member )
             {
-                //    var_export( $member );
                 if( ! $userInfo = self::getUserInfo( array( 'email' => strtolower( $member ) ) ) )
                 {
                     continue;
@@ -71,47 +76,77 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 {
                     $tools = array_merge( $tools, $memberData['tools'] );
                 }
-                
-                $intervals += array_sum( $memberData['intervals'] );
+
+                $screenshot = Workplace_Screenshot_Table::getInstance()->selectOne( null, array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] ) );
+                if( empty( $screenshot['filename'] ) )
+                {
+                    $screenshot['filename'] = '/img/logo.png';
+                }
+                $mainBg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;height:50vh;';
+
+                $intervals += $memberData['log'];
                 $name = ( $userInfo['firstname'] ? : $userInfo['username'] ) ? : $userInfo['email'];
-                $memberList .= ( '<a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '" style="' . $boxCss . ';">' . $name . '</a>' );
+                $memberList .= ( '<a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"  class="box-css" style="' . $mainBg . '">' . $name . '</a>' );
             }
+            $totalTime = $intervals * $logIntervals;
             $tools = array_unique( $tools );
 
-             $this->setViewContent( '<br><h1>Workspace Insights for Team ' . $data['name'] . '</h1><br>'); 
-             $html = '
-             <div style="display:flex;flex-direction:row;" >
-                <div style="' . $boxCss . ';">
-                    <div style="padding:2em;">
-                        <div style="font-size:68px;">' . count( $data['members'] ) . '</div>Members
+            $sendMessage = Workplace_Workspace_Broadcast_Creator::viewInLine();
+
+
+            $where = array( 'workspace_id' => $data['workspace_id'] );
+            $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'row_id_column' => 'software', 'limit' => 6 ) );
+            //  var_export( $screenshots );
+            $chat = '
+                <div class="chat-box-css">
+                    <div style="background:white; color:#333;display: flex;flex-direction: column; flex-flow: column-reverse; overflow:auto;flex-basis:100%">
+                        ' . Workplace_Workspace_Broadcast_List::viewInLine() .  '
                     </div>
-                    <div style="display:flex;flex-direction:row;">
-                        ' . $memberList . '
-                    </div>
-                </div>
-                <div style="display:flex;flex-direction:column; align-content:space-between;flex-basis:100%" >
-                    <div  style="' . $boxCss . ';" >
-                        <span style="font-size:40px;">' . count( $onlineMembers ) . '</span><br>Online
-                    </div>
-                    <div style="' . $boxCss . ';">
-                        <span style="font-size:40px;">' . round( $intervals / 3600, 2 ) . '</span><br>Hours
-                    </div>
-                    <div style="' . $boxCss . ';">
-                        <span style="font-size:40px;">' . count( $tools ) . '</span><br>Tools
+                    <div style="flex-basis:10%">
+                    ' . $sendMessage .  '
                     </div>
                 </div>
-             </div>';
+            ';
+
+            $this->setViewContent( $this->includeTitle( $data ) ); 
+
+            $html = '
+            <div style="display:flex;align-content:space-between;flex-basis:100%" >
+                <div class="box-css">
+                    <span style="font-size:40px;">' . count( $data['members'] ) . '</span><br>Members
+                </div>
+                <div class="box-css">
+                    <span style="font-size:40px;">' . count( $onlineMembers ) . '</span><br>Online
+                </div>
+                <div class="box-css">
+                    <span style="font-size:40px;">' . round( $totalTime / 3600, 2 ) . '</span><br>Hours
+                </div>
+                <div class="box-css">
+                    <span style="font-size:40px;">' . count( $tools ) . '</span><br>Tools
+                </div>
+            </div>
+            <div style="display:flex; flex-wrap:wrap;">
+                <div class="chat-box-75">
+                ' . $memberList . '
+                </div>
+                ' . $chat . '
+                
+
+            </div>
+            ' . self::showScreenshots( $screenshots, $data ) . '
+            <a class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?workspace_id=' . $data['workspace_id'] . '">Manage Tools</a>
+
+            <div class="wk-space"></div>
+            <div class="wk-space"></div>
+            ';
 
              $this->setViewContent( $html ); 
-              
-
              // end of widget process
           
 		}  
 		catch( Exception $e )
         { 
             //  Alert! Clear the all other content and display whats below.
-        //    $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
             $this->setViewContent( self::__( '<p class="badnews">Theres an error in the code</p>' ) ); 
             return false; 
         }

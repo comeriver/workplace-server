@@ -97,13 +97,14 @@ class Workplace_Log extends Workplace
             $tools = array();
             if( ! empty( $_POST['software'] ) )
             {
-                $tools[] = $_POST['software'];
+                $tools[] = self::sanitizeToolName( $_POST['software'] );
             }
             foreach( $keys as $software => $softwareContent )
             {
                 //  Fix browsers dynamic title
+                $realToolName = self::sanitizeToolName( $software );
+                $tools[] = $realToolName;
 
-                $tools[] = self::sanitizeToolName( $software );
                 foreach( $softwareContent as $title => $content )
                 {
                     $content = trim( $content );
@@ -121,14 +122,13 @@ class Workplace_Log extends Workplace
                     Workplace_Keylog_Table::getInstance()->insert( $data );
                 }
             }
+            $tools = array_unique( $tools );
 
             // Save Screenshot
             Workplace_Screenshot_Save::viewInLine();
 
             //  log online
-        //    var_export( $where );
             $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
-        //    var_export( $workspaces );
 
             $time = time();
             $year = date( 'Y' );
@@ -138,26 +138,40 @@ class Workplace_Log extends Workplace
             $count = 0;
             $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
             $fees = Workplace_Settings::retrieve( 'cost_per_sec' ) ? : 0;
-        //    var_export( $workspaces );
             foreach( $workspaces as $workspace )
             {
                 if( empty( $workspace['member_data'][$userInfo['email']]['authorized'] ) )
                 {
                     continue;
                 }
+
+                $bannedTools = array_intersect( array_keys( $workspace['banned_tools'] ), $tools );
+                if( ! empty( $bannedTools ) )
+                {
+                    $ownerInfo = self::getUserInfo( array( 'user_id' => $workspace['user_id'] ) );
+
+                    $mailInfo = array();
+                    $mailInfo['to'] = '' . $userInfo['email'] . ',' . $ownerInfo['email'];
+                    $mailInfo['subject'] = 'Banned tool used by ' . $userInfo['username'];
+                    $mailInfo['body'] = 'The following banned tools has been used by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ': "' . self::arrayToString( $bannedTools ) . '".
+
+                    The entry has been removed from work session time in ' . $workspace['name'] . '.
+                    ';
+                    try
+                    {
+                        @self::sendMail( $mailInfo );
+                    }
+                    catch( Ayoola_Exception $e ){ null; }
+        
+                }
+
                 $count++;
                 $updated = $workspace['member_data'][$userInfo['email']];
                 $updated['last_seen'] = $time;
-            //    $updated['log'] = $updated['log']++;
-                unset( $updated['work_time'] );
-                unset( $updated['tools'] );
-                unset( $updated['intervals'] );
-                unset( $updated['log'] );
-            //    $updated['work_time'][$year][$month][$day][] = $logIntervals;
-            //    $updated['intervals'][] = $logIntervals;
-             //   $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
-            //    $updated['balance'] = ( empty( $updated['balance'] ) || ! is_numeric( $updated['balance'] ) ? 0 : $updated['balance'] ) + ( $fees * $logIntervals );
-                
+                $updated['log'] = @$updated['log']++;
+                $updated['work_time'][$year][$month][$day]++;
+                $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
+                $updated['tools'] = array_unique( $updated['tools'] );
                 $workspace['member_data'][$userInfo['email']] = $updated;
                 $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
                 $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $toWhere );
@@ -173,7 +187,6 @@ class Workplace_Log extends Workplace
 		catch( Exception $e )
         { 
             //  Alert! Clear the all other content and display whats below.
-
             $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
             $this->setViewContent( self::__( '<p class="badnews">Theres an error in the code</p>' ) ); 
             return false; 

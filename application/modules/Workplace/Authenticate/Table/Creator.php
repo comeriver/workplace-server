@@ -49,19 +49,13 @@ class Workplace_Authenticate_Table_Creator extends Workplace_Authenticate_Table_
 			';
 			try
 			{
-		//		var_export( $mailInfo );
 				@Ayoola_Application_Notification::mail( $mailInfo );
 			}
 			catch( Ayoola_Exception $e ){ null; }
-		//	if( ! $this->insertDb() ){ return false; }
 			if( $this->insertDb( $values ) )
 			{ 
 				$this->setViewContent(  '' . self::__( '<div class="goodnews">Added successfully. </div>' ) . '', true  ); 
 			}
-		//	$this->setViewContent( $this->getForm()->view() );
-            
-
-
             // end of widget process
           
 		}  

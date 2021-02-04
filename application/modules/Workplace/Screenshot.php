@@ -42,22 +42,22 @@ class Workplace_Screenshot extends Workplace_Workspace_Insights
 		try
 		{ 
             //  Code that runs the widget goes here...
-            if( ! $data = $this->getIdentifierData() ){ return false; }
+            if( ! $data = $this->getIdentifierData() )
+            { 
+                $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid workspace data</div>' ) . '', true  ); 
+                return false; 
+            }
+        
             $screen = Workplace_Screenshot_Table::getInstance()->selectOne( null, array( 'table_id' => $_REQUEST['table_id'], 'workspace_id' => $data['workspace_id'] ) );
-        //    var_export( $screen );
-        //                var_export( $data );
-
             if( ! $screen ){ return false; }
 
             $boxCss = 'padding:2em; background-color:#333; color:white; border: 1px groove #ccc;flex-basis:25%;';
             $this->setViewContent( '<br><h1>Team ' . $data['name'] . ' Member Insight</h1><br>'); 
-   ///     return false;
 
             do
             {
                 $filter = new Ayoola_Filter_Time();
                 $userInfo = self::getUserInfo( array( 'user_id' => strtolower( $screen['user_id'] ) ) );
-            //    var_export( $userInfo );
                 if( empty( $userInfo ) )
                 {
                     break;
@@ -82,7 +82,6 @@ class Workplace_Screenshot extends Workplace_Workspace_Insights
 
                 foreach( $screenshots as $screenshot )
                 {   
-                //   var_export( $screenshot );
                     if( ! empty( $count[$screenshot['window_title']] ) || empty( $screenshot['creation_time'] ) )
                     {
                         //  one software screenshot
@@ -92,7 +91,8 @@ class Workplace_Screenshot extends Workplace_Workspace_Insights
                     $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;';
                     $shots .= 
                     ( 
-                        '<a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Screenshot?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" style="height:500px;' . $boxCss . ';' . $bg . '">
+                        '
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Screenshot?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" style="height:500px;' . $boxCss . ';' . $bg . '">
                         ' . $screenshot['window_title'] . ' (' . $filter->filter( $screenshot['creation_time'] ) . ')
                         </a>' 
                     );
@@ -101,19 +101,6 @@ class Workplace_Screenshot extends Workplace_Workspace_Insights
                 }
 
                 $html = '
-                <div style="display:flex;flex-direction:row;" >
-                <div style="' . $boxCss . '; ' . $mainBg . '">
-                    <div style="padding:2em;">
-                        <div style="font-size:68px;">' . $screen['software'] . '</div>
-                    </div>
-                </div>
-                <div style="display:flex;flex-direction:column; align-content:space-between;flex-basis:100%" >
-                    <div style="' . $boxCss . ';">
-                        <span style="font-size:40px;">' . round( array_sum( $memberData['intervals'] ) / 3600, 2 ) . '</span><br>Hours
-                    </div>
-                </div>                
-                </div>
-                <div style="' . $boxCss . ';">Recent Highlights (' . count( $count ) .  ')</div>
                 <div style="display:flex;flex-direction:row;flex-wrap:wrap;">
                     ' . $shots . '
                 </div>
@@ -122,15 +109,12 @@ class Workplace_Screenshot extends Workplace_Workspace_Insights
                 
             }
             while( false );
-
-
-         // end of widget process
-          
+            // end of widget process
 		}  
 		catch( Exception $e )
         { 
             //  Alert! Clear the all other content and display whats below.
-        //    $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
+            //    $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
             $this->setViewContent( self::__( '<p class="badnews">Theres an error in the code</p>' ) ); 
             return false; 
         }

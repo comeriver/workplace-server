@@ -49,6 +49,125 @@ class Workplace_Workspace_Abstract extends Workplace
 	protected static $_accessLevel = array( 1, 98 );
 
 
+
+    /**
+     * 
+     * @param array Workspace Info
+     */
+	public static function includeTitle( array $data = null )  
+    {
+
+        return '
+        <div class="wk_title">
+        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '"><h2 class="">' . $data['name'] . '  </h2></a>
+            <p class="">' . date( 'g:ia, D jS M Y' ) . '</p>
+        </div>
+        '; 
+    }
+
+
+    /**
+     * 
+     * @param array Workspace Info
+     */
+	public static function includeScripts( array & $values = null )  
+    {
+
+        Application_Javascript::addCode(
+            '
+                setInterval(
+                    function()
+                    {
+                    location.href = location.href;
+                    }
+                    , 0.5*60000);
+            '
+        );
+        Application_Style::addCode(
+            '
+                .wk_title
+                {
+                    position: fixed;
+                    bottom: 2%;
+                    padding: 2em;
+                    background: rgba( 150, 150, 150, 0.5 );
+                    color: #fff;
+                    
+                }
+                .wk-space
+                {
+                    margin-bottom: 10em;;
+                }
+                .wk-screenshot
+                {
+                    padding: 1em;
+                    height: 50vh;
+                }
+                #Workplace_Workspace_Broadcast_Creator_form_id input[type=submit]
+                {
+                    padding: 0.5em;
+                    font-size: x-small;
+                    margin: 0.5em;
+                    float: right;
+                    font-size: x-small;
+                    box-shadow: inset 0px 1px 0px 0px #eee;
+                    background-color: #ccc;
+                    border: 1px solid #ddd;
+                }
+                #Workplace_Workspace_Broadcast_Creator_form_id textarea
+                {
+                    margin:0;
+                }
+                #Workplace_Workspace_Broadcast_Creator_form_id
+                {
+                    padding: 0;
+                }
+                .box-css, .chat-box-css
+                {
+                    padding:2em; 
+                    background-color:grey; 
+                    color:white; 
+                    flex-basis:100%; 
+                    text-align: center; 
+                    font-size:small;
+                    border: 0.5px solid #666;
+                }
+                .chat-box-css
+                {
+                    flex-basis:25%;
+                    font-size:small;
+                    height:50vh;
+                    display: flex;
+                    flex-direction: column;
+                    text-align:unset;  
+                    overflow:auto;
+                    padding:0;
+                }
+                .chat-box-75
+                {
+                    display:flex; 
+                    flex-basis:75%; 
+                    flex-direction: row-reverse;
+
+                }
+                @media only screen and (max-width: 900px) {
+                    .chat-box-75, .chat-box-css
+                    {
+                        flex-basis: 50%;
+                    }
+                }
+
+                @media only screen and (max-width: 600px) {
+                    .chat-box-75, .box-css, .chat-box-css
+                    {
+                        flex-basis: 100%;
+                    }
+                }
+
+
+            '
+        );
+    }
     /**
      * 
      * @param array Workspace Info
@@ -76,6 +195,54 @@ class Workplace_Workspace_Abstract extends Workplace
             }
             $found[$values['members'][$id]] = true;
         }
+    }
+
+    /**
+     * 
+     * @param array Workspace Info
+     */
+	public static function showScreenshots( array & $screenshots, $data = null )  
+    {
+        $shots = null;
+        $count = array();
+        $filter = new Ayoola_Filter_Time();
+
+        $title = null;
+        if( ! empty( $_REQUEST['window_title'] ) )
+        {
+            $title = '&window_title=1';
+        }
+        foreach( $screenshots as $screenshot )
+        {   
+            if( ! empty( $count[$screenshot['software']] ) || empty( $screenshot['creation_time'] ) )
+            {
+                //  one software screenshot
+                continue;
+            }
+            $count[$screenshot['software']] = true;
+            $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;';
+            $shots .= 
+            ( 
+                '<div class="box-css wk-screenshot" style="' . $bg . '">
+                ' . $screenshot['window_title'] . ' (' . $filter->filter( $screenshot['creation_time'] ) . ')
+                    <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '' . $title . '" title="View ' . $screenshot['software'] . '">
+                     <i class="fa fa-eye pc_give_space"></i>
+                    </a>
+                    <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_BanTool?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="Ban ' . $screenshot['software'] . '">
+                    <i class="fa fa-ban pc_give_space"></i>
+                    </a>
+
+                </div>
+                ' 
+            );
+        }
+        $html = '
+        <div style="display:flex;flex-direction:row;flex-wrap:wrap;">
+            ' . $shots . '
+        </div>
+        ';
+        return $html; 
+            
     }
 
 
@@ -132,12 +299,12 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
 		//	Form to create a new page
         $form = new Ayoola_Form( array( 'name' => $this->getObjectName(), 'data-not-playable' => true ) );
 		$form->submitValue = $submitValue ;
-//		$form->oneFieldSetAtATime = true;
 
 		$fieldset = new Ayoola_Form_Element;
         $fieldset->addElement( array( 'name' => 'name', 'label' => 'Team Name', 'type' => 'InputText', 'value' => @$values['name'] ) );         
 
-		$i = 0;
+        $i = 0;
+        
 		//	Build a separate demo form for the previous group
 		$subform = new Ayoola_Form( array( 'name' => 'xx...' )  );
 		$subform->setParameter( array( 'no_fieldset' => true, 'no_form_element' => true ) );
@@ -168,10 +335,8 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
 		$fieldset->container = 'span';
 		
 		//	add previous categories if available
-	//	$fieldset->addLegend( 'Create personal categories to use for posts ' );						  
 		$fieldset->addElement( array( 'name' => 'xxx', 'type' => 'Html', 'value' => '', 'data-pc-element-whitelist-group' => 'xxx' ), array( 'html' => '<p>Add team members</p>' . $subform->view(), 'fields' => 'members,privileges' ) );	
         $fieldset->addRequirement( 'name', array( 'NotEmpty' => null ) );
-    //    $fieldset->addRequirement( 'members', array( 'NotEmpty' => null ) );
 
 
 
