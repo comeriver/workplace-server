@@ -62,7 +62,7 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
                     unset( $options['row_id_column'] );
                     if( ! empty( $_REQUEST['window_title'] ) )
                     {
-                        $where['window_title'] = $screen['software'];
+                        $where['window_title'] = $screen['window_title'];
                     }
         
                 }

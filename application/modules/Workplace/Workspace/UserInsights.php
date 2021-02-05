@@ -82,7 +82,9 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                         break;
                     }
                     $memberData = $data['member_data'][$userInfo['email']];
-                    $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] ) );
+                    $where = array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] );
+                    $options = array( 'row_id_column' => 'software', 'limit' => 100 );
+                    $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
 
                     
                     if( ! empty( $_REQUEST['time'] ) )

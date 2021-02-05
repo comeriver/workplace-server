@@ -75,13 +75,40 @@ class Workplace_Workspace_Abstract extends Workplace
 
         Application_Javascript::addCode(
             '
-                setInterval(
-                    function()
-                    {
-                    location.href = location.href;
-                    }
-                    , 0.5*60000);
-            '
+					
+            let userActivityTimeout = null;
+
+            function resetUserActivityTimeout() {
+                clearTimeout(userActivityTimeout);
+                userActivityTimeout = setTimeout(() => {
+                    inactiveUserAction();
+                }, 30);
+            }
+
+            function inactiveUserAction() {
+                location.href = location.href;
+            }
+
+
+            let userActivityThrottlerTimeout = null;
+
+            function userActivityThrottler() {
+                if (!userActivityThrottlerTimeout) {
+                  userActivityThrottlerTimeout = setTimeout(() => {
+                    resetUserActivityTimeout();
+              
+                    clearTimeout(userActivityThrottlerTimeout);
+                    userActivityThrottlerTimeout = null;
+                  }, 30);
+                }
+              }
+            function activateActivityTracker() {
+                window.addEventListener("mousemove", userActivityThrottler);
+                window.addEventListener("scroll", userActivityThrottler);
+                window.addEventListener("keydown", userActivityThrottler);
+                window.addEventListener("resize", userActivityThrottler);
+            }
+                        '
         );
         Application_Style::addCode(
             '
@@ -235,7 +262,7 @@ class Workplace_Workspace_Abstract extends Workplace
         $count = array();
         $filter = new Ayoola_Filter_Time();
 
-        if( empty( $screenshot ) )
+        if( empty( $screenshots ) )
         {
             return 
             '<div class="badnews">
@@ -252,10 +279,10 @@ class Workplace_Workspace_Abstract extends Workplace
                // continue;
             }
             $count[$screenshot['software']] = true;
-            $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;';
+            $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.4), rgba( 0, 0, 0, 0.7 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;';
             $shots .= 
             ( 
-                '<div class="box-css wk-screenshot" style="' . $bg . '; display:flex;align-content:space-between; flex-direction:column;">
+                '<div class="box-css wk-screenshot" style="' . $bg . '; display:flex;align-content:space-between; justify-content: space-between;flex-direction:column;">
 
                     <div>
                     ' . $screenshot['software'] . '
@@ -267,10 +294,13 @@ class Workplace_Workspace_Abstract extends Workplace
                         </a>
                     </div>
                     <div>
-                    ' . $screenshot['window_title'] . ' (' . $filter->filter( $screenshot['creation_time'] ) . ')
+                    ' . $screenshot['window_title'] . '
                         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '&window_title=1" title="View ' . $screenshot['software'] . '">
-                        <i class="fa fa-eye pc_give_space"></i>
+                            <i class="fa fa-eye pc_give_space"></i>
                         </a>
+                        <br>
+                        (' . $filter->filter( $screenshot['creation_time'] ) . ')
+
                     </div>
 
                 </div>

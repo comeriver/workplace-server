@@ -194,7 +194,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
 
 
             $where = array( 'workspace_id' => $data['workspace_id'] );
-            $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'row_id_column' => 'software', 'limit' => 6 ) );
+            $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'row_id_column' => 'software', 'limit' => 12 ) );
 
             $chat = '
                 <div class="box-css chat-box-css">
