@@ -269,20 +269,38 @@ class Workplace_Workspace_Abstract extends Workplace
                 No records of activities here yet.
             </div>';
         }
+        $flexStyle = null;
+        switch( count( $screenshots ) )
+        {
+            case 1:
+                $flexStyle = '; flex-basis:100%;    height: 100vh;
+                width: 100%;
+                left: 0;';
+                
+            break;
+            case 2:
+                $flexStyle = '; flex-basis:50%;';
+            break;
+            case 3:
+                $flexStyle = '; flex-basis:33.333%;';
+            break;
+            default:
+
+            
+            break;
+        }
+
         foreach( $screenshots as $screenshot )
         {   
-            if( ! empty( $count[$screenshot['software']] ) || empty( $screenshot['creation_time'] ) )
+            $img = '' . $screenshot['filename'] . '';
+            if( count( $screenshots ) !== 1 )
             {
-                //  one software screenshot
-
-                //  do this at the caller level - db
-               // continue;
+                $img .= '?width=600&height=600';
             }
-            $count[$screenshot['software']] = true;
-            $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.4), rgba( 0, 0, 0, 0.7 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;';
+            $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.4), rgba( 0, 0, 0, 0.7 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $img . ' ); background-size:cover;';
             $shots .= 
             ( 
-                '<div class="box-css wk-screenshot" style="' . $bg . '; display:flex;align-content:space-between; justify-content: space-between;flex-direction:column;">
+                '<div class="box-css wk-screenshot" style="' . $bg . ';' . $flexStyle . '; display:flex;align-content:space-between; justify-content: space-between;flex-direction:column;">
 
                     <div>
                     ' . $screenshot['software'] . '

@@ -52,6 +52,7 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
             $where = array( 'workspace_id' => $data['workspace_id'] );
             $options = array( 'row_id_column' => 'software', 'limit' => 60 );
 
+            $screenOut = null;
             if( ! empty( $_REQUEST['table_id'] ) )
             {
                 $screen = Workplace_Screenshot_Table::getInstance()->selectOne( null, array( 'table_id' => $_REQUEST['table_id'], 'workspace_id' => $data['workspace_id'] ) );
@@ -64,7 +65,8 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
                     {
                         $where['window_title'] = $screen['window_title'];
                     }
-        
+                    $screen = array( $screen );
+                    $screenOut = self::showScreenshots( $screen, $data );
                 }
             }
             if( ! empty( $_REQUEST['user_id'] ) )
@@ -81,6 +83,11 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
                 return false; 
             }
 
+            $this->setViewContent( 
+                '
+                ' . $screenOut . '
+                '
+             ); 
             $this->setViewContent( self::showScreenshots( $screenshots, $data ) ); 
             // end of widget process
           
