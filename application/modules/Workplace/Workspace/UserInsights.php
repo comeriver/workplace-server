@@ -56,44 +56,126 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                 do
                 {
                     $filter = new Ayoola_Filter_Time();
+                    $filter->prefix = null;
+                    $filter->timeSegments['secs'] = 's';
+                    $filter->timeSegments['mins'] = 'm';
+                    $filter->timeSegments['hrs'] = 'h';
+                    $filter->timeSegments['days'] = 'd';
+                    $filter->timeSegments['wks'] = 'w';
+                    $filter->timeSegments['months'] = 'M';
+                    $filter->timeSegments['yrs'] = ' y';
                     if( empty( $_REQUEST['username'] ) )
                     {
+                        $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid user selected</div>' ) . '', true  ); 
                         break;
                     }
                     $userInfo = self::getUserInfo( array( 'username' => strtolower( $_REQUEST['username'] ) ) );
                     if( empty( $userInfo ) )
                     {
+                        $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid user selected</div>' ) . '', true  ); 
                         break;
                     }
                     
                     if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
                     {
+                        $this->setViewContent(  '' . self::__( '<div class="badnews">User has not authorized workspace</div>' ) . '', true  ); 
                         break;
                     }
                     $memberData = $data['member_data'][$userInfo['email']];
-                    //    var_export( $userInfo );
                     $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] ) );
 
-
+                    
+                    if( ! empty( $_REQUEST['time'] ) )
+                    {
+                        $timeToday = intval( $memberData['work_time'][$year][$month][$day] );
+                        $timeMonth = array_sum( $memberData['work_time'][$year][$month] );
+                        $timeYear = 0;
+                        foreach( $memberData['work_time'][$year] as $month )
+                        {
+                            $timeYear += array_sum( $month );
+                        }
+    
+                        $totalIdle += intval( $memberData['idle_log'] );
+                        if( ! empty( $_REQUEST['idle_time'] ) )
+                        {
+                            $idleToday = intval( $memberData['idle_time'][$year][$month][$day] );
+                            $idleMonth = array_sum( $memberData['idle_time'][$year][$month] );
+                            $idleYear = 0;
+                            foreach( $memberData['idle_time'][$year] as $month )
+                            {
+                                $idleYear += array_sum( $month );
+                            }
+                        }
+    
+                        $timePanel = '
+                        <div class="section-divider">Time Breakdown</div>
+                        <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
+                            <div class="box-css small-box-css ">
+                                <span style="font-size:40px;">' . round( $timeYear / 3600, 2 ) . '</span><br>
+                                <span>This year</span>
+                            </div>
+                            <div class="box-css small-box-css ">
+                                <span style="font-size:40px;">' . round( $timeMonth / 3600, 2 ) . '</span><br>
+                                <span>This Month</span>
+                            </div>
+                            <div class="box-css small-box-css ">
+                                <span style="font-size:40px;">' . round( $timeToday / 3600, 2 ) . '</span><br>
+                                <span>Work Today</span>
+                            </div>
+                            <div class="box-css small-box-css ">
+                                <span style="font-size:40px;">' . round( $totalIdle / 3600, 2 ) . '</span><br>
+                                <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Idle</a>
+                            </div>
+                        </div>';
+                        if( ! empty( $_REQUEST['idle_time'] ) )
+                        {
+                            $timePanel .= '
+                            <div class="section-divider">Idle Time Breakdown</div>
+                            <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
+                                <div class="box-css small-box-css ">
+                                    <span style="font-size:40px;">' . round( @$idleYear / 3600, 2 ) . '</span><br>
+                                    <span>This year</span>
+                                </div>
+                                <div class="box-css small-box-css ">
+                                    <span style="font-size:40px;">' . round( @$idleMonth / 3600, 2 ) . '</span><br>
+                                    <span>This Month</span>
+                                </div>
+                                <div class="box-css small-box-css ">
+                                    <span style="font-size:40px;">' . round( @$idleToday / 3600, 2 ) . '</span><br>
+                                    <span>Today</span>
+                                </div>
+                                <div class="box-css small-box-css ">
+                                    <span style="font-size:40px;">' . round( @$totalIdle / 3600, 2 ) . '</span><br>
+                                    All time
+                                </div>
+                            </div>';
+                        }
+            
+                    }
 
 
                     $name = ( $userInfo['firstname'] ? : $userInfo['username'] ) ? : $userInfo['email'];
                     $html = '
-                    <div style="display:flex;align-content:space-between;flex-basis:100%" >
-                    <div class="box-css">
-                        <span style="font-size:40px;">' . $name . '</span><br>' . ( $userInfo['email'] ) . '
+                    <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
+                        <div class="box-css small-box-css">
+                            <span style="font-size:40px;">' . $name . '</span><br>' . ( $userInfo['email'] ) . '
+                        </div>
+                        <div class="box-css">
+                            <span style="font-size:40px;">' . ( $filter->filter( $memberData['last_seen'] ) ? : '...' ) . '</span><br>Last Seen
+                        </div>
+                        <div class="box-css small-box-css">
+                            <span style="font-size:40px;">' . round( ( $memberData['log'] * $logIntervals ) / 3600, 2 ) . '</span><br>
+                            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '&time=1">Hours</a>
+
+                        </div>
+                        <div class="box-css small-box-css">
+                            <span style="font-size:40px;">' . count( $memberData['tools'] ) . '</span><br>
+                            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?user_id=' . $userInfo['user_id'] . '&workspace_id=' . $data['workspace_id'] . '">Tools</a>
+
+                        </div>
                     </div>
-                    <div class="box-css">
-                        <span style="font-size:40px;">' . ( $filter->filter( $memberData['last_seen'] ) ? : '...' ) . '</span><br>Last Seen
-                    </div>
-                    <div class="box-css">
-                        <span style="font-size:40px;">' . round( ( $memberData['log'] * $logIntervals ) / 3600, 2 ) . '</span><br>Hours
-                    </div>
-                    <div class="box-css">
-                        <span style="font-size:40px;">' . count( $memberData['tools'] ) . '</span><br>Tools
-                    </div>
-                </div>
-                ' . self::showScreenshots( $screenshots, $data ) . '
+                    ' . $timePanel . ' 
+                    ' . self::showScreenshots( $screenshots, $data ) . '
                     ';
                     $this->setViewContent( $this->includeTitle( $data ) ); 
 

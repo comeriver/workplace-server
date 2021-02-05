@@ -99,6 +99,7 @@ class Workplace_Log extends Workplace
             {
                 $tools[] = self::sanitizeToolName( $_POST['software'] );
             }
+            $idleTime = true;
             foreach( $keys as $software => $softwareContent )
             {
                 //  Fix browsers dynamic title
@@ -108,6 +109,10 @@ class Workplace_Log extends Workplace
                 foreach( $softwareContent as $title => $content )
                 {
                     $content = trim( $content );
+                    if( ! empty( $content ) )
+                    {
+                        $idleTime = false;
+                    }
                     if( ! $content )
                     {
                         continue;
@@ -168,8 +173,14 @@ class Workplace_Log extends Workplace
                 $count++;
                 $updated = $workspace['member_data'][$userInfo['email']];
                 $updated['last_seen'] = $time;
-                $updated['log'] = @$updated['log']++;
+                $updated['log']++;
                 $updated['work_time'][$year][$month][$day]++;
+
+                if( ! empty( $idleTime ) )
+                {
+                    $updated['idle_time'][$year][$month][$day]++;
+                    $updated['idle_log']++;
+                }
                 $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
                 $updated['tools'] = array_unique( $updated['tools'] );
                 $workspace['member_data'][$userInfo['email']] = $updated;

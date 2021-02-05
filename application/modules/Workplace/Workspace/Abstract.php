@@ -85,6 +85,25 @@ class Workplace_Workspace_Abstract extends Workplace
         );
         Application_Style::addCode(
             '
+                .wk_title a, .box-css a, a.box-css
+                {
+                    color: orange;
+                    text-decoration:none;
+                }
+                .box-css a:hover, .wk_title a:hover, a.box-css:hover
+                {
+                    color: white;
+                    text-decoration:none;
+
+                }
+
+                .section-divider
+                {
+                    padding: 2em;
+                    background: rgba( 150, 150, 150, 0.5 );
+                    color: #333;
+                    text-align:center;
+                }
                 .wk_title
                 {
                     position: fixed;
@@ -122,14 +141,14 @@ class Workplace_Workspace_Abstract extends Workplace
                 {
                     padding: 0;
                 }
-                .box-css, .chat-box-css
+                .box-css, .small-box-css, .chat-box-css
                 {
                     padding:2em; 
                     background-color:grey; 
                     color:white; 
-                    flex-basis:100%; 
+                    flex-basis:25%; 
                     text-align: center; 
-                    font-size:small;
+                    font-size:x-small;
                     border: 0.5px solid #666;
                 }
                 .chat-box-css
@@ -143,6 +162,10 @@ class Workplace_Workspace_Abstract extends Workplace
                     overflow:auto;
                     padding:0;
                 }
+                .box-css-x3
+                {
+                    flex-basis:33.333%;
+                }
                 .chat-box-75
                 {
                     display:flex; 
@@ -151,7 +174,7 @@ class Workplace_Workspace_Abstract extends Workplace
 
                 }
                 @media only screen and (max-width: 900px) {
-                    .chat-box-75, .chat-box-css
+                    .chat-box-75, .chat-box-css, .small-box-css
                     {
                         flex-basis: 50%;
                     }
@@ -162,6 +185,11 @@ class Workplace_Workspace_Abstract extends Workplace
                     {
                         flex-basis: 100%;
                     }
+                    .small-box-css
+                    {
+                        flex-basis: 50%;
+                    }
+
                 }
 
 
@@ -207,30 +235,43 @@ class Workplace_Workspace_Abstract extends Workplace
         $count = array();
         $filter = new Ayoola_Filter_Time();
 
-        $title = null;
-        if( ! empty( $_REQUEST['window_title'] ) )
+        if( empty( $screenshot ) )
         {
-            $title = '&window_title=1';
+            return 
+            '<div class="badnews">
+                No records of activities here yet.
+            </div>';
         }
         foreach( $screenshots as $screenshot )
         {   
             if( ! empty( $count[$screenshot['software']] ) || empty( $screenshot['creation_time'] ) )
             {
                 //  one software screenshot
-                continue;
+
+                //  do this at the caller level - db
+               // continue;
             }
             $count[$screenshot['software']] = true;
             $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;';
             $shots .= 
             ( 
-                '<div class="box-css wk-screenshot" style="' . $bg . '">
-                ' . $screenshot['window_title'] . ' (' . $filter->filter( $screenshot['creation_time'] ) . ')
-                    <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '' . $title . '" title="View ' . $screenshot['software'] . '">
-                     <i class="fa fa-eye pc_give_space"></i>
-                    </a>
-                    <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_BanTool?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="Ban ' . $screenshot['software'] . '">
-                    <i class="fa fa-ban pc_give_space"></i>
-                    </a>
+                '<div class="box-css wk-screenshot" style="' . $bg . '; display:flex;align-content:space-between; flex-direction:column;">
+
+                    <div>
+                    ' . $screenshot['software'] . '
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="View ' . $screenshot['software'] . '">
+                        <i class="fa fa-eye pc_give_space"></i>
+                        </a>
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_BanTool?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="Ban ' . $screenshot['software'] . '">
+                        <i class="fa fa-ban pc_give_space"></i>
+                        </a>
+                    </div>
+                    <div>
+                    ' . $screenshot['window_title'] . ' (' . $filter->filter( $screenshot['creation_time'] ) . ')
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '&window_title=1" title="View ' . $screenshot['software'] . '">
+                        <i class="fa fa-eye pc_give_space"></i>
+                        </a>
+                    </div>
 
                 </div>
                 ' 

@@ -67,6 +67,11 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
         
                 }
             }
+            if( ! empty( $_REQUEST['user_id'] ) )
+            {
+                $where['user_id'] = $_REQUEST['user_id'];
+            }
+
             $this->setViewContent( $this->includeTitle( $data ) ); 
 
             $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
