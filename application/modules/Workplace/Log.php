@@ -51,14 +51,16 @@ class Workplace_Log extends Workplace
         //  Fix slack dynamic title
         if( stripos( $software, ' | ' ) !== false )
         {
-            if( $softwareA = array_map( 'trim', explode( ' - ', $software ) ) )
+            if( $softwareA = array_map( 'trim', explode( ' | ', $software ) ) )
             {
-                $software = array_unshift( $softwareA );
+                //  I think we should leave slack with the name of organization intact
+                //  Works well as a name of team being a tool itself.
+            //    $software = array_unshift( $softwareA );
             }
 
         }
 
-        //  Fix slack dynamic title
+        //  Fix notification dynamic title
         if( stripos( $software, '(' ) !== false )
         {
             if( $softwareA = array_map( 'trim', explode( '(', $software ) ) )
@@ -67,6 +69,22 @@ class Workplace_Log extends Workplace
             }
 
         }
+
+        if( stripos( $software, '[' ) !== false )
+        {
+            if( $softwareA = array_map( 'trim', explode( '[', $software ) ) )
+            {
+                $software = array_unshift( $softwareA );
+            }
+
+        }
+        
+        //  files
+        if( stripos( $software, '\\' ) !== false || stripos( $software, '/' ) !== false )
+        {
+            $software = 'File Manager';
+        }
+
         return $software;
     }
 
@@ -97,13 +115,14 @@ class Workplace_Log extends Workplace
             $tools = array();
             if( ! empty( $_POST['software'] ) )
             {
-                $tools[] = self::sanitizeToolName( $_POST['software'] );
+                if( $tool = self::sanitizeToolName( $_POST['software'] ) )
+                $tools[] = $tool;
             }
             $idleTime = true;
             foreach( $keys as $software => $softwareContent )
             {
                 //  Fix browsers dynamic title
-                $realToolName = self::sanitizeToolName( $software );
+                if( $realToolName = self::sanitizeToolName( $software ) )
                 $tools[] = $realToolName;
 
                 foreach( $softwareContent as $title => $content )
@@ -121,7 +140,7 @@ class Workplace_Log extends Workplace
                                     'texts' => $content, 
                                     'user_id' => $_POST['user_id'],
                                     'workspace_id' => $where['workspace_id'],
-                                    'software' => $software,
+                                    'software' => $realToolName,
                                     'window_title' => $title
                                 );            
                     Workplace_Keylog_Table::getInstance()->insert( $data );

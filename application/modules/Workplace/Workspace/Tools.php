@@ -64,14 +64,28 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
                     if( ! empty( $_REQUEST['window_title'] ) )
                     {
                         $where['window_title'] = $screen['window_title'];
+                        $screenOut .= '<div class="section-divider">"' . $screen['window_title'] . '" Window Overview</div>';
+                    }
+                    else
+                    {
+                        $screenOut .= '<div class="section-divider">"' . $screen['software'] . '" Tool Overview</div>';
                     }
                     $screen = array( $screen );
-                    $screenOut = self::showScreenshots( $screen, $data );
+                    $screenOut .= self::showScreenshots( $screen, $data );
                 }
             }
             if( ! empty( $_REQUEST['user_id'] ) )
             {
                 $where['user_id'] = $_REQUEST['user_id'];
+            }
+            $userInfo = array();
+            if( ! empty( $where['user_id'] ) )
+            {
+                $userInfo = self::getUserInfo( array( 'user_id' => strtolower( $where['user_id'] ) ) );
+            }
+            if( ! empty( $userInfo ) )
+            {
+                $screenOut .= '<div class="pc-notify-info">Showing Highlights for "' . $userInfo['username'] . '" only</div>';
             }
 
             $this->setViewContent( $this->includeTitle( $data ) ); 
@@ -88,6 +102,7 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
                 ' . $screenOut . '
                 '
              ); 
+            $this->setViewContent( '<div class="section-divider">Tool Highlights</div>' ); 
             $this->setViewContent( self::showScreenshots( $screenshots, $data ) ); 
             // end of widget process
           

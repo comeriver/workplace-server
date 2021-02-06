@@ -46,39 +46,36 @@ class Workplace_Screenshot_Save extends Workplace
             {
                 return false;
             }
-
             //  Output demo content to screen
-
             $screenshot = base64_decode( $_POST['screenshot'] );
             $filename = '/workplace/screenshots/' . $_POST['user_id'] . '/' . md5( $_POST['window_title'] ) . '_' . time() . '.jpg';
             $path = Ayoola_Doc::getDocumentsDirectory() . $filename;
             Ayoola_Doc::createDirectory( dirname( $path ) );
-            //    var_export( $path );
+
             file_put_contents( $path, $screenshot );
-                if( $_POST['workspaces'] )
-                {
-                    $workspaces = json_decode( $_POST['workspaces'], true );   
-                }
-                $toSave = array( 
-                    'filename' => $filename, 
-                    'user_id' => $_POST['user_id'], 
-                    'software' => $_POST['software'], 
-                    'workspace_id' => $workspaces, 
-                    'window_title' => $_POST['window_title'] 
-                );
+            if( $_POST['workspaces'] )
+            {
+                $workspaces = json_decode( $_POST['workspaces'], true );   
+            }
+
+            $realToolName = self::sanitizeToolName( $_POST['software'] );
+
+            $toSave = array( 
+                'filename' => $filename, 
+                'user_id' => $_POST['user_id'], 
+                'software' => $realToolName, 
+                'workspace_id' => $workspaces, 
+                'window_title' => $_POST['window_title'] 
+            );
             if( Workplace_Screenshot_Table::getInstance()->insert( $toSave ) )
             {
                 $this->_objectData['goodnews'] = 'Screenshot successfully saved.';
             }
-
-
-             // end of widget process
           
 		}  
 		catch( Exception $e )
         { 
             //  Alert! Clear the all other content and display whats below.
-        //    $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
             $this->setViewContent( self::__( '<p class="badnews">Theres an error in the code</p>' ) ); 
             return false; 
         }

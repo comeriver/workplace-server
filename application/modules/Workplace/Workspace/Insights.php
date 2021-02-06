@@ -158,6 +158,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
     
                 }
                 $counter++;
+                //  var_export( $memberData );
                 $intervals += $memberData['log'];
                 $name = ( $userInfo['firstname'] ? : $userInfo['username'] ) ? : strtolower( $member );
                 $memberList .= ( '<a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"  class="box-css" style="' . $screenCss . '">' . $name . $lastSeen . ' </a>' );
