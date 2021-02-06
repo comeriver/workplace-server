@@ -55,7 +55,7 @@ class Workplace_Log extends Workplace
             {
                 //  I think we should leave slack with the name of organization intact
                 //  Works well as a name of team being a tool itself.
-            //    $software = array_unshift( $softwareA );
+                //  $software = array_unshift( $softwareA );
             }
 
         }
@@ -63,20 +63,15 @@ class Workplace_Log extends Workplace
         //  Fix notification dynamic title
         if( stripos( $software, '(' ) !== false )
         {
-            if( $softwareA = array_map( 'trim', explode( '(', $software ) ) )
-            {
-                $software = array_unshift( $softwareA );
-            }
-
+            //  e.g. 
+            //  (1) MyMedicalBank | Slack
+            //  (+) MyMedicalBank | Slack
+            $software = preg_replace( '|\(.*\)|', '', $software );
         }
 
         if( stripos( $software, '[' ) !== false )
-        {
-            if( $softwareA = array_map( 'trim', explode( '[', $software ) ) )
-            {
-                $software = array_unshift( $softwareA );
-            }
-
+        {  
+            $software = preg_replace( '|\[.*\]|', '', $software );
         }
         
         //  files
@@ -84,6 +79,8 @@ class Workplace_Log extends Workplace
         {
             $software = 'File Manager';
         }
+
+        $software = trim( $software );
 
         return $software;
     }

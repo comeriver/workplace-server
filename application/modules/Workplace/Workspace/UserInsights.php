@@ -84,6 +84,10 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     $memberData = $data['member_data'][$userInfo['email']];
                     $where = array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] );
                     $options = array( 'row_id_column' => 'software', 'limit' => 100 );
+                    if( $screen = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'limit' => 1 ) ) )
+                    {
+
+                    }
                     $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
 
                     
@@ -177,6 +181,8 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                         </div>
                     </div>
                     ' . $timePanel . ' 
+                    ' . self::showScreenshots( $screen, $data ) . '
+
                     ' . self::showScreenshots( $screenshots, $data ) . '
                     ';
                     $this->setViewContent( $this->includeTitle( $data ) ); 
