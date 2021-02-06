@@ -168,6 +168,9 @@ class Workplace_Log extends Workplace
                 {
                     continue;
                 }
+                $count++;
+                $updated = $workspace['member_data'][$userInfo['email']];
+
 
                 $bannedTools = array_intersect( array_keys( $workspace['banned_tools'] ), $tools );
                 if( ! empty( $bannedTools ) )
@@ -187,21 +190,24 @@ class Workplace_Log extends Workplace
                     }
                     catch( Ayoola_Exception $e ){ null; }
         
+                    $updated['ban_log']++;
+                    $updated['banned_time'][$year][$month][$day]++;
                 }
-
-                $count++;
-                $updated = $workspace['member_data'][$userInfo['email']];
-                $updated['last_seen'] = $time;
-                $updated['log']++;
-                $updated['work_time'][$year][$month][$day]++;
-
-                if( ! empty( $idleTime ) )
+                else
                 {
-                    $updated['idle_time'][$year][$month][$day]++;
-                    $updated['idle_log']++;
+                    $updated['log']++;
+                    $updated['work_time'][$year][$month][$day]++;
+    
+                    if( ! empty( $idleTime ) )
+                    {
+                        $updated['idle_time'][$year][$month][$day]++;
+                        $updated['idle_log']++;
+                    }
+                    $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
+                    $updated['tools'] = array_unique( $updated['tools'] );
                 }
-                $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
-                $updated['tools'] = array_unique( $updated['tools'] );
+
+                $updated['last_seen'] = $time;
                 $workspace['member_data'][$userInfo['email']] = $updated;
                 $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
                 $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $toWhere );
