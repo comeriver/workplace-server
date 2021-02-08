@@ -54,9 +54,26 @@ class Workplace_Workspace_Abstract extends Workplace
      * 
      * @param array Workspace Info
      */
+	public static function isWorkspaceAdmin( array $data = null )  
+    {
+        switch( $data['privileges'][strtolower( Ayoola_Application::getUserInfo( 'email' ) )] )
+        {
+            case 'admin':
+            case 'owner':
+                return true;
+            break;
+        }
+        return false;
+    }
+
+
+    /**
+     * 
+     * @param array Workspace Info
+     */
 	public static function includeTitle( array $data = null )  
     {
-
+        self::includeScripts();
         return '
         <div class="wk_title">
         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '"><h2 class="">' . $data['name'] . '  </h2></a>
@@ -249,6 +266,10 @@ class Workplace_Workspace_Abstract extends Workplace
                 unset( $values['privileges'][$id] );
             }
             $found[$values['members'][$id]] = true;
+
+            //  make priviledges easily searchable
+            $values['privileges'][$values['members'][$id]] = $values['privileges'][$id];
+            unset( $values['privileges'][$id] );
         }
     }
 
@@ -365,14 +386,11 @@ To deny this invitation, just ignore this email.
 
 To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', click this link: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . $email . '&auth_token=' . $workspaceInfo['member_data'][$email]['auth_token'] . '&. 
             ';
-        //    echo $mailInfo['body'];
             self::sendMail( $mailInfo );
         }
         $toUpdate = $workspaceInfo;
         unset( $toUpdate['workspace_id'] );
         $result = Workplace_Workspace::getInstance()->update( $toUpdate, array( 'workspace_id' => $workspaceInfo['workspace_id'] ) );
-    //    var_export( $workspaceInfo['workspace_id'] );
-    //    var_export( $result );
 
     }
 
@@ -397,7 +415,7 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
 		//	Build a separate demo form for the previous group
 		$subform = new Ayoola_Form( array( 'name' => 'xx...' )  );
 		$subform->setParameter( array( 'no_fieldset' => true, 'no_form_element' => true ) );
-		$subform->wrapForm = false;
+        $subform->wrapForm = false;
 		do
 		{
 				
@@ -413,7 +431,7 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
                 'admin' => 'Admin',
                 'owner' => 'Owner',
             );
-			$subfield->addElement( array( 'name' => 'privileges', 'label' => '', 'type' => 'Select', 'multiple' => 'multiple', 'value' => @$values['privileges'][$i], ), $options ); 
+			$subfield->addElement( array( 'name' => 'privileges', 'label' => '', 'type' => 'Select', 'multiple' => 'multiple', 'value' => @$values['privileges'][$i] ? : $values['privileges'][@$values['members'][$i]], ), $options ); 
 
 			$i++;
 			$subform->addFieldset( $subfield );

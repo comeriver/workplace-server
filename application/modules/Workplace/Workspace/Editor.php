@@ -28,18 +28,33 @@ class Workplace_Workspace_Editor extends Workplace_Workspace_Abstract
 		try
 		{ 
             //  Code that runs the widget goes here...
-			if( ! $data = $this->getIdentifierData() ){ return false; }
+            if( ! $data = $this->getIdentifierData() )
+            {
+                $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, workspace data could not be retrieved. Please contact support.' ) . '</div>', true  ); 
+                return false;
+            }        
+
+            if( ! self::isWorkspaceAdmin( $data ) )
+            {
+                $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
+                return false;
+            }        
+
 			$this->createForm( 'Save', 'Edit Workspace', $data );
-			$this->setViewContent( $this->getForm()->view(), true );
+            $this->setViewContent( $this->getForm()->view(), true );
+            $this->setViewContent( $this->includeTitle( $data ) ); 
             if( ! $values = $this->getForm()->getValues() ){ return false; }
             
             self::sanitizeMembersList( $values );
+            $this->setViewContent( $this->includeTitle( $data ) ); 
 
 
             if( $this->updateDb( $values ) )
             { 
                 self::mailMembers( $values + $data );
                 $this->setViewContent(  '' . self::__( '<div class="goodnews">Workspace information updated successfully</div>' ) . '', true  ); 
+                $this->setViewContent( $this->includeTitle( $data ) ); 
+
             } 
 
              // end of widget process

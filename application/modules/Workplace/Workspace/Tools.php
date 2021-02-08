@@ -50,12 +50,18 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
             self::includeScripts();
 
             $where = array( 'workspace_id' => $data['workspace_id'] );
+
             $options = array( 'row_id_column' => 'software', 'limit' => 60 );
 
             $screenOut = null;
             if( ! empty( $_REQUEST['table_id'] ) )
             {
-                $screen = Workplace_Screenshot_Table::getInstance()->selectOne( null, array( 'table_id' => $_REQUEST['table_id'], 'workspace_id' => $data['workspace_id'] ) );
+                $whereX = array( 'table_id' => $_REQUEST['table_id'], 'workspace_id' => $data['workspace_id'] );
+                if( ! self::isWorkspaceAdmin( $data ) )
+                {
+                    $whereX['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+                }
+                $screen = Workplace_Screenshot_Table::getInstance()->selectOne( null, $whereX );
                 if( $screen )
                 { 
                     $where['software'] = $screen['software'];
@@ -88,7 +94,13 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
                 $screenOut .= '<div class="pc-notify-info">Showing Highlights for "' . $userInfo['username'] . '" only</div>';
             }
 
-            $this->setViewContent( $this->includeTitle( $data ) ); 
+            $this->setViewContent( $this->includeTitle( $data ) );
+            
+            if( ! self::isWorkspaceAdmin( $data ) )
+            {
+                $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+            }        
+
 
             $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
             if( ! $screenshots )
@@ -102,6 +114,7 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
                 ' . $screenOut . '
                 '
              ); 
+            
             $this->setViewContent( '<div class="section-divider">Tool Highlights</div>' ); 
             $this->setViewContent( self::showScreenshots( $screenshots, $data ) ); 
             // end of widget process

@@ -84,6 +84,10 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     $memberData = $data['member_data'][$userInfo['email']];
                     $where = array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] );
                     $options = array( 'row_id_column' => 'software', 'limit' => 100 );
+                    if( ! self::isWorkspaceAdmin( $data ) )
+                    {
+                        $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+                    }        
                     if( $screen = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'limit' => 1 ) ) )
                     {
 

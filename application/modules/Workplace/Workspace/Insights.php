@@ -111,6 +111,12 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             $idleYear = 0;
             $totalIdle = 0;
 
+            $viewAll = true;
+            if( ! self::isWorkspaceAdmin( $data ) )
+            {
+                $viewAll = false;
+            }
+
             foreach( $data['members'] as $member )
             {
                 if( ! $userInfo = self::getUserInfo( array( 'email' => strtolower( $member ) ) ) )
@@ -120,6 +126,10 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
                 {
                 //    continue;
+                }
+                if( strtolower( Ayoola_Application::getUserInfo( 'email' ) ) !== strtolower( $member ) && empty( $viewAll ) )
+                {
+                    continue;
                 }
 
                 $memberData = $data['member_data'][$userInfo['email']];
@@ -195,6 +205,11 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
 
 
             $where = array( 'workspace_id' => $data['workspace_id'] );
+            if( empty( $viewAll ) )
+            {
+                $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+            }
+
             $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'row_id_column' => 'software', 'limit' => 12 ) );
 
             $chat = '
@@ -278,12 +293,12 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 </div>
             </div>
                 ' . $timePanel . ' 
-            <div class="section-divider">Recent Members Activities</div>
+            <div class="section-divider">Recent Team Activities</div>
             <div style="display:flex; flex-wrap:wrap;">
                 ' . $chat . ' 
                 ' . $memberList . '
             </div>
-            <div class="section-divider">Recent Tools Used</div>
+            <div class="section-divider">Recent Tools & Activities</div>
             ' . self::showScreenshots( $screenshots, $data ) . '
 
             <div class="wk-space"></div>

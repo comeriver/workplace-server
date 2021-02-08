@@ -28,12 +28,24 @@ class Workplace_Workspace_Delete extends Workplace_Workspace_Abstract
 		try
 		{ 
             //  Code that runs the widget goes here...
-			if( ! $data = $this->getIdentifierData() ){ return false; }
+            if( ! $data = $this->getIdentifierData() )
+            {
+                $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, workspace data could not be retrieved. Please contact support.' ) . '</div>', true  ); 
+                return false;
+            }        
+
+            if( ! self::isWorkspaceAdmin( $data ) )
+            {
+                $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
+                return false;
+            }        
 			$this->createConfirmationForm( 'Delete Workspace', 'Delete Workspace' );
 			$this->setViewContent( $this->getForm()->view(), true );
+            $this->setViewContent( $this->includeTitle( $data ) ); 
 			if( ! $values = $this->getForm()->getValues() ){ return false; }
             
 			if( $this->deleteDb() ){ $this->setViewContent(  '' . self::__( '<div class="goodnews">Workspace information deleted successfully</div>' ) . '', true  ); } 
+            $this->setViewContent( $this->includeTitle( $data ) ); 
 
              // end of widget process
           

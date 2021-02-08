@@ -27,6 +27,13 @@ class Workplace extends PageCarton_Widget
 	protected static $_accessLevel = array( 0 );
 	
     /**
+     * Access level for player. Defaults to everyone
+     *
+     * @var array
+     */
+	protected $_xSecureIdentifierData = false;
+	
+    /**
      * Supported client versions. 
      * Clients versions not in this list will be asked to update immediately
      *

@@ -47,6 +47,7 @@ class Workplace_Workspace_BanTool extends Workplace_Workspace_Insights
                 if( ! $data = $this->getIdentifierData() )
                 { 
                     $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid workspace data</div>' ) . '', true  ); 
+                    $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false; 
                 }
 
@@ -54,12 +55,14 @@ class Workplace_Workspace_BanTool extends Workplace_Workspace_Insights
                 if( ! $screen )
                 { 
                     $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid tool data</div>' ) . '', true  ); 
+                    $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false; 
                 }
 
                 $this->createConfirmationForm( 'Ban ' . $screen['software'], 'Ban ' . $screen['software'] . ' from ' . $data['name'] . ' workspace' );
 
                 $this->setViewContent( $this->getForm()->view(), true );
+                $this->setViewContent( $this->includeTitle( $data ) ); 
 
                 if( ! $values = $this->getForm()->getValues() ){ return false; }
 
@@ -68,6 +71,7 @@ class Workplace_Workspace_BanTool extends Workplace_Workspace_Insights
              // if( $this->deleteDb() )
                 { 
                     $this->setViewContent(  '' . self::__( '<div class="goodnews">Software banned successfully</div>' ) . '', true  ); 
+                    $this->setViewContent( $this->includeTitle( $data ) ); 
                 } 
                 // end of widget process
               
