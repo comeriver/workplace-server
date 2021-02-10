@@ -471,7 +471,7 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
 		$fieldset->container = 'span';
 		
 		//	add previous categories if available
-		$fieldset->addElement( array( 'name' => 'xxx', 'type' => 'Html', 'value' => '', 'data-pc-element-whitelist-group' => 'xxx' ), array( 'html' => '<p>Add team members</p>' . $subform->view(), 'fields' => 'members,privileges,renumeration' ) );	
+		$fieldset->addElement( array( 'name' => 'xxx', 'type' => 'Html', 'value' => '', 'data-pc-element-whitelist-group' => 'xxx' ), array( 'html' => '<p>Add team members</p>' . $subform->view(), 'fields' => 'members,privileges,renumeration,max_renumeration' ) );	
         $fieldset->addRequirement( 'name', array( 'NotEmpty' => null ) );
 
 

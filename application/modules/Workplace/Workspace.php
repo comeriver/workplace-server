@@ -25,7 +25,7 @@ class Workplace_Workspace extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.5';  
+    protected $_tableVersion = '0.6';  
 
     /**
      * Table data types and declaration
