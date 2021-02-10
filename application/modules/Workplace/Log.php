@@ -187,17 +187,18 @@ class Workplace_Log extends Workplace
                 }
                 $ownerInfo = self::getUserInfo( array( 'user_id' => $workspace['user_id'] ) );
                 $mailInfo = array();
-                $mailInfo['to'] = '' . $userInfo['email'] . ',' . $ownerInfo['email'];
+                $adminEmails['to'] = '' . $userInfo['email'] . ',' . $ownerInfo['email'];
 
                 foreach( $workspace['privileges'] as $email => $type )
                 {
                     if( $type === 'ownwer' || $type === 'admin' )
                     {
-                        $mailInfo['to'] .= ',' . $email;
+                        $adminEmails['to'] .= ',' . $email;
                     }
                 }
                 if( ! empty( $bannedTools ) )
                 {
+                    $mailInfo['to'] = $adminEmails;
                     $mailInfo['subject'] = 'Banned Tool Used by ' . $userInfo['username'];
                     $mailInfo['body'] = 'The following banned tools has been used by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ': "' . self::arrayToString( $bannedTools ) . '".
 
@@ -235,6 +236,7 @@ class Workplace_Log extends Workplace
                 $targetRenumeration = doubleval( $updated['max_renumeration'] );
                 if( $renumeration >= $targetRenumeration && ( empty( $values['member_data'][$member]['payment_due'] ) || time() - $values['member_data'][$member]['payment_due'] > 86400 ) )
                 {
+                    $mailInfo['to'] = $adminEmails;
                     $mailInfo['subject'] = 'Payment due for ' . $userInfo['username'];
                     $mailInfo['body'] = 'The recorded work time by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ' has reached the threshold set for payout.
 
@@ -254,11 +256,19 @@ class Workplace_Log extends Workplace
                 $notOnline = array_diff( $workspace['members'], $workspace['settings']['online'][$dayX] );
                 if( $notOnline && ( empty( $updated['last_seen'] ) || time() - $updated['last_seen'] > 3600 ) )
                 {
-                    $notOnline = implode( ',', $notOnline );
+                    $notOnline = implode( ', ', $notOnline );
                     $mailInfo['to'] = '' . $notOnline . '';
                     $mailInfo['subject'] = '' . $userInfo['username'] . 'is online on ' . $workspace['name'] . '';
                     $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace.';
                     @self::sendMail( $mailInfo );
+
+                    //  admin
+                    $mailInfo['to'] = $adminEmails;
+                    $mailInfo['subject'] = '' . $userInfo['username'] . 'is online on ' . $workspace['name'] . '';
+                    $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace.
+                    ' . $notOnline . ' are all currently offline.';
+                    @self::sendMail( $mailInfo );
+
                 }
                 $updated['last_seen'] = time();                    
                 $workspace['member_data'][$userInfo['email']] = $updated;
