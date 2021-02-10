@@ -57,7 +57,7 @@ class Workplace_Workspace_SearchTools extends PageCarton_Widget
                 return false;
             }                                
             
-            $tools = Workplace_Screenshot_Table::getInstance()->select( 'software', array( '*' => $_GET['q'] ) );
+            $tools = Workplace_Screenshot_Table::getInstance()->select( 'software', array( '*' => $_GET['q'], 'row_id_column' => 'software' ) );
                            
             if( empty( $_GET['raw_response'] ) )
             {
