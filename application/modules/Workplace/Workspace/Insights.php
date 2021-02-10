@@ -168,37 +168,41 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
     
                 }
                 $counter++;
-                //  var_export( $memberData );
                 $intervals += $memberData['log'];
                 $name = ( $userInfo['firstname'] ? : $userInfo['username'] ) ? : strtolower( $member );
                 $memberList .= ( '<a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"  class="box-css" style="' . $screenCss . '">' . $name . $lastSeen . ' </a>' );
 
-                if( ! empty( $_REQUEST['time'] ) )
+                if( ! empty( $_REQUEST['time'] ) && ! empty( $memberData['work_time'][$year] ) )
                 {
+                    if( ! empty( $memberData['work_time'][$year][$month][$day] ) )
                     $timeToday += intval( $memberData['work_time'][$year][$month][$day] );
+
+                    if( ! empty( $memberData['work_time'][$year][$month] ) )
                     $timeMonth += array_sum( $memberData['work_time'][$year][$month] );
 
-                    foreach( $memberData['work_time'][$year] as $month )
+                    foreach( $memberData['work_time'][$year] as $eachMonth )
                     {
-                        $timeYear += array_sum( $month );
+                        $timeYear += array_sum( $eachMonth );
                     }
 
                     $totalIdle += intval( $memberData['idle_log'] );
-                    if( ! empty( $_REQUEST['idle_time'] ) )
+                    $idleToday += intval( $memberData['idle_time'][$year][$month][$day] );
+                    if( ! empty( $_REQUEST['idle_time'] ) && ! empty( $memberData['idle_time'][$year] ) )
                     {
-                        $idleToday += intval( $memberData['idle_time'][$year][$month][$day] );
+                        if( ! empty( $memberData['idle_time'][$year][$month][$day] ) )
+                        if( ! empty( $memberData['idle_time'][$year][$month] ) )
                         $idleMonth += array_sum( $memberData['idle_time'][$year][$month] );
-                        foreach( $memberData['idle_time'][$year] as $month )
+                        foreach( $memberData['idle_time'][$year] as $eachMonth )
                         {
-                            $idleYear += array_sum( $month );
+                            $idleYear += array_sum( $eachMonth );
                         }
                     }
-                   
+                 
 
                 }
                 
             }
-            $totalTime = $intervals * $logIntervals;
+            $totalTime = $intervals;
             $tools = array_unique( $tools );
 
             $sendMessage = Workplace_Workspace_Broadcast_Creator::viewInLine();
@@ -227,44 +231,44 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             if( ! empty( $_REQUEST['time'] ) )
             {
                 $timePanel = '
-                <div class="section-divider">Time Breakdown</div>
+                <div class="section-divider">Work Time Breakdown (in Hrs)</div>
                 <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
                     <div class="box-css small-box-css ">
-                        <span style="font-size:40px;">' . round( $timeYear / 3600, 2 ) . '</span><br>
+                        <span style="font-size:40px;">' . self::toHours( ( $timeYear ) ) . '</span><br>
                         <span>This year</span>
                     </div>
                     <div class="box-css small-box-css ">
-                        <span style="font-size:40px;">' . round( $timeMonth / 3600, 2 ) . '</span><br>
+                        <span style="font-size:40px;">' . self::toHours( ( $timeMonth ) ) . '</span><br>
                         <span>This Month</span>
                     </div>
                     <div class="box-css small-box-css ">
-                        <span style="font-size:40px;">' . round( $timeToday / 3600, 2 ) . '</span><br>
-                        <span>Work Today</span>
+                        <span style="font-size:40px;">' . self::toHours( ( $timeToday ) ) . '</span><br>
+                        <span>Today</span>
                     </div>
                     <div class="box-css small-box-css ">
-                        <span style="font-size:40px;">' . round( $totalIdle / 3600, 2 ) . '</span><br>
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Idle</a>
+                        <span style="font-size:40px;">' . self::toHours( ( $timeToday - $idleToday ) ) . '</span><br>
+                         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Active Today</a>
                     </div>
                 </div>';
                 if( ! empty( $_REQUEST['idle_time'] ) )
                 {
                     $timePanel .= '
-                    <div class="section-divider">Idle Time Breakdown</div>
+                    <div class="section-divider">Idle Time Breakdown (in Hrs)</div>
                     <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
                         <div class="box-css small-box-css ">
-                            <span style="font-size:40px;">' . round( @$idleYear / 3600, 2 ) . '</span><br>
+                            <span style="font-size:40px;">' . self::toHours( ( @$idleYear ) ) . '</span><br>
                             <span>This year</span>
                         </div>
                         <div class="box-css small-box-css ">
-                            <span style="font-size:40px;">' . round( @$idleMonth / 3600, 2 ) . '</span><br>
+                            <span style="font-size:40px;">' . self::toHours( ( @$idleMonth ) ) . '</span><br>
                             <span>This Month</span>
                         </div>
                         <div class="box-css small-box-css ">
-                            <span style="font-size:40px;">' . round( @$idleToday / 3600, 2 ) . '</span><br>
+                            <span style="font-size:40px;">' . self::toHours( ( @$idleToday ) ) . '</span><br>
                             <span>Today</span>
                         </div>
                         <div class="box-css small-box-css ">
-                            <span style="font-size:40px;">' . round( @$totalIdle / 3600, 2 ) . '</span><br>
+                            <span style="font-size:40px;">' . self::toHours( ( @$totalIdle ) ) . '</span><br>
                             <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">All time</a>
                         </div>
                     </div>';
@@ -285,7 +289,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
 
                 </div>
                 <div class="box-css small-box-css">
-                    <span style="font-size:40px;">' . round( $totalTime / 3600, 2 ) . '</span><br>
+                    <span style="font-size:40px;">' . self::toHours( $totalTime ) . '</span><br>
                     <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1">Hours</a>
                 </div>
                 <div class="box-css small-box-css">

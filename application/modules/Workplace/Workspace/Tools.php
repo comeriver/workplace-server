@@ -96,16 +96,22 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
 
             $this->setViewContent( $this->includeTitle( $data ) );
             
+            $preference = null;
             if( ! self::isWorkspaceAdmin( $data ) )
             {
                 $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
             }        
+            else
+            {
+                $preference = '<a target="_blank" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a></div>';
+
+            }
 
 
             $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
             if( ! $screenshots )
             { 
-                $this->setViewContent(  '' . self::__( '<div class="badnews">No tools added yet</div>' ) . ''  ); 
+                $this->setViewContent(  '' . self::__( '<div class="badnews">No tools added yet. ' . $preference . '</div>' ) . ''  ); 
                 return false; 
             }
 
@@ -115,7 +121,7 @@ class Workplace_Workspace_Tools extends Workplace_Workspace_Insights
                 '
              ); 
             
-            $this->setViewContent( '<div class="section-divider">Tool Highlights</div>' ); 
+            $this->setViewContent( '<div class="section-divider">Tool Highlights ' . $preference . '</div>' ); 
             $this->setViewContent( self::showScreenshots( $screenshots, $data ) ); 
             // end of widget process
           

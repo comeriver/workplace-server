@@ -54,7 +54,6 @@ class Workplace_Workspace_Editor extends Workplace_Workspace_Abstract
                 self::mailMembers( $values + $data );
                 $this->setViewContent(  '' . self::__( '<div class="goodnews">Workspace information updated successfully</div>' ) . '', true  ); 
                 $this->setViewContent( $this->includeTitle( $data ) ); 
-
             } 
 
              // end of widget process

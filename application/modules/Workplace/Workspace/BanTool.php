@@ -50,7 +50,12 @@ class Workplace_Workspace_BanTool extends Workplace_Workspace_Insights
                     $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false; 
                 }
-
+                if( ! self::isWorkspaceAdmin( $data ) )
+                {
+                    $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
+                    return false;
+                }        
+    
                 $screen = Workplace_Screenshot_Table::getInstance()->selectOne( null, array( 'table_id' => $_REQUEST['table_id'], 'workspace_id' => $data['workspace_id'] ) );
                 if( ! $screen )
                 { 
@@ -66,13 +71,22 @@ class Workplace_Workspace_BanTool extends Workplace_Workspace_Insights
 
                 if( ! $values = $this->getForm()->getValues() ){ return false; }
 
-                $data['banned_tools'][$screen['software']] = true;
+
+                if( ! in_array( $screen['software'], $data['settings']['banned_tools'] ) )
+                {
+                    $data['settings']['banned_tools'][] = $screen['software'];
+
+                    if( $this->updateDb( $data ) )
+                    { 
+                        $this->setViewContent(  '' . self::__( '<div class="goodnews">' . $screen['software'] . ' banned successfully</div>' ) . '', true  ); 
+                        $this->setViewContent( $this->includeTitle( $data ) ); 
+                    }     
+                }
+                else
+                {
+                    $this->setViewContent(  '' . self::__( '<div class="goodnews">' . $screen['software'] . ' already in banned list.</div>' ) . '', true  ); 
+                }
                 
-             // if( $this->deleteDb() )
-                { 
-                    $this->setViewContent(  '' . self::__( '<div class="goodnews">Software banned successfully</div>' ) . '', true  ); 
-                    $this->setViewContent( $this->includeTitle( $data ) ); 
-                } 
                 // end of widget process
               
             }  

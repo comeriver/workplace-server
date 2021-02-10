@@ -25,7 +25,7 @@ class Workplace_Workspace extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.2';  
+    protected $_tableVersion = '0.5';  
 
     /**
      * Table data types and declaration
@@ -39,6 +39,9 @@ class Workplace_Workspace extends PageCarton_Table
   'members' => 'JSON',
   'privileges' => 'JSON',
   'member_data' => 'JSON',
+  'renumeration' => 'JSON',
+  'max_renumeration' => 'JSON',
+  'settings' => 'JSON',
   'balance' => 'INPUTTEXT',
   'paid' => 'INPUTTEXT',
   'workspace_token' => 'INPUTTEXT',

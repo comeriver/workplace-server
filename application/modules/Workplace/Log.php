@@ -57,7 +57,6 @@ class Workplace_Log extends Workplace
                 //  Works well as a name of team being a tool itself.
                 //  $software = array_unshift( $softwareA );
             }
-
         }
 
         //  Fix notification dynamic title
@@ -94,7 +93,6 @@ class Workplace_Log extends Workplace
           try
 		{ 
             //  Code that runs the widget goes here...
-
             //  Output demo content to screen
             if( ! $userInfo = $this->authenticate() )
             {
@@ -116,6 +114,12 @@ class Workplace_Log extends Workplace
                 $tools[] = $tool;
             }
             $idleTime = true;
+
+            if( $_POST['active_time'] )
+            {
+                $idleTime = false;
+            }
+
             foreach( $keys as $software => $softwareContent )
             {
                 //  Fix browsers dynamic title
@@ -145,6 +149,11 @@ class Workplace_Log extends Workplace
             }
             $tools = array_unique( $tools );
 
+            if( count( $tools ) > 1 )
+            {
+                $idleTime = false;
+            }
+
             // Save Screenshot
             Workplace_Screenshot_Save::viewInLine();
 
@@ -168,19 +177,34 @@ class Workplace_Log extends Workplace
                 $count++;
                 $updated = $workspace['member_data'][$userInfo['email']];
 
+                if( ! empty( $workspace['settings']['whitelist_tools'] ) )
+                {
+                    $bannedTools = array_diff( $tools, $workspace['settings']['whitelist_tools'] );
+                }
+                else
+                {
+                    $bannedTools = array_intersect( $workspace['settings']['banned_tools'], $tools );
+                }
+                $ownerInfo = self::getUserInfo( array( 'user_id' => $workspace['user_id'] ) );
+                $mailInfo = array();
+                $mailInfo['to'] = '' . $userInfo['email'] . ',' . $ownerInfo['email'];
 
-                $bannedTools = array_intersect( array_keys( $workspace['banned_tools'] ), $tools );
+                foreach( $workspace['privileges'] as $email => $type )
+                {
+                    if( $type === 'ownwer' || $type === 'admin' )
+                    {
+                        $mailInfo['to'] .= ',' . $email;
+                    }
+                }
                 if( ! empty( $bannedTools ) )
                 {
-                    $ownerInfo = self::getUserInfo( array( 'user_id' => $workspace['user_id'] ) );
-
-                    $mailInfo = array();
-                    $mailInfo['to'] = '' . $userInfo['email'] . ',' . $ownerInfo['email'];
-                    $mailInfo['subject'] = 'Banned tool used by ' . $userInfo['username'];
+                    $mailInfo['subject'] = 'Banned Tool Used by ' . $userInfo['username'];
                     $mailInfo['body'] = 'The following banned tools has been used by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ': "' . self::arrayToString( $bannedTools ) . '".
 
-                    The entry has been removed from work session time in ' . $workspace['name'] . '.
-                    ';
+                    The entry has been removed from work session time in ' . $workspace['name'] . '. 
+
+                    Manage Workspace Tool Preference for ' . $workspace['name'] . ': ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_ManageTools?workspace_id=' . $workspace['workspace_id'] . '.';
+
                     try
                     {
                         @self::sendMail( $mailInfo );
@@ -189,14 +213,17 @@ class Workplace_Log extends Workplace
         
                     $updated['ban_log']++;
                     $updated['banned_time'][$year][$month][$day]++;
+                    $updated['time'][$year][$month][$day]['banned']++;
                 }
                 else
                 {
                     $updated['log']++;
                     $updated['work_time'][$year][$month][$day]++;
+                    $updated['time'][$year][$month][$day]['work']++;
     
                     if( ! empty( $idleTime ) )
                     {
+                        $updated['time'][$year][$month][$day]['idle']++;
                         $updated['idle_time'][$year][$month][$day]++;
                         $updated['idle_log']++;
                     }
@@ -204,10 +231,41 @@ class Workplace_Log extends Workplace
                     $updated['tools'] = array_unique( $updated['tools'] );
                 }
 
-                $updated['last_seen'] = $time;
+                $renumeration = self::getTotalPayout( $updated );
+                $targetRenumeration = doubleval( $updated['max_renumeration'] );
+                if( $renumeration >= $targetRenumeration && ( empty( $values['member_data'][$member]['payment_due'] ) || time() - $values['member_data'][$member]['payment_due'] > 86400 ) )
+                {
+                    $mailInfo['subject'] = 'Payment due for ' . $userInfo['username'];
+                    $mailInfo['body'] = 'The recorded work time by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ' has reached the threshold set for payout.
+
+                    Perform payout documentation for ' . $workspace['name'] . ': ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Payout?workspace_id=' . $workspace['workspace_id'] . '.';
+
+                    try
+                    {
+                        @self::sendMail( $mailInfo );
+                    }
+                    catch( Ayoola_Exception $e ){ null; }
+                    $values['member_data'][$member]['payment_due'] = time();
+                }
+
+                //  Notify those not online
+                $dayX = $year . $month . $day;
+                $workspace['settings']['online'][$dayX][] = $userInfo['email'];
+                $notOnline = array_diff( $workspace['members'], $workspace['settings']['online'][$dayX] );
+                if( $notOnline && ( empty( $updated['last_seen'] ) || time() - $updated['last_seen'] > 3600 ) )
+                {
+                    $notOnline = implode( ',', $notOnline );
+                    $mailInfo['to'] = '' . $notOnline . '';
+                    $mailInfo['subject'] = '' . $userInfo['username'] . 'is online on ' . $workspace['name'] . '';
+                    $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace.';
+                    @self::sendMail( $mailInfo );
+                }
+                $updated['last_seen'] = time();                    
                 $workspace['member_data'][$userInfo['email']] = $updated;
+
+
                 $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
-                $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'] ), $toWhere );
+                $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'], 'settings' => $workspace['settings'] ), $toWhere );
             }
             $otherSettings = array();
             $otherSettings['supported_versions'] = self::$_supportedClientVersions;

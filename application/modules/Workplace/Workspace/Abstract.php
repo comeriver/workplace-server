@@ -48,6 +48,29 @@ class Workplace_Workspace_Abstract extends Workplace
      */
 	protected static $_accessLevel = array( 1, 98 );
 
+    /**
+     * 
+     * @param array
+     */
+	public static function getTotalPayout( $memberData )  
+    {
+        $totalHours = intval( $memberData['log'] );
+        $totalPaid = intval( $memberData['paid'] );
+        $totalDue = $totalHours - $totalPaid;
+        $totalDue = self::toHours( $totalDue );
+        $renumeration = doubleval( $data['renumeration'][$key] ) ? : 1;
+        return $totalDue * $renumeration;
+    }
+
+    /**
+     * 
+     */
+	public static function toHours( $noOfLogs )  
+    {
+        $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
+        $hours = round( ( $noOfLogs * $logIntervals ) / 3600, 2 );
+        return $hours;
+    }
 
 
     /**
@@ -63,6 +86,11 @@ class Workplace_Workspace_Abstract extends Workplace
                 return true;
             break;
         }
+        if( self::hasPriviledge() )
+        {
+            return true;
+        }
+
         return false;
     }
 
@@ -78,7 +106,8 @@ class Workplace_Workspace_Abstract extends Workplace
         <div class="wk_title">
         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '"><h2 class="">' . $data['name'] . '  </h2></a>
             <p class="">' . date( 'g:ia, D jS M Y' ) . '</p>
-        </div>
+            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '">Payouts</a>
+            </div>
         '; 
     }
 
@@ -129,7 +158,7 @@ class Workplace_Workspace_Abstract extends Workplace
         );
         Application_Style::addCode(
             '
-                .wk_title a, .box-css a, a.box-css
+                .wk_title a, .box-css a, .box-css-table a, a.box-css-table, a.box-css
                 {
                     color: orange;
                     text-decoration:none;
@@ -140,7 +169,6 @@ class Workplace_Workspace_Abstract extends Workplace
                     text-decoration:none;
 
                 }
-
                 .section-divider
                 {
                     padding: 2em;
@@ -185,7 +213,7 @@ class Workplace_Workspace_Abstract extends Workplace
                 {
                     padding: 0;
                 }
-                .box-css, .small-box-css, .chat-box-css
+                .box-css, .small-box-css, .chat-box-css, .box-css-table
                 {
                     padding:2em; 
                     background-color:grey; 
@@ -210,18 +238,11 @@ class Workplace_Workspace_Abstract extends Workplace
                 {
                     flex-basis:33.333%;
                 }
-                .chat-box-75
-                {
-                    display:flex; 
-                    flex-basis:75%; 
-                    flex-direction: row-reverse;
-
-                }
                 @media only screen and (max-width: 900px) {
                     .chat-box-75, .chat-box-css, .small-box-css
                     {
                         flex-basis: 50%;
-                    }
+                    }    
                 }
 
                 @media only screen and (max-width: 600px) {
@@ -233,7 +254,6 @@ class Workplace_Workspace_Abstract extends Workplace
                     {
                         flex-basis: 50%;
                     }
-
                 }
 
 
@@ -270,6 +290,10 @@ class Workplace_Workspace_Abstract extends Workplace
             //  make priviledges easily searchable
             $values['privileges'][$values['members'][$id]] = $values['privileges'][$id];
             unset( $values['privileges'][$id] );
+
+            $values['member_data'][$values['members'][$id]]['renumeration'] = $values['renumeration'][$id];
+            $values['member_data'][$values['members'][$id]]['max_renumeration'] = $values['max_renumeration'][$id];
+
         }
     }
 
@@ -431,7 +455,12 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
                 'admin' => 'Admin',
                 'owner' => 'Owner',
             );
-			$subfield->addElement( array( 'name' => 'privileges', 'label' => '', 'type' => 'Select', 'multiple' => 'multiple', 'value' => @$values['privileges'][$i] ? : $values['privileges'][@$values['members'][$i]], ), $options ); 
+            
+            $subfield->addElement( array( 'name' => 'privileges', 'label' => '', 'type' => 'Select', 'multiple' => 'multiple', 'value' => @$values['privileges'][$i] ? : $values['privileges'][@$values['members'][$i]], ), $options ); 
+            
+            $subfield->addElement( array( 'name' => 'renumeration', 'label' => 'Renumeration Per Hour', 'placeholder' => '0.00', 'type' => 'InputText', 'multiple' => 'multiple', 'value' => @$values['renumeration'][$i] ) ); 
+            $subfield->addElement( array( 'name' => 'max_renumeration', 'label' => 'Renumeration Threshold', 'placeholder' => '0.00', 'type' => 'InputText', 'multiple' => 'multiple', 'value' => @$values['max_renumeration'][$i] ) ); 
+
 
 			$i++;
 			$subform->addFieldset( $subfield );
@@ -442,7 +471,7 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
 		$fieldset->container = 'span';
 		
 		//	add previous categories if available
-		$fieldset->addElement( array( 'name' => 'xxx', 'type' => 'Html', 'value' => '', 'data-pc-element-whitelist-group' => 'xxx' ), array( 'html' => '<p>Add team members</p>' . $subform->view(), 'fields' => 'members,privileges' ) );	
+		$fieldset->addElement( array( 'name' => 'xxx', 'type' => 'Html', 'value' => '', 'data-pc-element-whitelist-group' => 'xxx' ), array( 'html' => '<p>Add team members</p>' . $subform->view(), 'fields' => 'members,privileges,renumeration' ) );	
         $fieldset->addRequirement( 'name', array( 'NotEmpty' => null ) );
 
 
