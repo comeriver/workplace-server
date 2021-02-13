@@ -53,11 +53,14 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                 if( ! self::isWorkspaceAdmin( $data ) )
                 {
                     $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
+                    $this->setViewContent( $this->includeTitle( $data ) ); 
+
                     return false;
                 }        
     
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Process Payout Documentation' ) . '</h3>', true  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'This is to provide payment advice for team members, based on the number of hours of work and based on amount set as renumeration for team members. ' ) . '</p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check payment history' ) . '</a></p>'  ); 
 
                 $options = array();
 
@@ -66,13 +69,18 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                 $values = $data;
                 foreach( $data['members'] as $key => $member )
                 {
-                    $totalHours = intval( $data['member_data'][$member]['log'] );
+                    $totalHours = intval( $data['member_data'][$member]['active_log'] );
                     $totalPaid = intval( $data['member_data'][$member]['paid'] );
                     $totalDue = $totalHours - $totalPaid;
                     $totalDue = self::toHours( $totalDue );
             
                     $renumeration = self::getTotalPayout( $data['member_data'][$member] );
-                    $targetRenumeration = doubleval( $data['renumeration'][$key] );
+                    $targetRenumeration = doubleval( $data['max_renumeration'][$key] );
+
+                    if( $renumeration >= $targetRenumeration )
+                    {
+                        $renumeration = $targetRenumeration;
+                    }
 
                     if( ! $userInfo = self::getUserInfo( array( 'email' => strtolower( $member ) ) ) )
                     {
@@ -83,12 +91,26 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                         continue;
                     }
 
+
                     if( ! empty( $_REQUEST['paid'] ) && $_REQUEST['paid'] === $userInfo['username'] )
                     {
-                        $values['member_data'][$member]['paid'] = intval( $data['member_data'][$member]['log'] );
+                        $values['member_data'][$member]['paid'] = intval( $data['member_data'][$member]['active_log'] );
                         $values['member_data'][$member]['paid_time'] = time();
                         $values['settings']['online'] = array();
                         unset( $values['member_data'][$member]['payment_due'] );
+
+                        Workplace_Workspace_Payout_Table::getInstance()->insert( 
+                            array(
+
+                                'username' => $userInfo['username'],
+                                'workspace_id' => $data['workspace_id'],
+                                'renumeration' => $data['renumeration'][$key],
+                                'max_renumeration' => $data['max_renumeration'][$key],
+                                'work_time' => $totalDue,
+                                'amount_paid' => $renumeration,
+                            )
+                        );
+
                     }
 
                     if( time() - intval( $values['member_data'][$member]['paid_time'] ) < 3600  )
@@ -104,9 +126,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                     elseif( $renumeration  )
                     {
                         if( $renumeration >= $targetRenumeration )
-                        {
-                            $renumeration = $targetRenumeration;
-    
+                        {    
                             $met .= '
                             <div class="box-css-table">
                                 <a  href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '">' . $userInfo['username'] . '</a>
@@ -153,7 +173,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                     $this->setViewContent( '
                         <div style="display:flex;flex-wrap:wrap;">
                             <div class="box-css-table">Member</div>
-                            <div class="box-css-table">Work Time</div>
+                            <div class="box-css-table">Active Time</div>
                             <div class="box-css-table">Amount Due</div>
                             <div class="box-css-table">Mark as Paid</div>
                             ' . $met . '
@@ -163,11 +183,11 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
 
                 if( $notMet )
                 {
-                    $this->setViewContent( '<h4 class="pc_give_space_top_bottom">' . self::__( 'Members that did not meet target work time' ) . '</h4>' ); 
+                    $this->setViewContent( '<h4 class="pc_give_space_top_bottom">' . self::__( 'Members with active time less than target' ) . '</h4>' ); 
                     $this->setViewContent( '
                         <div style="display:flex;flex-wrap:wrap;">
                             <div class="box-css-table">Member</div>
-                            <div class="box-css-table">Work Time</div>
+                            <div class="box-css-table">Active Time</div>
                             <div class="box-css-table">Amount Due</div>
                             <div class="box-css-table">Mark as Paid</div>
                             ' . $notMet . '
@@ -181,7 +201,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                     $this->setViewContent( '
                         <div style="display:flex;flex-wrap:wrap;">
                             <div class="box-css-table">Member</div>
-                            <div class="box-css-table">Work Time</div>
+                            <div class="box-css-table">Active Time</div>
                             <div class="box-css-table">Amount Due</div>
                             <div class="box-css-table"></div>
                             ' . $paid . '
@@ -195,14 +215,13 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                     $this->setViewContent( '
                         <div style="display:flex;flex-wrap:wrap;">
                             <div class="box-css-table">Member</div>
-                            <div class="box-css-table">Work Time</div>
+                            <div class="box-css-table">Active Time</div>
                             <div class="box-css-table">Amount Due</div>
                             <div class="box-css-table"><i class="fa fa-trash"></i></div>
                             ' . $noActivity . '
                         </div>' 
                     ); 
                 }
-
                 $this->setViewContent( $this->includeTitle( $data ) ); 
 
                 // end of widget process

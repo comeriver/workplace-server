@@ -58,7 +58,7 @@ class Workplace_Screenshot_Save extends Workplace
                 $workspaces = json_decode( $_POST['workspaces'], true );   
             }
 
-            $realToolName = self::sanitizeToolName( $_POST['software'] );
+            $realToolName = Workplace_Log::sanitizeToolName( $_POST['software'] );
 
             $toSave = array( 
                 'filename' => $filename, 

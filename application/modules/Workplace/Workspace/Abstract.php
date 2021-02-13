@@ -54,11 +54,11 @@ class Workplace_Workspace_Abstract extends Workplace
      */
 	public static function getTotalPayout( $memberData )  
     {
-        $totalHours = intval( $memberData['log'] );
+        $totalHours = intval( $memberData['active_log'] );
         $totalPaid = intval( $memberData['paid'] );
         $totalDue = $totalHours - $totalPaid;
         $totalDue = self::toHours( $totalDue );
-        $renumeration = doubleval( $data['renumeration'][$key] ) ? : 1;
+        $renumeration = doubleval( $memberData['renumeration'] ) ? : 1;
         return $totalDue * $renumeration;
     }
 
@@ -90,7 +90,6 @@ class Workplace_Workspace_Abstract extends Workplace
         {
             return true;
         }
-
         return false;
     }
 

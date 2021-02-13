@@ -45,13 +45,15 @@ class Workplace_Workspace_Editor extends Workplace_Workspace_Abstract
             $this->setViewContent( $this->includeTitle( $data ) ); 
             if( ! $values = $this->getForm()->getValues() ){ return false; }
             
+            $values = $values + $data;
+
             self::sanitizeMembersList( $values );
             $this->setViewContent( $this->includeTitle( $data ) ); 
 
 
             if( $this->updateDb( $values ) )
             { 
-                self::mailMembers( $values + $data );
+                self::mailMembers( $values );
                 $this->setViewContent(  '' . self::__( '<div class="goodnews">Workspace information updated successfully</div>' ) . '', true  ); 
                 $this->setViewContent( $this->includeTitle( $data ) ); 
             } 
