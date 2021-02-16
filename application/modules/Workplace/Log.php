@@ -40,7 +40,12 @@ class Workplace_Log extends Workplace
     public static function sanitizeToolName( $software )
     { 
         
-        if( stripos( $software, ' @ ' ) !== false && stripos( $software, '%' ) !== false && stripos( $software, '/' ) !== false && stripos( $software, 'RGB' ) !== false )
+        if( 
+            stripos( $software, ' @ ' ) !== false 
+            && stripos( $software, '%' ) !== false 
+            && stripos( $software, '/' ) !== false 
+            && ( stripos( $software, 'RGB' ) !== false || stripos( $software, 'CMYK' ) !== false ) 
+        )
         {
             $software =  'Adobe Photoshop';
             return $software;
@@ -83,7 +88,14 @@ class Workplace_Log extends Workplace
         //  files
         if( stripos( $software, '\\' ) !== false || stripos( $software, '/' ) !== false )
         {
-            $software = 'File Manager';
+            $software = 'File Explorer';
+        }
+        if( 
+            stripos( $software, '%' ) !== false 
+        )
+        {
+            $software =  'Loading';
+            return $software;
         }
 
         $software = trim( $software );
