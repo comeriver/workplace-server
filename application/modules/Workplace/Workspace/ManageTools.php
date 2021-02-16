@@ -56,8 +56,8 @@ class Workplace_Workspace_ManageTools extends Workplace_Workspace_Insights
                     return false;
                 }        
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Tools Preferences' ) . '</h3>', true  ); 
-                $this->setViewContent(  '<p>' . self::__( 'When you set Banned Tools, those tools set will not be allowed in the workspace. An alert will be sent out to workspace admin when any team member use any banned tool.' ) . '</p>' ); 
-                $this->setViewContent(  '<p>' . self::__( 'When you set Whitelist Tools, other tools will not be allowed. When anyone use a tool that is not in the whitelist, a notification will be sent to the workspace admin' ) . '</p>' ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'When you set Banned Tools, those tools set will not be allowed in the workspace. An alert will be sent out to workspace admin when any team member use any banned tool.' ) . '</p>' ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'When you set Whitelist Tools, other tools will not be allowed. When anyone use a tool that is not in the whitelist, a notification will be sent to the workspace admin' ) . '</p>' ); 
 
                 $form = new Ayoola_Form();
                 $form->submitValue = 'Update Tools Preference';

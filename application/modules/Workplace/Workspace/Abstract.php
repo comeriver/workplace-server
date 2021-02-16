@@ -143,38 +143,32 @@ class Workplace_Workspace_Abstract extends Workplace
         Application_Javascript::addCode(
             '
 					
-            let userActivityTimeout = null;
+            var timeOut = null;
+            var activityMade = function(){
+            
+            clearInterval(timeOut); //first clears the interval
+              timeOut = setInterval(
 
-            function resetUserActivityTimeout() {
-                clearTimeout(userActivityTimeout);
-                userActivityTimeout = setTimeout(() => {
-                    inactiveUserAction();
-                }, 30);
-            }
-
-            function inactiveUserAction() {
-                location.href = location.href;
-            }
-
-
-            let userActivityThrottlerTimeout = null;
-
-            function userActivityThrottler() {
-                if (!userActivityThrottlerTimeout) {
-                  userActivityThrottlerTimeout = setTimeout(() => {
-                    resetUserActivityTimeout();
-              
-                    clearTimeout(userActivityThrottlerTimeout);
-                    userActivityThrottlerTimeout = null;
-                  }, 30);
+                function()
+                { 
+                    console.log("Page Refreshed"); 
+                    location.reload();
                 }
-              }
-            function activateActivityTracker() {
-                window.addEventListener("mousemove", userActivityThrottler);
-                window.addEventListener("scroll", userActivityThrottler);
-                window.addEventListener("keydown", userActivityThrottler);
-                window.addEventListener("resize", userActivityThrottler);
+                  
+                  , 30000); 
+              //logs to the console at every 3 seconds of inactivity
             }
+            
+            var bindEvents = function(){
+              var body = document.body;
+              // bind click move and scroll event to body
+              body.addEventListener("click", activityMade);
+              body.addEventListener("mousemove", activityMade);
+              body.addEventListener("scroll", activityMade);
+              activityMade(); // assume activivity has done at page init
+            }
+            bindEvents();
+
                         '
         );
         Application_Style::addCode(
@@ -400,7 +394,7 @@ class Workplace_Workspace_Abstract extends Workplace
                         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="View ' . $screenshot['software'] . '">
                         <i class="fa fa-eye pc_give_space"></i>
                         </a>
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_BanTool?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="Ban ' . $screenshot['software'] . '">
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_BanTool?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="Ban ' . $screenshot['software'] . '">
                         <i class="fa fa-ban pc_give_space"></i>
                         </a>
                     </div>

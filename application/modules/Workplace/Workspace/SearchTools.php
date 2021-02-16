@@ -56,9 +56,10 @@ class Workplace_Workspace_SearchTools extends PageCarton_Widget
                 $this->setViewContent( $this->getForm()->view() );
                 return false;
             }                                
-            
-            $tools = Workplace_Screenshot_Table::getInstance()->select( 'software', array( '*' => $_GET['q'], 'row_id_column' => 'software' ) );
-                           
+        //    var_export( $_GET['q'] );
+            $tools = Workplace_Screenshot_Table::getInstance()->select( 'software', array( '*' => $_GET['q'] ), array( 'row_id_column' => 'software' ) );
+        //    var_export( $tools );
+                         
             if( empty( $_GET['raw_response'] ) )
             {
                 $ref = array();
