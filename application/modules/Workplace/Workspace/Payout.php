@@ -60,7 +60,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
     
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Process Payout Documentation' ) . '</h3>', true  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'This is to provide payment advice for team members, based on the number of hours of work and based on amount set as renumeration for team members. ' ) . '</p>'  ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check payment history' ) . '</a></p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check payout history' ) . '</a></p>'  ); 
 
                 $options = array();
 
@@ -72,7 +72,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                     $totalHours = intval( $data['member_data'][$member]['active_log'] );
                     $totalPaid = intval( $data['member_data'][$member]['paid'] );
                     $totalDue = $totalHours - $totalPaid;
-                    $totalDue = self::toHours( $totalDue );
+                    $totalDueTime = self::toHours( $totalDue );
             
                     $renumeration = self::getTotalPayout( $data['member_data'][$member] );
                     $targetRenumeration = doubleval( $data['max_renumeration'][$key] );
@@ -99,6 +99,38 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                         $values['settings']['online'] = array();
                         unset( $values['member_data'][$member]['payment_due'] );
 
+                        $currency = ( Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '' );
+
+                        $mailInfo['to'] = '' . $userInfo['email'] . '';
+                        $mailInfo['subject'] = 'Your payout on ' . $workspace['name'] . ' is being processed';
+                        $mailInfo['body'] = 'Your work on ' . $workspace['name'] . ' is currently being processed for payment. You will receive a payment notification shortly.
+                        ';
+                        
+                        $mailInfo['body'] .= 'Amount Due: ' . $renumeration . '
+                        ';
+                        $mailInfo['body'] .= 'Date: ' . date( 'Y' ) . '/' . date( 'M' ) . '/' . date( 'd' ) . '
+                        ';
+
+                        $mailInfo['body'] .= 'The payout is based on the work setting on the workspace as at the date stated above. Check the workspace activity here: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '';
+                        @self::sendMail( $mailInfo );
+
+                        // admin notification
+                        $ownerInfo = self::getUserInfo( array( 'user_id' => $data['user_id'] ) );
+                        $mailInfo = array();
+                        $adminEmails = '' . $ownerInfo['email'] . ',' . implode( ',', $data['settings']['admins'] );
+            
+                        $mailInfo['to'] = $adminEmails;
+                        $mailInfo['subject'] = 'Payment instruction for ' . $userInfo['username'] . ' on ' . $workspace['name'] . '';
+                        $mailInfo['body'] = 'The work on ' . $workspace['name'] . ' by ' . $userInfo['username'] . ' has been marked for a payout. You should go ahead and follow-up this with a real payment using your regular corporate salary payment channel.
+                        ';
+                        
+                        $mailInfo['body'] .= 'Amount Due: ' . $renumeration . '
+                        ';
+                        $mailInfo['body'] .= 'Date: ' . date( 'Y' ) . '/' . date( 'M' ) . '/' . date( 'd' ) . '
+                        ';
+
+                        $mailInfo['body'] .= 'The payout is based on the work setting on the workspace as at the date stated above. Check the workspace activity for ' . $userInfo['username'] . ' here: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '';
+            
                         Workplace_Workspace_Payout_Table::getInstance()->insert( 
                             array(
 
@@ -106,7 +138,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                                 'workspace_id' => $data['workspace_id'],
                                 'renumeration' => $data['renumeration'][$key],
                                 'max_renumeration' => $data['max_renumeration'][$key],
-                                'work_time' => $totalDue,
+                                'work_time' => $totalDueTime,
                                 'amount_paid' => $renumeration,
                             )
                         );
@@ -119,7 +151,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                         <div class="box-css-table">
                             <a  href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '">' . $userInfo['username'] . '</a>
                         </div>
-                        <div class="box-css-table">' . $totalDue . ' hrs </div>
+                        <div class="box-css-table">' . $totalDueTime . ' hrs </div>
                         <div class="box-css-table">' . $renumeration . '</div>
                         <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
                     }
@@ -131,7 +163,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                             <div class="box-css-table">
                                 <a  href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '">' . $userInfo['username'] . '</a>
                             </div>
-                            <div class="box-css-table">' . $totalDue . ' hrs </div>
+                            <div class="box-css-table">' . $totalDueTime . ' hrs </div>
                             <div class="box-css-table">' . $renumeration . '</div>
                             <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?paid=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
                         }
@@ -141,7 +173,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                             <div class="box-css-table">
                                 <a  href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '">' . $userInfo['username'] . '</a>
                             </div>
-                            <div class="box-css-table">' . $totalDue . ' hrs </div>
+                            <div class="box-css-table">' . $totalDueTime . ' hrs </div>
                             <div class="box-css-table">' . $renumeration . '</div>
                             <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?paid=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
                         }
@@ -152,13 +184,10 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                         <div class="box-css-table">
                             <a  href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '">' . $userInfo['username'] . '</a>
                         </div>
-                        <div class="box-css-table">' . $totalDue . ' hrs </div>
+                        <div class="box-css-table">' . $totalDueTime . ' hrs </div>
                         <div class="box-css-table">' . $renumeration . '</div>
                         <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Editor?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-trash"></i></a>';
                     }
-
-                    $options[$member] = self::toHours( $totalDue );
-                    $options[$member] = $member . '';
                 }
                 if( $values !== $data && $this->updateDb( $values ) )
                 { 

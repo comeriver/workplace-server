@@ -174,7 +174,7 @@ class Workplace_Log extends Workplace
 
             $count = 0;
             $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
-            $fees = Workplace_Settings::retrieve( 'cost_per_sec' ) ? : 0;
+            $minBill = Workplace_Settings::retrieve( 'min_bill' ) ? : 20;
             foreach( $workspaces as $workspace )
             {
                 if( empty( $workspace['member_data'][$userInfo['email']]['authorized'] ) )
@@ -194,15 +194,9 @@ class Workplace_Log extends Workplace
                 }
                 $ownerInfo = self::getUserInfo( array( 'user_id' => $workspace['user_id'] ) );
                 $mailInfo = array();
-                $adminEmails['to'] = '' . $userInfo['email'] . ',' . $ownerInfo['email'];
+                $adminEmails = '' . $ownerInfo['email'] . ',' . implode( ',', $workspace['settings']['admins'] );
 
-                foreach( $workspace['privileges'] as $email => $type )
-                {
-                    if( $type === 'ownwer' || $type === 'admin' )
-                    {
-                        $adminEmails['to'] .= ',' . $email;
-                    }
-                }
+
                 if( ! empty( $bannedTools ) )
                 {
                     $mailInfo['to'] = $adminEmails;
@@ -306,6 +300,44 @@ class Workplace_Log extends Workplace
                 }
                 $updated['last_seen'] = $time;                    
                 $workspace['member_data'][$userInfo['email']] = $updated;
+
+
+
+                $workspace['settings']['cost']['billed']++;     
+                
+                $due = intval( $workspace['settings']['cost']['billed'] ) - intval( $workspace['settings']['cost']['paid'] );
+                $cost = Workplace_Settings::retrieve( 'cost' );
+                $hoursDue = self::toHours( $due );
+                $moneyDue = $hoursDue * $cost;
+
+                $billedTime = intval( $workspace['settings']['cost']['billed_time'] );
+
+                if( $moneyDue >= $minBill && $time - $billedTime > 86400 )
+                {                        
+                    
+
+                    if( ! self::pay( $data, $ownerInfo['username'] ) )
+                    {
+                        $currency = ( Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '' );
+                        $mailInfo['to'] = $adminEmails;
+    
+                        //  admin
+                        $mailInfo['subject'] = 'Bill for ' . $workspace['name'] . ' is due';
+                        $mailInfo['body'] = 'Bill for ' . $workspace['name'] . ' workspace is due. Please make payment now to avoid disconnection and continue to use the workspace service without interruption.
+                        ';
+                        $mailInfo['body'] .= 'Amount: ' . $currency . '' . $moneyDue . '. 
+                        ';                    
+                        $mailInfo['body'] .= 'Pay the bill online right now by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Billing. You may add funds to the owner account wallet to automatically deduct this payment from the wallet in the future.
+                        ';
+                        @self::sendMail( $mailInfo );
+                        @Ayoola_Application_Notification::mail( $mailInfo );
+    
+                    }
+                    $workspace['settings']['cost']['billed_time'] = $time;     
+
+
+                }
+
 
                 $toWhere = $where + array( 'workspace_id' => $workspace['workspace_id'] );
                 $result = Workplace_Workspace::getInstance()->update( array( 'member_data' => $workspace['member_data'], 'settings' => $workspace['settings'] ), $toWhere );

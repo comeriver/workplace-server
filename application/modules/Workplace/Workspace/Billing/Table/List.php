@@ -6,7 +6,7 @@
  * LICENSE
  *
  * @category   PageCarton
- * @package    Workplace_Workspace_Payout_Table_List
+ * @package    Workplace_Workspace_Billing_Table_List
  * @copyright  Copyright (c) 2017 PageCarton (http://www.pagecarton.org)
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  * @version    $Id: List.php Wednesday 20th of December 2017 03:21PM ayoola@ayoo.la $
@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Workspace_Payout_Table_List extends Workplace_Workspace_Payout_Table_Abstract
+class Workplace_Workspace_Billing_Table_List extends Workplace_Workspace_Billing_Table_Abstract
 {
  	
     /**
@@ -24,7 +24,7 @@ class Workplace_Workspace_Payout_Table_List extends Workplace_Workspace_Payout_T
      * 
      * @var string 
      */
-	  protected static $_objectTitle = 'Recent workspace payouts';   
+	  protected static $_objectTitle = 'Recent Workspace Bill Payments';   
 	
     /**
      * Access level for player. Defaults to everyone
@@ -32,7 +32,6 @@ class Workplace_Workspace_Payout_Table_List extends Workplace_Workspace_Payout_T
      * @var boolean
      */
 	protected static $_accessLevel = array( 1, 98 );
-
 
     /**
      * Performs the creation process
@@ -42,7 +41,7 @@ class Workplace_Workspace_Payout_Table_List extends Workplace_Workspace_Payout_T
      */	
     public function init()
     {
-        $class = new Workplace_Workspace_Payout;
+        $class = new Workplace_Workspace_Billing;
         if( ! $data = $class->getIdentifierData() )
         { 
             $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid workspace data</div>' ) . '', true  ); 
@@ -58,7 +57,6 @@ class Workplace_Workspace_Payout_Table_List extends Workplace_Workspace_Payout_T
 
         $this->setViewContent( $this->getList() );	
         $this->setViewContent( $this->includeTitle( $data ) ); 
-	
     } 
 	
     /**
@@ -68,15 +66,13 @@ class Workplace_Workspace_Payout_Table_List extends Workplace_Workspace_Payout_T
     protected function createList()
     {
         $this->_dbWhereClause['workspace_id'] = $_REQUEST['workspace_id'];
-        
-
 		require_once 'Ayoola/Paginator.php';
 		$list = new Ayoola_Paginator();
 		$list->pageName = $this->getObjectName();
 		$list->listTitle = self::getObjectTitle();
 		$list->setData( $this->getDbData() );
 		$list->setKey( $this->getIdColumn() );
-		$list->setNoRecordMessage( 'No payout documentation made yet.' );
+		$list->setNoRecordMessage( 'No payments settlement made yet.' );
         $list->setListOptions( 
             array( 
         			'Creator' => '',    
@@ -86,16 +82,10 @@ class Workplace_Workspace_Payout_Table_List extends Workplace_Workspace_Payout_T
 		$list->createList
 		(
 			array(
-                    'username' => array( 'field' => 'username', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
-                    'renumeration' => array( 'field' => 'renumeration', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
-                    'max_renumeration' => array( 'field' => 'max_renumeration', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
-                    'work_time' => array( 'field' => 'work_time', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
-                    
+                    'workspace_id' => array( 'field' => 'workspace_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     'amount' => array( 'field' => 'amount', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     'username' => array( 'field' => 'username', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                     'Added' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time' ), 
-                    
-                    '%FIELD% <a style="font-size:smaller;"  href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Payout_Table_Editor/?' . $this->getIdColumn() . '=%KEY%\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>', 
-                    
-                    '%FIELD% <a style="font-size:smaller;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Payout_Table_Delete/?' . $this->getIdColumn() . '=%KEY%\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-trash" aria-hidden="true"></i></a>', 
+                    '%FIELD% <a style="font-size:smaller;"  href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Billing_Table_Editor/?' . $this->getIdColumn() . '=%KEY%\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>', 
+                    '%FIELD% <a style="font-size:smaller;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Billing_Table_Delete/?' . $this->getIdColumn() . '=%KEY%\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-trash" aria-hidden="true"></i></a>', 
 				)
 		);
 		return $list;
