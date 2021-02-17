@@ -39,6 +39,12 @@ class Workplace_Workspace_Delete extends Workplace_Workspace_Abstract
                 $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
                 return false;
             }        
+            if( self::isOwingTooMuch( $data ) )
+            {
+                $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
+                $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
+                return false;
+            }        
 			$this->createConfirmationForm( 'Delete Workspace', 'Delete Workspace' );
 			$this->setViewContent( $this->getForm()->view(), true );
             $this->setViewContent( $this->includeTitle( $data ) ); 

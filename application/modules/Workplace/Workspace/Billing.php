@@ -114,8 +114,8 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
 
                 $values = $data;
                 
-                $due = intval( $data['settings']['cost']['billed'] ) - intval( $data['settings']['cost']['paid'] );
-                $cost = Workplace_Settings::retrieve( 'cost' );
+                $due = doubleval( $data['settings']['cost']['billed'] ) - doubleval( $data['settings']['cost']['paid'] );
+                $cost = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
                 $hoursDue = self::toHours( $due );
                 $moneyDue = $hoursDue * $cost;
                 

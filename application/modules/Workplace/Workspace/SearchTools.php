@@ -57,8 +57,19 @@ class Workplace_Workspace_SearchTools extends PageCarton_Widget
                 return false;
             }                                
         //    var_export( $_GET['q'] );
-            $tools = Workplace_Screenshot_Table::getInstance()->select( 'software', array( '*' => $_GET['q'] ), array( 'row_id_column' => 'software' ) );
-        //    var_export( $tools );
+            $term = 'software';
+            $where = array( '*' => $_GET['q'] );
+            if( ! empty( $_GET['window_title'] ) )
+            {
+                $term = 'window_title';
+                $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+            }                                
+            if( ! empty( $_GET['workspace_id'] ) )
+            {
+                $where['workspace_id'] = $_GET['workspace_id'];
+            }                                
+
+            $tools = Workplace_Screenshot_Table::getInstance()->select( $term, $where, array( 'row_id_column' => $term ) );
                          
             if( empty( $_GET['raw_response'] ) )
             {

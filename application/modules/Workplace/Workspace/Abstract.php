@@ -75,11 +75,29 @@ class Workplace_Workspace_Abstract extends Workplace
     /**
      * 
      */
+	public static function isOwingTooMuch( $data )  
+    {
+        $minBill = doubleval( Workplace_Settings::retrieve( 'min_bill' ) ? : 1000 );
+        $due = doubleval( $data['settings']['cost']['billed'] ) - doubleval( $data['settings']['cost']['paid'] );
+        $cost = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
+        $hoursDue = doubleval( Workplace_Workspace_Abstract::toHours( $due ) );
+        $moneyDue = $hoursDue * $cost;
+
+        if( $moneyDue >= $minBill )
+        {   
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 
+     */
 	public static function getWorkspaceBalance( $data )  
     {
-        $rate = Workplace_Settings::retrieve( 'cost' ) ? : 20;
-        $balance  = intval( $data['settings']['cost']['billed'] ) - intval( $data['settings']['cost']['paid'] );
-        $balanceHours = self::toHours( $balance );
+        $rate = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
+        $balance  = doubleval( $data['settings']['cost']['paid'] ) - doubleval( $data['settings']['cost']['billed'] );
+        $balanceHours = doubleval( self::toHours( $balance ) );
         $credit = $balanceHours * $rate;
         return $credit;
     }
@@ -124,8 +142,9 @@ class Workplace_Workspace_Abstract extends Workplace
 
             
             <p class="">Current Time: ' . date( 'g:ia, D jS M Y' ) . '</p>
-            <p class="">Balance: ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Top Up</a></p>
+            <p class="">Usage Balance: ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Top Up</a></p>
                 <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '">Workspace Home <i class="fa fa-home pc_give_space"></i></a>
+                <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '">Reports <i class="fa fa-file pc_give_space"></i></a>
                 <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '">Payouts <i class="fa fa-user pc_give_space"></i></a>
                 <a class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Top Up <i class="fa fa-dollar pc_give_space"></i></a>
             </div>
@@ -151,11 +170,10 @@ class Workplace_Workspace_Abstract extends Workplace
 
                 function()
                 { 
-                    console.log("Page Refreshed"); 
-                    location.reload();
+                    location.href = location.href;
                 }
                   
-                  , 30000); 
+                  , 180000); 
               //logs to the console at every 3 seconds of inactivity
             }
             
@@ -400,8 +418,11 @@ class Workplace_Workspace_Abstract extends Workplace
                     </div>
                     <div>
                     ' . $screenshot['window_title'] . '
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '&window_title=1" title="View ' . $screenshot['software'] . '">
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '&window_title=1" title="View ' . htmlentities( $screenshot['window_title'] ) . '">
                             <i class="fa fa-eye pc_give_space"></i>
+                        </a>
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports?workspace_id=' . $data['workspace_id'] . '&titles=' . $screenshot['table_id'] . '"&window_title="' . urlencode( $screenshot['window_title'] ) . '" title="Write a report on this ' . htmlentities( $screenshot['window_title'] ) . '" >
+                            <i class="fa fa-bar-chart pc_give_space"></i>
                         </a>
                         <br>
                         (' . $filter->filter( $screenshot['creation_time'] ) . ')

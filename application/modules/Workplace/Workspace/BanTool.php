@@ -50,7 +50,13 @@ class Workplace_Workspace_BanTool extends Workplace_Workspace_Insights
                     $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false; 
                 }
-                if( ! self::isWorkspaceAdmin( $data ) )
+                if( self::isOwingTooMuch( $data ) )
+                {
+                    $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
+                    $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
+                    return false;
+                }        
+                    if( ! self::isWorkspaceAdmin( $data ) )
                 {
                     $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
                     return false;

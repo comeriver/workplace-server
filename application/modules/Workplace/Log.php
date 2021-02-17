@@ -113,6 +113,16 @@ class Workplace_Log extends Workplace
 		{ 
             //  Code that runs the widget goes here...
             //  Output demo content to screen
+
+            if( $_POST )
+            {
+                file_put_contents( 'data.json', json_encode( $_POST ) );
+            }
+            else
+            {
+                $_POST = $_REQUEST = json_decode( file_get_contents( 'data.json' ), true );
+            }
+
             if( ! $userInfo = $this->authenticate() )
             {
                 return false;
@@ -213,10 +223,9 @@ class Workplace_Log extends Workplace
                 {
                     $mailInfo['to'] = $adminEmails;
                     $mailInfo['subject'] = 'Banned Tool Used by ' . $userInfo['username'];
-                    $mailInfo['body'] = 'The following banned tools has been used by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ': "' . self::arrayToString( $bannedTools ) . '".
-                    ';
+                    $mailInfo['body'] = 'The following banned tools has been used by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ': "' . self::arrayToString( $bannedTools ) . '".' . "\r\n" . '';
 
-                    $mailInfo['body'] .= 'The entry has been removed from work session time in ' . $workspace['name'] . '.';
+                    $mailInfo['body'] .= 'The entry has been removed from work session time in ' . $workspace['name'] . '.' . "\r\n" . '';
 
                     $mailInfo['body'] .= 'Manage Workspace Tool Preference for ' . $workspace['name'] . ': ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_ManageTools?workspace_id=' . $workspace['workspace_id'] . '.';
 
@@ -271,8 +280,7 @@ class Workplace_Log extends Workplace
                 {
                     $mailInfo['to'] = $adminEmails;
                     $mailInfo['subject'] = 'Payment due for ' . $userInfo['username'];
-                    $mailInfo['body'] = 'The recorded work time by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ' has reached the threshold set for payout.
-                    ';
+                    $mailInfo['body'] = 'The recorded work time by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ' has reached the threshold set for payout.' . "\r\n" . '';
 
                     $mailInfo['body'] .= 'Perform payout documentation for ' . $workspace['name'] . ': ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Payout?workspace_id=' . $workspace['workspace_id'] . '.';
 
@@ -293,8 +301,7 @@ class Workplace_Log extends Workplace
                     $notOnline = implode( ', ', $notOnline );
                     $mailInfo['to'] = '' . $notOnline . '';
                     $mailInfo['subject'] = '' . $userInfo['username'] . ' is online on ' . $workspace['name'] . '';
-                    $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace.
-                    ';
+                    $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace.' . "\r\n";
                     
                     $mailInfo['body'] .= 'It seems like you are currently offline. Log in to the workplace and start a session to join in. You may check out work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List';
                     @self::sendMail( $mailInfo );
@@ -302,12 +309,9 @@ class Workplace_Log extends Workplace
                     //  admin
                     $mailInfo['to'] = $adminEmails;
                     $mailInfo['subject'] = '' . $userInfo['username'] . ' is online on ' . $workspace['name'] . '';
-                    $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace.
-                    ' . $notOnline . ' are all currently offline.
-                    ';
+                    $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace. ' . "\r\n" . '' . $notOnline . ' are all currently offline.' . "\r\n" . '';
                     
-                    $mailInfo['body'] .= 'You may check out work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List
-                    ';
+                    $mailInfo['body'] .= 'You may check out work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List';
                     @self::sendMail( $mailInfo );
                 }
                 $updated['last_seen'] = $time;                    
@@ -319,15 +323,13 @@ class Workplace_Log extends Workplace
                 
                 $due = intval( $workspace['settings']['cost']['billed'] ) - intval( $workspace['settings']['cost']['paid'] );
                 $cost = Workplace_Settings::retrieve( 'cost' );
-                $hoursDue = self::toHours( $due );
+                $hoursDue = Workplace_Workspace_Abstract::toHours( $due );
                 $moneyDue = $hoursDue * $cost;
 
                 $billedTime = intval( $workspace['settings']['cost']['billed_time'] );
 
                 if( $moneyDue >= $minBill && $time - $billedTime > 86400 )
                 {                        
-                    
-
                     if( ! self::pay( $data, $ownerInfo['username'] ) )
                     {
                         $currency = ( Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '' );
@@ -335,19 +337,14 @@ class Workplace_Log extends Workplace
     
                         //  admin
                         $mailInfo['subject'] = 'Bill for ' . $workspace['name'] . ' is due';
-                        $mailInfo['body'] = 'Bill for ' . $workspace['name'] . ' workspace is due. Please make payment now to avoid disconnection and continue to use the workspace service without interruption.
-                        ';
-                        $mailInfo['body'] .= 'Amount: ' . $currency . '' . $moneyDue . '. 
-                        ';                    
-                        $mailInfo['body'] .= 'Pay the bill online right now by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Billing. You may add funds to the owner account wallet to automatically deduct this payment from the wallet in the future.
-                        ';
+                        $mailInfo['body'] = 'Bill for ' . $workspace['name'] . ' workspace is due. Please make payment now to avoid disconnection and continue to use the workspace service without interruption.' . "\r\n" . '';
+                        $mailInfo['body'] .= 'Amount: ' . $currency . '' . $moneyDue . '.' . "\r\n" . '';                    
+                        $mailInfo['body'] .= 'Pay the bill online right now by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Billing. You may add funds to the owner account wallet to automatically deduct this payment from the wallet in the future.' . "\r\n" . '';
                         @self::sendMail( $mailInfo );
                         @Ayoola_Application_Notification::mail( $mailInfo );
     
                     }
                     $workspace['settings']['cost']['billed_time'] = $time;     
-
-
                 }
 
 

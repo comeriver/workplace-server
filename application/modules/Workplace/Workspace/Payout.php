@@ -57,7 +57,13 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
 
                     return false;
                 }        
-    
+                if( self::isOwingTooMuch( $data ) )
+                {
+                    $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
+                    $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
+                    return false;
+                }        
+       
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Process Payout Documentation' ) . '</h3>', true  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'This is to provide payment advice for team members, based on the number of hours of work and based on amount set as renumeration for team members. ' ) . '</p>'  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check payout history' ) . '</a></p>'  ); 

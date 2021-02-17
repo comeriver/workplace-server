@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Workspace_ManageTools extends Workplace_Workspace_Insights
+class Workplace_Workspace_Reports extends Workplace_Workspace_Insights
 {
 	
     /**
@@ -56,26 +56,37 @@ class Workplace_Workspace_ManageTools extends Workplace_Workspace_Insights
                     $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
                     return false;
                 }        
-                    if( ! self::isWorkspaceAdmin( $data ) )
+    
+                $previousTitles = array();
+                if( ! empty( $_REQUEST['window_title'] ) )
                 {
-                    $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
-                    return false;
-                }        
-                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Tools Preferences' ) . '</h3>', true  ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'When you set Banned Tools, those tools set will not be allowed in the workspace. An alert will be sent out to workspace admin when any team member use any banned tool.' ) . '</p>' ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'When you set Whitelist Tools, other tools will not be allowed. When anyone use a tool that is not in the whitelist, a notification will be sent to the workspace admin' ) . '</p>' ); 
+                    $previousTitles = array_map( 'urldecode', (array) $_REQUEST['window_title'] );
+                }
+
+                $class = new Workplace_Workspace_Reports_Table_Editor;
+                if( $report = $class->getIdentifierData() )
+                { 
+                    if( ! empty( $report['titles'] ) && is_array( $report['titles'] ) )
+                    $previousTitles = array_merge( $previousTitles, $report['titles'] );
+                }
+                //var_export( $report );
+        
+                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Reports' ) . '</h3>', true  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'Share a report on work done' ) . '</p>' ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check previous reports' ) . '</a></p>'  ); 
 
                 $form = new Ayoola_Form();
-                $form->submitValue = 'Update Tools Preference';
+                $form->submitValue = 'Save Report';
                 $fieldset = new Ayoola_Form_Element();
+
 
                 $fieldset->addElement( 
                     array( 
-                    'name' => 'banned_tools', 
-                    'label' => 'Banned Tools', 
+                    'name' => 'titles', 
+                    'label' => 'Reference Titles', 
                     'config' => array( 
                         'ajax' => array( 
-                            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_SearchTools?article_type=' . $type,
+                            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_SearchTools?window_title=1&workspace_id=' . $data['workspace_id'] . '&article_type=' . $type,
                             'delay' => 1000
                         ),
                         'placeholder' => 'e.g. Microsoft Word',
@@ -83,43 +94,57 @@ class Workplace_Workspace_ManageTools extends Workplace_Workspace_Insights
                     ), 
                     'multiple' => 'multiple', 
                     'type' => 'Select2', 
-                    'value' => $data['settings']['banned_tools'] 
+                    'value' => $previousTitles 
                     )
                     ,
-                    array_combine( $data['settings']['banned_tools'], $data['settings']['banned_tools'] )
+                    array_combine( $previousTitles, $previousTitles )
                 ); 
 
-                 $fieldset->addElement( 
+                $fieldset->addElement( 
                     array( 
-                    'name' => 'whitelist_tools', 
-                    'label' => 'Whitelist Tools', 
-                    'config' => array( 
-                        'ajax' => array( 
-                            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_SearchTools?article_type=' . $type,
-                            'delay' => 1000
-                        ),
-                        'placeholder' => 'e.g. Microsoft Word',
-                        'minimumInputLength' => 2,   
-                    ), 
-                    'multiple' => 'multiple', 
-                    'type' => 'Select2', 
-                    'value' => $data['settings']['whitelist_tools'] 
+                    'name' => 'text', 
+                    'label' => 'Report Text', 
+                    'placeholder' => 'Compose a report text...',
+                    'type' => 'Textarea', 
+                    'value' => $report['text']
                     )
-                    ,
-                    array_combine( $data['settings']['whitelist_tools'], $data['settings']['whitelist_tools'] )
-                ); 
+                );
+                
                 $form->addFieldset( $fieldset );
                 $this->setViewContent( $form->view() );
                 $this->setViewContent( $this->includeTitle( $data ) ); 
 
                 if( ! $values = $form->getValues() ){ return false; }
 
-                $data['settings']['whitelist_tools'] = $values['whitelist_tools'];
-                $data['settings']['banned_tools'] = $values['banned_tools'];
+                if( $report )
+                {
+                    $saved = Workplace_Workspace_Reports_Table::getInstance()->update(
+                        array(
+                            'text' => $values['text'],
+                            'titles' => $values['titles'],
+                            )
+                            ,
+                            array(
+                                'table_id' => $report['table_id'],
+                                )
+    
+                    );
+                }
+                else
+                {
+                    $saved = Workplace_Workspace_Reports_Table::getInstance()->insert(
+                        array(
+                            'username' => Ayoola_Application::getUserInfo( 'username' ),
+                            'workspace_id' => $data['workspace_id'],
+                            'text' => $values['text'],
+                            'titles' => $values['titles'],
+                            )
+                    );
+                }
                 
-                if( $this->updateDb( $data ) )
+                if( $saved )
                 { 
-                    $this->setViewContent(  '' . self::__( '<div class="goodnews">Software tools preference saved successfully</div>' ) . '', true  ); 
+                    $this->setViewContent(  '' . self::__( '<div class="goodnews">Report saved successfully</div>' ) . '', true  ); 
                     $this->setViewContent( $this->includeTitle( $data ) ); 
                 } 
                 // end of widget process

@@ -47,8 +47,16 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                 if( ! $data = $this->getIdentifierData() )
                 { 
                     $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid workspace data</div>' ) . '', true  ); 
+                    $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false; 
                 }
+                if( self::isOwingTooMuch( $data ) )
+                {
+                    $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
+                    $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
+                    return false;
+                }        
+    
                 self::includeScripts();
    
                 $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
@@ -70,18 +78,21 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     if( empty( $_REQUEST['username'] ) )
                     {
                         $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid user selected</div>' ) . '', true  ); 
+                        $this->setViewContent( $this->includeTitle( $data ) ); 
                         break;
                     }
                     $userInfo = self::getUserInfo( array( 'username' => strtolower( $_REQUEST['username'] ) ) );
                     if( empty( $userInfo ) )
                     {
                         $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid user selected</div>' ) . '', true  ); 
+                        $this->setViewContent( $this->includeTitle( $data ) ); 
                         break;
                     }
                     
                     if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
                     {
                         $this->setViewContent(  '' . self::__( '<div class="badnews">User has not authorized workspace</div>' ) . '', true  ); 
+                        $this->setViewContent( $this->includeTitle( $data ) ); 
                         break;
                     }
                     $memberData = $data['member_data'][$userInfo['email']];
