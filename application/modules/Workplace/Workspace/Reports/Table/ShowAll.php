@@ -71,20 +71,31 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
         $html = '';
         foreach( $reports as $report )
         {
-            $toolInfo = Workplace_Workspace_Tools::showTools( $data, $report['titles'], $this->_dbWhereClause['user_id'] );
+            $where = array( 'window_title' => $report['titles'], 'workspace_id' => $report['workspace_id'] );
+            $options = array( 'row_id_column' => 'window_title', 'limit' => count( $report['titles'] ) );
+            if( ! self::isWorkspaceAdmin( $data ) )
+            {
+                $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+            }        
+            $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
+
             $this->setViewContent( '
 
-            <div style="display:flex;flex-wrap:wrap;">
-                <div class="wk-50" >
-                    <p class="pc_give_space_top_bottom section-divider">By: ' . Ayoola_Application::getUserInfo( 'username' ) . ' (' . date( 'd M Y', $report['creation_time'] ) . ')</p>
-                    <div class="pc_give_space_top_bottom" style="text-align:justify;padding: 1em;">' . nl2br( $report['text'] ) . '</div>
-                    <div class="pc_give_space_top_bottom">
-                        <a style="font-size:x-large; margin-right:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports_Table_Delete/?table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                        <a style="font-size:x-large;  margin-right:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports/?workspace_id=' . $report['workspace_id'] . '&table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                    </div>
+            <div>
+                <div class="xwk-50" >
+                    <p class="pc_give_space_top_bottom section-divider">
+                        By: ' . Ayoola_Application::getUserInfo( 'username' ) . ' (' . date( 'd M Y', $report['creation_time'] ) . ')
+                        <a style="margin:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports_Table_Delete/?table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a style="margin:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports/?workspace_id=' . $report['workspace_id'] . '&table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+
+                    </p>
+                    <div class="pc_give_space_top_bottom" style="text-align: justify;
+                    background: white;
+                    padding: 2em;
+                ">' . nl2br( $report['text'] ) . '</div>
                 </div>
-                <div class="wk-50" style="padding:1em;">
-                    <div class="pc_give_space_top_bottom">' . self::showScreenshots( $toolInfo['screenshots'], $data ) . '</div>
+                <div class="xwk-50" style="">
+                    <div class="pc_give_space_top_bottom">' . self::showScreenshots( $screenshots, $data ) . '</div>
                 </div>
             </div>
             ' 

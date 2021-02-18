@@ -106,7 +106,7 @@ class Workplace_Workspace_Reports extends Workplace_Workspace_Insights
                     'label' => 'Report Text', 
                     'placeholder' => 'Compose a report text...',
                     'type' => 'Textarea', 
-                    'value' => $report['text']
+                    'value' => $report['text'] ? : $data['report_template']
                     )
                 );
                 
@@ -144,6 +144,30 @@ class Workplace_Workspace_Reports extends Workplace_Workspace_Insights
                 
                 if( $saved )
                 { 
+                    $mailInfo['to'] = '' . Ayoola_Application::getUserInfo( 'email' ) . '';
+                    $mailInfo['subject'] = 'Your report on ' . $data['name'] . ' is saved';
+                    $mailInfo['body'] = 'Your report on ' . $data['name'] . ' is saved successfully' . "\r\n";
+                    
+                    $mailInfo['body'] .= 'Date: ' . date( 'Y' ) . '/' . date( 'M' ) . '/' . date( 'd' ) . "\r\n";
+                    $mailInfo['body'] .= 'Check the report on : ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Reports_Table_ShowAll?workspace=' . $data['workspace_id'] . '' . "\r\n";
+                    @self::sendMail( $mailInfo );
+
+                    // admin notification
+                    $ownerInfo = self::getUserInfo( array( 'user_id' => $data['user_id'] ) );
+                    $mailInfo = array();
+                    $adminEmails = '' . $ownerInfo['email'] . ',' . implode( ',', $data['settings']['admins'] );
+        
+                    $mailInfo['to'] = $adminEmails;
+                    $mailInfo['subject'] = '' . Ayoola_Application::getUserInfo( 'email' ) . '\'s report on ' . $data['name'] . '';
+                    $mailInfo['body'] = 'Report on ' . $data['name'] . ' by ' . Ayoola_Application::getUserInfo( 'email' ) . ' has been saved.' . "\r\n";
+                    
+                    $mailInfo['body'] .= 'Date: ' . date( 'Y' ) . '/' . date( 'M' ) . '/' . date( 'd' ) . "\r\n";
+
+                    $mailInfo['body'] .= 'Check the report on : ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Reports_Table_ShowAll?workspace=' . $data['workspace_id'] . '' . "\r\n";
+                    @self::sendMail( $mailInfo );
+                    var_export( $mailInfo );
+                    var_export( $data['settings'] );
+
                     $this->setViewContent(  '' . self::__( '<div class="goodnews">Report saved successfully</div>' ) . '', true  ); 
                     $this->setViewContent( $this->includeTitle( $data ) ); 
                 } 

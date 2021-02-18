@@ -96,7 +96,7 @@ class Workplace_Workspace_Abstract extends Workplace
 	public static function getWorkspaceBalance( $data )  
     {
         $rate = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
-        $balance  = doubleval( $data['settings']['cost']['paid'] ) - doubleval( $data['settings']['cost']['billed'] );
+        $balance  = doubleval( $data['settings']['cost']['billed'] ) - doubleval( $data['settings']['cost']['paid'] );
         $balanceHours = doubleval( self::toHours( $balance ) );
         $credit = $balanceHours * $rate;
         return $credit;
@@ -135,6 +135,18 @@ class Workplace_Workspace_Abstract extends Workplace
         $balance = self::getWorkspaceBalance( $data );
         $currency = Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '';
         
+        $bills = '';
+        $adminOptions = '';
+        if( self::isWorkspaceAdmin( $data ) )
+        {
+            $bills = '<p class="">
+            Usage Bill: ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Clear Bill</a>
+        </p>';
+            $adminOptions = '
+            <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '">Payouts <i class="fa fa-dollar pc_give_space"></i></a>
+            <a class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Top Up <i class="fa fa-credit-card pc_give_space"></i></a>
+            ';
+        }        
 
         return '
         <div class="wk_title">
@@ -142,11 +154,10 @@ class Workplace_Workspace_Abstract extends Workplace
 
             
             <p class="">Current Time: ' . date( 'g:ia, D jS M Y' ) . '</p>
-            <p class="">Usage Balance: ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Top Up</a></p>
-                <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '">Workspace Home <i class="fa fa-home pc_give_space"></i></a>
-                <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '">Reports <i class="fa fa-file pc_give_space"></i></a>
-                <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '">Payouts <i class="fa fa-user pc_give_space"></i></a>
-                <a class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Top Up <i class="fa fa-dollar pc_give_space"></i></a>
+            ' . $bills . '
+            <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '">Workspace Home <i class="fa fa-home pc_give_space"></i></a>
+            <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '">Reports <i class="fa fa-bar-chart pc_give_space"></i></a>
+            ' . $adminOptions . '
             </div>
         '; 
     }
@@ -263,6 +274,7 @@ class Workplace_Workspace_Abstract extends Workplace
                     text-align: center; 
                     font-size:x-small;
                     border: 0.5px solid #666;
+                    overflow: auto;
                 }
                 .chat-box-css
                 {
@@ -327,6 +339,7 @@ class Workplace_Workspace_Abstract extends Workplace
             $values['privileges'][] = 'owner';
         }
         $found = array();
+        $values['settings']['admins'] = array();
         foreach( $values['members'] as $id => $member )
         {
             $values['members'][$id] = trim( strtolower( $member ) );
@@ -338,12 +351,10 @@ class Workplace_Workspace_Abstract extends Workplace
             $found[$values['members'][$id]] = true;
 
             //  make priviledges easily searchable
-            $values['privileges'][$values['members'][$id]] = $values['privileges'][$id];
-            unset( $values['privileges'][$id] );
 
             if( $values['privileges'][$id] === 'admin' )
             {
-                $values['settings']['admins'] = $values['members'][$id];
+                $values['settings']['admins'][] = $values['members'][$id];
             }
             elseif( $values['privileges'][$id] === 'admin' )
             {
@@ -351,6 +362,9 @@ class Workplace_Workspace_Abstract extends Workplace
                 $values['settings']['owners'][] = $values['members'][$id];
             }
 
+            $values['settings']['online'] = array();
+            $values['privileges'][$values['members'][$id]] = $values['privileges'][$id];
+            unset( $values['privileges'][$id] );
             $values['member_data'][$values['members'][$id]]['renumeration'] = $values['renumeration'][$id];
             $values['member_data'][$values['members'][$id]]['max_renumeration'] = $values['max_renumeration'][$id];
 
@@ -421,7 +435,7 @@ class Workplace_Workspace_Abstract extends Workplace
                         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '&window_title=1" title="View ' . htmlentities( $screenshot['window_title'] ) . '">
                             <i class="fa fa-eye pc_give_space"></i>
                         </a>
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports?workspace_id=' . $data['workspace_id'] . '&titles=' . $screenshot['table_id'] . '"&window_title="' . urlencode( $screenshot['window_title'] ) . '" title="Write a report on this ' . htmlentities( $screenshot['window_title'] ) . '" >
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports?workspace_id=' . $data['workspace_id'] . '&window_title=' . urlencode( $screenshot['window_title'] ) . '" title="Write a report on this ' . htmlentities( $screenshot['window_title'] ) . '" >
                             <i class="fa fa-bar-chart pc_give_space"></i>
                         </a>
                         <br>
@@ -495,7 +509,7 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
 		$form->submitValue = $submitValue ;
 
 		$fieldset = new Ayoola_Form_Element;
-        $fieldset->addElement( array( 'name' => 'name', 'label' => 'Team Name', 'type' => 'InputText', 'value' => @$values['name'] ) );         
+        $fieldset->addElement( array( 'name' => 'name', 'placeholder' => 'What is the name of your team...', 'label' => 'Team Name', 'type' => 'InputText', 'value' => @$values['name'] ) );         
 
         $i = 0;
         
@@ -537,6 +551,7 @@ To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', cl
 		$fieldset->addElement( array( 'name' => 'xxx', 'type' => 'Html', 'value' => '', 'data-pc-element-whitelist-group' => 'xxx' ), array( 'html' => '<p>Add team members</p>' . $subform->view(), 'fields' => 'members,privileges,renumeration,max_renumeration' ) );	
         $fieldset->addRequirement( 'name', array( 'NotEmpty' => null ) );
 
+        $fieldset->addElement( array( 'name' => 'report_template', 'label' => 'Report Template', 'placeholder' => 'Make it easy for team members to share their reports by creating a template team members will use to make theirs (Optional) ...', 'type' => 'TextArea', 'value' => @$values['report_template'] ) );         
 
 
 		$fieldset->addLegend( $legend );

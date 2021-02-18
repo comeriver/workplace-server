@@ -294,7 +294,15 @@ class Workplace_Log extends Workplace
 
                 //  Notify those not online
                 $dayX = $year . $month . $day;
-                $workspace['settings']['online'][$dayX][] = $userInfo['email'];
+                if( empty( $workspace['settings']['online'][$dayX] ) )
+                {
+                    //  reset this DB
+                    $workspace['settings']['online'] = array();
+                }
+                if( ! in_array( $userInfo['email'], $workspace['settings']['online'][$dayX] ) )
+                {
+                    $workspace['settings']['online'][$dayX][] = $userInfo['email'];
+                }
                 $notOnline = array_diff( $workspace['members'], $workspace['settings']['online'][$dayX] );
                 if( $notOnline && ( empty( $updated['last_seen'] ) || $time - $updated['last_seen'] > 3600 ) )
                 {

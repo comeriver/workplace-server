@@ -136,7 +136,8 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                         ';
 
                         $mailInfo['body'] .= 'The payout is based on the work setting on the workspace as at the date stated above. Check the workspace activity for ' . $userInfo['username'] . ' here: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '';
-            
+                        @self::sendMail( $mailInfo );
+        
                         Workplace_Workspace_Payout_Table::getInstance()->insert( 
                             array(
 
