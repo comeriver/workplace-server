@@ -61,11 +61,14 @@ class Workplace_Workspace_Payout_Table_Abstract extends Workplace_Workspace_Payo
 		//	Form to create a new page
         $form = new Ayoola_Form( array( 'name' => $this->getObjectName(), 'data-not-playable' => true ) );
 		$form->submitValue = $submitValue ;
-//		$form->oneFieldSetAtATime = true;
 
 		$fieldset = new Ayoola_Form_Element;
-	//	$fieldset->placeholderInPlaceOfLabel = false;       
-        $fieldset->addElement( array( 'name' => 'user_id', 'type' => 'InputText', 'value' => @$values['user_id'] ) );         $fieldset->addElement( array( 'name' => 'workspace_id', 'type' => 'InputText', 'value' => @$values['workspace_id'] ) );         $fieldset->addElement( array( 'name' => 'renumeration', 'type' => 'InputText', 'value' => @$values['renumeration'] ) );         $fieldset->addElement( array( 'name' => 'max_renumeration', 'type' => 'InputText', 'value' => @$values['max_renumeration'] ) );         $fieldset->addElement( array( 'name' => 'work_time', 'type' => 'InputText', 'value' => @$values['work_time'] ) ); 
+        $fieldset->addElement( array( 'name' => 'user_id', 'type' => 'InputText', 'value' => @$values['user_id'] ) );         
+        $fieldset->addElement( array( 'name' => 'workspace_id', 'type' => 'InputText', 'value' => @$values['workspace_id'] ) );         
+        $fieldset->addElement( array( 'name' => 'renumeration', 'type' => 'InputText', 'value' => @$values['renumeration'] ) );         
+        $fieldset->addElement( array( 'name' => 'max_renumeration', 'type' => 'InputText', 'value' => @$values['max_renumeration'] ) );         
+        $fieldset->addElement( array( 'name' => 'comment', 'type' => 'TextArea', 'value' => @$values['comment'] ) );         
+        $fieldset->addElement( array( 'name' => 'work_time', 'type' => 'InputText', 'value' => @$values['work_time'] ) ); 
 
 		$fieldset->addLegend( $legend );
 		$form->addFieldset( $fieldset );   

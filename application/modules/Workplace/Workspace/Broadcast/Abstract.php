@@ -63,7 +63,7 @@ class Workplace_Workspace_Broadcast_Abstract extends PageCarton_Widget
 		//  $form->submitValue = 'Send';
 
 		$fieldset = new Ayoola_Form_Element;
-        $fieldset->addElement( array( 'name' => 'message', 'label' => '', 'placeholder' => 'Enter a message...', 'type' => 'TextArea', 'value' => @$values['message'] ) ); 
+        $fieldset->addElement( array( 'name' => 'message', 'label' => '', 'placeholder' => 'Enter a message to broadcast to all team members...', 'type' => 'TextArea', 'value' => @$values['message'] ) ); 
         $fieldset->addElement( array( 'name' => 'submit', 'type' => 'submit', 'value' => 'Send', 'style' => 'Send' ) ); 
 
 		//   $fieldset->addLegend( $legend );

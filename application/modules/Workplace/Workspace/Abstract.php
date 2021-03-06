@@ -132,6 +132,11 @@ class Workplace_Workspace_Abstract extends Workplace
     {
         self::includeScripts();
 
+        if( empty( $data ) )
+        {
+            return false;
+        }
+
         $balance = self::getWorkspaceBalance( $data );
         $currency = Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '';
         
@@ -141,22 +146,20 @@ class Workplace_Workspace_Abstract extends Workplace
         {
             $bills = '<p class="">
             Usage Bill: ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Clear Bill</a>
-        </p>';
+            </p>';
             $adminOptions = '
-            <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '">Payouts <i class="fa fa-dollar pc_give_space"></i></a>
-            <a class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Top Up <i class="fa fa-credit-card pc_give_space"></i></a>
+            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Payroll <i class="fa fa-dollar pc_give_space"></i></a>
+            <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i>  Top Up <i class="fa fa-credit-card pc_give_space"></i></a>
             ';
         }        
 
         return '
         <div class="wk_title">
-            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '"><h2 class="">' . $data['name'] . '  </h2></a>
-
-            
+            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '"><h2 class="">' . $data['name'] . '  </h2></a>       
             <p class="">Current Time: ' . date( 'g:ia, D jS M Y' ) . '</p>
             ' . $bills . '
-            <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '">Workspace Home <i class="fa fa-home pc_give_space"></i></a>
-            <a  class="pc-btn" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '">Reports <i class="fa fa-bar-chart pc_give_space"></i></a>
+            <a  class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_List"> <i class="fa fa-chevron-right pc_give_space"></i> Home <i class="fa fa-home pc_give_space"></i></a>
+            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Reports <i class="fa fa-bar-chart pc_give_space"></i></a>
             ' . $adminOptions . '
             </div>
         '; 
@@ -165,9 +168,8 @@ class Workplace_Workspace_Abstract extends Workplace
 
     /**
      * 
-     * @param array Workspace Info
      */
-	public static function includeScripts( array & $values = null )  
+	public static function includeScripts()  
     {
 
         Application_Javascript::addCode(
@@ -220,7 +222,6 @@ class Workplace_Workspace_Abstract extends Workplace
                 .section-divider
                 {
                     padding: 2em;
-                    background: rgba( 150, 150, 150, 0.5 );
                     color: #333;
                     text-align:center;
                 }
@@ -229,13 +230,10 @@ class Workplace_Workspace_Abstract extends Workplace
                     position: fixed;
                     bottom: 2%;
                     padding: 2em;
-                    background: rgba( 250, 0, 0, 0.3 );
+                    background: rgba( 100, 100, 100, 0.3 );
                     color: #fff;
+                    border-radius: 1em;
                     
-                }
-                .wk-50
-                {
-                    width: 50%;
                 }
                 .wk-space
                 {
@@ -265,7 +263,7 @@ class Workplace_Workspace_Abstract extends Workplace
                 {
                     padding: 0;
                 }
-                .box-css, .small-box-css, .chat-box-css, .box-css-table
+                .box-css, .small-box-css, .chat-box-css, .box-css-table, .box-css-wk-50
                 {
                     padding:2em; 
                     background-color:grey; 
@@ -275,6 +273,12 @@ class Workplace_Workspace_Abstract extends Workplace
                     font-size:x-small;
                     border: 0.5px solid #666;
                     overflow: auto;
+                }
+                .wk-50, .box-css-wk-50
+                {
+                    width: 50%;
+                    flex-basis:50%; 
+
                 }
                 .chat-box-css
                 {
@@ -296,7 +300,7 @@ class Workplace_Workspace_Abstract extends Workplace
                     {
                         flex-basis: 50%;
                     }    
-                    .wk-50
+                    .wk-50, .box-css-wk-50
                     {
                         width: 100%;
                     }
@@ -322,6 +326,7 @@ class Workplace_Workspace_Abstract extends Workplace
             '
         );
     }
+
     /**
      * 
      * @param array Workspace Info

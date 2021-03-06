@@ -163,10 +163,8 @@ class Workplace_Workspace_Reports extends Workplace_Workspace_Insights
                     
                     $mailInfo['body'] .= 'Date: ' . date( 'Y' ) . '/' . date( 'M' ) . '/' . date( 'd' ) . "\r\n";
 
-                    $mailInfo['body'] .= 'Check the report on : ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Reports_Table_ShowAll?workspace=' . $data['workspace_id'] . '' . "\r\n";
+                    $mailInfo['body'] .= 'Check the report on : ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '' . "\r\n";
                     @self::sendMail( $mailInfo );
-                    var_export( $mailInfo );
-                    var_export( $data['settings'] );
 
                     $this->setViewContent(  '' . self::__( '<div class="goodnews">Report saved successfully</div>' ) . '', true  ); 
                     $this->setViewContent( $this->includeTitle( $data ) ); 

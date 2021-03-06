@@ -81,7 +81,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                     $x = count( $data['members'] ) - 3;
                     $a = $x % 4;
                     $b = $x % 3;
-                    $c = $x % 3;
+                    $c = $x % 2;
 
                 if( empty( $a ) )
                 {
@@ -94,6 +94,10 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 elseif( empty( $c ) )
                 {
                     $breakLineCss = '; flex-basis:50%;';
+                }
+                elseif( $x == 1 )
+                {
+                    $breakLineCss = '; flex-basis:100%;';
                 }
                 else
                 {
@@ -152,7 +156,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 $screenshot = Workplace_Screenshot_Table::getInstance()->selectOne( null, array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] ) );
                 if( empty( $screenshot['filename'] ) )
                 {
-                    $screenshot['filename'] = '/img/logo.png';
+                //    $screenshot['filename'] = '/img/logo.png';
                 }
                 $screenCss = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.5), rgba( 0, 0, 0, 0.1 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $screenshot['filename'] . '?width=600&height=600 ); background-size:cover;height:50vh;' . $flexStyle;
 
@@ -172,7 +176,6 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                     {
                         $screenCss .= $breakLineCss;
                     }
-    
                 }
                 $counter++;
                 $intervals += $memberData['log'];
@@ -204,16 +207,12 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                             $idleYear += array_sum( $eachMonth );
                         }
                     }
-                 
-
                 }
-                
             }
             $totalTime = $intervals;
             $tools = array_unique( $tools );
 
             $sendMessage = Workplace_Workspace_Broadcast_Creator::viewInLine();
-
 
             $where = array( 'workspace_id' => $data['workspace_id'] );
             if( empty( $viewAll ) )

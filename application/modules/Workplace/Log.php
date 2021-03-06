@@ -276,7 +276,7 @@ class Workplace_Log extends Workplace
 
                 $renumeration = Workplace_Workspace_Abstract::getTotalPayout( $updated );
                 $targetRenumeration = doubleval( $updated['max_renumeration'] );
-                if( $renumeration >= $targetRenumeration && ( empty( $updated['payment_due'] ) || $time - $updated['payment_due'] > 86400 ) )
+                if( intval( $renumeration ) && $renumeration >= $targetRenumeration && ( empty( $updated['payment_due'] ) || $time - $updated['payment_due'] > 106400 ) )
                 {
                     $mailInfo['to'] = $adminEmails;
                     $mailInfo['subject'] = 'Payment due for ' . $userInfo['username'];

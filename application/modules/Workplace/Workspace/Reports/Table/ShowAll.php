@@ -84,7 +84,7 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
             <div>
                 <div class="xwk-50" >
                     <p class="pc_give_space_top_bottom section-divider">
-                        By: ' . Ayoola_Application::getUserInfo( 'username' ) . ' (' . date( 'd M Y', $report['creation_time'] ) . ')
+                        By: ' . $report['username'] . ' (' . date( 'd M Y', $report['creation_time'] ) . ')
                         <a style="margin:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports_Table_Delete/?table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-trash" aria-hidden="true"></i></a>
                         <a style="margin:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports/?workspace_id=' . $report['workspace_id'] . '&table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
