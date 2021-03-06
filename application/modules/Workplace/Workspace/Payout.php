@@ -250,6 +250,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
     
                                     'username' => $userInfo['username'],
                                     'workspace_id' => $data['workspace_id'],
+                                    'paid' => $renumeration,
                                     'renumeration' => $data['renumeration'][$key],
                                     'max_renumeration' => $data['max_renumeration'][$key],
                                     'work_time' => $totalDueTime,

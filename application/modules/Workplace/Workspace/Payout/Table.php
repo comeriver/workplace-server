@@ -25,7 +25,7 @@ class Workplace_Workspace_Payout_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.2';  
+    protected $_tableVersion = '0.3';  
 
     /**
      * Table data types and declaration
@@ -37,6 +37,7 @@ class Workplace_Workspace_Payout_Table extends PageCarton_Table
   'username' => 'INPUTTEXT',
   'workspace_id' => 'INPUTTEXT',
   'renumeration' => 'INPUTTEXT',
+  'paid' => 'INPUTTEXT',
   'max_renumeration' => 'INPUTTEXT',
   'work_time' => 'INPUTTEXT',
   'amount_paid' => 'INPUTTEXT',

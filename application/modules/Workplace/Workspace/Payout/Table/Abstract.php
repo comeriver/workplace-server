@@ -66,6 +66,7 @@ class Workplace_Workspace_Payout_Table_Abstract extends Workplace_Workspace_Payo
         $fieldset->addElement( array( 'name' => 'user_id', 'type' => 'InputText', 'value' => @$values['user_id'] ) );         
         $fieldset->addElement( array( 'name' => 'workspace_id', 'type' => 'InputText', 'value' => @$values['workspace_id'] ) );         
         $fieldset->addElement( array( 'name' => 'renumeration', 'type' => 'InputText', 'value' => @$values['renumeration'] ) );         
+        $fieldset->addElement( array( 'name' => 'paid', 'type' => 'InputText', 'value' => @$values['paid'] ) );         
         $fieldset->addElement( array( 'name' => 'max_renumeration', 'type' => 'InputText', 'value' => @$values['max_renumeration'] ) );         
         $fieldset->addElement( array( 'name' => 'comment', 'type' => 'TextArea', 'value' => @$values['comment'] ) );         
         $fieldset->addElement( array( 'name' => 'work_time', 'type' => 'InputText', 'value' => @$values['work_time'] ) ); 

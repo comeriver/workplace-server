@@ -88,6 +88,7 @@ class Workplace_Workspace_Payout_Table_List extends Workplace_Workspace_Payout_T
 			array(
                     'username' => array( 'field' => 'username', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
                     'renumeration' => array( 'field' => 'renumeration', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
+                    'paid' => array( 'field' => 'paid', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
                     'max_renumeration' => array( 'field' => 'max_renumeration', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     
                     'work_time' => array( 'field' => 'work_time', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                     'comment' => array( 'field' => 'comment', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
