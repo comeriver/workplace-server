@@ -196,7 +196,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                                 'value' => $comment
                             )
                         );
-                        $fieldset->addRequirements( array( 'NotEmpty') );
+                        $fieldset->addRequirements( array( 'NotEmpty' => null ) );
 
                         $form->addFieldset( $fieldset );
                         $formViewX = $form->view();

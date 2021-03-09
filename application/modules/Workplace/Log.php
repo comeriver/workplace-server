@@ -113,67 +113,83 @@ class Workplace_Log extends Workplace
 		{ 
             //  Code that runs the widget goes here...
             //  Output demo content to screen
-
             if( $_POST )
             {
                 file_put_contents( 'data.json', json_encode( $_POST ) );
             }
             else
             {
-                $_POST = $_REQUEST = json_decode( file_get_contents( 'data.json' ), true );
+                //$_POST = $_REQUEST = json_decode( file_get_contents( 'data.json' ), true );
             }
 
-            if( ! $userInfo = $this->authenticate() )
+            if( ! $userInfo = Ayoola_Application::getUserInfo() ? : $this->authenticate() )
             {
                 return false;
             }
-            $where = array( 'members' => $userInfo['email'] );
-            if( $_POST['workspaces'] )
+
+            $postData = $_POST;
+            if( $this->getParameter( 'log') )
             {
-                $where['workspace_id'] = json_decode( $_POST['workspaces'], true );   
+                $postData = $this->getParameter( 'log');
+            }
+
+            $where = array( 'members' => $userInfo['email'] );
+            if( ! empty( $postData['workspace_id'] ) )
+            {
+                $where['workspace_id'] = (array) $postData['workspace_id'];   
+            }
+            if( $postData['workspaces'] )
+            {
+                $where['workspace_id'] = json_decode( $postData['workspaces'], true );   
             }
 
             //  keylog 
-            $keys = json_decode( $_POST['texts'], true );
 
             $tools = array();
-            if( ! empty( $_POST['software'] ) )
+            if( ! empty( $postData['software'] ) )
             {
-                if( $tool = self::sanitizeToolName( $_POST['software'] ) )
+                if( $tool = self::sanitizeToolName( $postData['software'] ) )
                 $tools[] = $tool;
             }
             $idleTime = true;
 
-            if( $_POST['active_time'] )
+            if( $postData['active_time'] )
             {
                 $idleTime = false;
             }
 
-            foreach( $keys as $software => $softwareContent )
+            if( ! empty( $postData['texts'] ) )
             {
-                //  Fix browsers dynamic title
-                if( $realToolName = self::sanitizeToolName( $software ) )
-                $tools[] = $realToolName;
-
-                foreach( $softwareContent as $title => $content )
+                $keys = json_decode( $postData['texts'], true );
+                foreach( $keys as $software => $softwareContent )
                 {
-                    $content = trim( $content );
-                    if( ! empty( $content ) )
+                    //  Fix browsers dynamic title
+                    if( $realToolName = self::sanitizeToolName( $software ) )
+                    $tools[] = $realToolName;
+    
+                    foreach( $softwareContent as $title => $content )
                     {
-                        $idleTime = false;
+                        $content = trim( $content );
+                        if( ! empty( $content ) )
+                        {
+                            $idleTime = false;
+                        }
+                        if( ! $content )
+                        {
+                            continue;
+                        }
+                        $data = array( 
+                                        'texts' => $content, 
+                                        'user_id' => Ayoola_Application::getUserInfo( 'user_id' ),
+                                        'workspace_id' => $where['workspace_id'],
+                                        'software' => $realToolName,
+                                        'window_title' => $title,
+                                        'goals_id' => $postData['goals_id'],
+                                        'tasks_id' => $postData['tasks_id'] 
+                        
+                                    );            
+                        Workplace_Keylog_Table::getInstance()->insert( $data );
                     }
-                    if( ! $content )
-                    {
-                        continue;
-                    }
-                    $data = array( 
-                                    'texts' => $content, 
-                                    'user_id' => $_POST['user_id'],
-                                    'workspace_id' => $where['workspace_id'],
-                                    'software' => $realToolName,
-                                    'window_title' => $title
-                                );            
-                    Workplace_Keylog_Table::getInstance()->insert( $data );
                 }
             }
             $tools = array_unique( $tools );
@@ -184,7 +200,30 @@ class Workplace_Log extends Workplace
             }
 
             // Save Screenshot
-            Workplace_Screenshot_Save::viewInLine();
+            //  Workplace_Screenshot_Save::viewInLine();
+            if( $postData['screenshot'] )
+            {
+                $screenshot = base64_decode( $postData['screenshot'] );
+                $postData['filename'] = '/workplace/screenshots/' . Ayoola_Application::getUserInfo( 'user_id' ) . '/' . md5( $postData['window_title'] ) . '_' . time() . '.jpg';
+                $path = Ayoola_Doc::getDocumentsDirectory() . $postData['filename'];
+                Ayoola_Doc::createDirectory( dirname( $path ) );
+                file_put_contents( $path, $screenshot );
+            }
+        
+            
+            //var_export( $postData );
+            //var_export( $where );
+            $toSave = array( 
+                'filename' => $postData['filename'], 
+                'user_id' => Ayoola_Application::getUserInfo( 'user_id' ), 
+                'software' => self::sanitizeToolName( $postData['software'] ), 
+                'workspace_id' => $where['workspace_id'], 
+                'window_title' => $postData['window_title'],
+                'goals_id' => $postData['goals_id'],
+                'tasks_id' => $postData['tasks_id'] 
+            );
+            Workplace_Screenshot_Table::getInstance()->insert( $toSave );
+            
 
             //  log online
             $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
@@ -196,6 +235,13 @@ class Workplace_Log extends Workplace
 
             $count = 0;
             $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
+
+            $logsToCount = 1;
+            if( $postData['duration'] )
+            {
+                $logsToCount = intval( $postData['duration'] ) / $logIntervals;
+            }
+
             $minBill = Workplace_Settings::retrieve( 'min_bill' ) ? : 20;
             foreach( $workspaces as $workspace )
             {
@@ -218,7 +264,6 @@ class Workplace_Log extends Workplace
                 $mailInfo = array();
                 $adminEmails = '' . $ownerInfo['email'] . ',' . implode( ',', $workspace['settings']['admins'] );
 
-
                 if( ! empty( $bannedTools ) )
                 {
                     $mailInfo['to'] = $adminEmails;
@@ -235,19 +280,21 @@ class Workplace_Log extends Workplace
                     }
                     catch( Ayoola_Exception $e ){ null; }
         
-                    $updated['ban_log']++;
-                    $updated['banned_time'][$year][$month][$day]++;
-                    $updated['time'][$year][$month][$day]['banned']++;
+                    $updated['ban_log'] += $logsToCount;
+                    $updated['banned_time'][$year][$month][$day] += $logsToCount;
+                    $updated['time'][$year][$month][$day]['banned'] += $logsToCount;
+
                 }
                 else
                 {
-                    $updated['log']++;
-                    $updated['work_time'][$year][$month][$day]++;
-                    $updated['time'][$year][$month][$day]['session']++;
+                    $updated['log'] += $logsToCount;
+                    $updated['work_time'][$year][$month][$day] += $logsToCount;
+                    $updated['time'][$year][$month][$day]['session'] += $logsToCount;
 
                     if( empty( $idleTime ) )
                     {
                         $updated['lastest_activity'] = $time;
+                        $updated['lastest_task'] = $postData['tasks_id'];
                     }
                     elseif( ! empty( $idleTime ) && ! empty( $updated['lastest_activity'] ) )
                     {
@@ -262,13 +309,13 @@ class Workplace_Log extends Workplace
     
                     if( ! empty( $idleTime ) )
                     {
-                        $updated['time'][$year][$month][$day]['idle']++;
-                        $updated['idle_time'][$year][$month][$day]++;
-                        $updated['idle_log']++;
+                        $updated['time'][$year][$month][$day]['idle'] += $logsToCount;
+                        $updated['idle_time'][$year][$month][$day] += $logsToCount;
+                        $updated['idle_log'] += $logsToCount;
                     }
                     else
                     {
-                        $updated['active_log']++;
+                        $updated['active_log'] += $logsToCount;
                     }
                     $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
                     $updated['tools'] = array_unique( $updated['tools'] );
@@ -327,7 +374,7 @@ class Workplace_Log extends Workplace
 
 
 
-                $workspace['settings']['cost']['billed']++;     
+                $workspace['settings']['cost']['billed'] += $logsToCount;     
                 
                 $due = intval( $workspace['settings']['cost']['billed'] ) - intval( $workspace['settings']['cost']['paid'] );
                 $cost = Workplace_Settings::retrieve( 'cost' );

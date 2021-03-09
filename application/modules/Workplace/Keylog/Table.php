@@ -25,7 +25,7 @@ class Workplace_Keylog_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.3';  
+    protected $_tableVersion = '0.4';  
 
     /**
      * Table data types and declaration
@@ -39,6 +39,9 @@ class Workplace_Keylog_Table extends PageCarton_Table
   'window_title' => 'INPUTTEXT',
   'software' => 'INPUTTEXT',
   'workspace_id' => 'JSON',
+  'goals_id' => 'INPUTTEXT',
+  'tasks_id' => 'INPUTTEXT',
+
 
 );
 

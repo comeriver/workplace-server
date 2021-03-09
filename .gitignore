@@ -32,3 +32,7 @@ application/pages/data-backup/
 extensions/
 application/pages/*/*managed-project*.*
 application/pages/*/make-project-payment*.*
+application/documents/public/*
+application/databases/Application/settings.xml
+application/databases/ProjectManager/tasks.xml
+application/databases/Workplace/Workspace/Work/table.xml

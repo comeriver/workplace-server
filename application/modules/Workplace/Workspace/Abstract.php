@@ -159,6 +159,7 @@ class Workplace_Workspace_Abstract extends Workplace
             <p class="">Current Time: ' . date( 'g:ia, D jS M Y' ) . '</p>
             ' . $bills . '
             <a  class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_List"> <i class="fa fa-chevron-right pc_give_space"></i> Home <i class="fa fa-home pc_give_space"></i></a>
+            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Work <i class="fa fa-tasks pc_give_space"></i></a>
             <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Reports <i class="fa fa-bar-chart pc_give_space"></i></a>
             ' . $adminOptions . '
             </div>
@@ -171,7 +172,6 @@ class Workplace_Workspace_Abstract extends Workplace
      */
 	public static function includeScripts()  
     {
-
         Application_Javascript::addCode(
             '
 					
