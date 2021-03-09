@@ -210,7 +210,11 @@ class Workplace_Log extends Workplace
                 file_put_contents( $path, $screenshot );
             }
         
-            
+            $time = time();
+            $year = date( 'Y' );
+            $month = date( 'M' );
+            $day = date( 'd' );
+
             //var_export( $postData );
             //var_export( $where );
             $toSave = array( 
@@ -220,7 +224,8 @@ class Workplace_Log extends Workplace
                 'workspace_id' => $where['workspace_id'], 
                 'window_title' => $postData['window_title'],
                 'goals_id' => $postData['goals_id'],
-                'tasks_id' => $postData['tasks_id'] 
+                'tasks_id' => $postData['tasks_id'],
+                'session' => $year . $month . $day 
             );
             Workplace_Screenshot_Table::getInstance()->insert( $toSave );
             
@@ -228,10 +233,6 @@ class Workplace_Log extends Workplace
             //  log online
             $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
 
-            $time = time();
-            $year = date( 'Y' );
-            $month = date( 'M' );
-            $day = date( 'd' );
 
             $count = 0;
             $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;

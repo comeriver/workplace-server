@@ -120,12 +120,14 @@
                     if( $screen )
                     { 
                         $where['software'] = $screen['software'];
-                        unset( $options['row_id_column'] );
+                        $options['row_id_column'] = 'window_title';
                         if( ! empty( $_REQUEST['window_title'] ) )
                         {
                             $where['window_title'] = $screen['window_title'];
                             $screenOut .= '<div class="section-divider">"' . $screen['window_title'] . '" Window Overview</div>';
                             $where['user_id'] = $screen['user_id'];
+                            $options['row_id_column'] = 'session';
+
                         }
                         else
                         {
