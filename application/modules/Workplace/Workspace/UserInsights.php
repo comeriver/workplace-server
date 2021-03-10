@@ -181,7 +181,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     $name = ( $userInfo['firstname'] ? : $userInfo['username'] ) ? : $userInfo['email'];
                     $html = '
                     <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
-                        <div class="box-css small-box-css">
+                        <div class="box-css">
                             <span style="font-size:40px;">' . $name . '</span><br>' . ( $userInfo['email'] ) . '
                         </div>
                         <div class="box-css">

@@ -41,10 +41,6 @@ class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
     {    
 		try
 		{ 
-            //  Code that runs the widget goes here...
-
-            //  Output demo content to screen
-
             // save to main site
             @$email = $_REQUEST['email'];
             $activeWorkspace = false;
@@ -132,7 +128,8 @@ class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
             $steps .= '
             
             <li ' . $doneCss . '>Download/Install Workplace Client to your Work Computer. <a  target="_blank" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Downloads"> Go to Downloads</a></li>
-            <li ' . $doneCss . '>Login to Workplace Client Software on your Work Computer everytime you want to Work</li>';
+            <li ' . $doneCss . '>Login to Workplace Client tool on your work computer everytime you want to work</li>
+            ';
     
             $html = '
             <ol>
@@ -149,7 +146,6 @@ class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
 		catch( Exception $e )
         { 
             //  Alert! Clear the all other content and display whats below.
-        //    $this->setViewContent( self::__( '<p class="badnews">' . $e->getMessage() . '</p>' ) ); 
             $this->setViewContent( self::__( '<p class="badnews">Theres an error in the code</p>' ) ); 
             return false; 
         }

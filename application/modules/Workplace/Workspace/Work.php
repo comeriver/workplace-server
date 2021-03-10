@@ -50,6 +50,13 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                     $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false; 
                 }
+                if( empty( $data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['authorized'] ) )
+                {
+                    $this->setViewContent(  '<div class="badnews pc_give_space_top_bottom">' . self::__( 'Sorry, you need to authorize your data on this workspace before you can view it.' ) . '</div>', true  ); 
+                    $this->setViewContent(  '<div class="pc_give_space_top_bottom"><a href="' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . Ayoola_Application::getUserInfo( 'email' ) . '&auth_token=' . $data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['auth_token'] . '">Authorize this Workspace</a></div>'  ); 
+                    $this->setViewContent( $this->includeTitle( $data ) ); 
+                    return false;
+                }
 /*              if( ! self::isWorkspaceAdmin( $data ) )
                 {
                     $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
@@ -188,8 +195,8 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                                             '
                             );
     
-                            $this->setViewContent( '<br><br><div id="xxxtimer" class="wk-50" style="font-size:56px;"></div>' ); 
-                            $this->setViewContent( '<br><br><div class="wk-50">Please ensure you share an update on this task before clock run out to avoid losing your work session.</div>' ); 
+                            $this->setViewContent( '<br><br><div id="xxxtimer" class="wk-50" style="font-size:40px;"></div>' ); 
+                            $this->setViewContent( '<br><br><div class="wk-50">Please share an update on this task before clock run out to avoid losing your work session.</div>' ); 
 
                         }                        
                         if( $formValues = $form->getValues() )

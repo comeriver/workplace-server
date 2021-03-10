@@ -227,6 +227,8 @@ class Workplace_Workspace_Abstract extends Workplace
                 }
                 .wk_title
                 {
+                    max-height: 50vh;
+                    overflow: auto;
                     position: fixed;
                     bottom: 2%;
                     padding: 2em;
