@@ -42,8 +42,8 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
         $this->setViewContent( '<h2 class="pc_give_space_top_bottom">My Workspaces (' . count( $workspaces) . ')</h2>' ); 
         $this->setViewContent( '
             <p class="pc_give_space_top_bottom">
-                <a class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/"><i class="fa fa-home pc_give_space"></i></a>
-                <a class="btn btn-primary" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Creator/\', \'' . $this->getObjectName() . '\' );" href="javascript:">Create a new Workspace <i class="fa fa-plus pc_give_space"></i></a>
+                <a class="btn btn-primary pc_give_space_top_bottom" href="' . Ayoola_Application::getUrlPrefix() . '/"><i class="fa fa-home pc_give_space"></i></a>
+                <a class="btn btn-primary pc_give_space_top_bottom" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Creator/\', \'' . $this->getObjectName() . '\' );" href="javascript:">Create a new Workspace <i class="fa fa-plus pc_give_space"></i></a>
             </p>' 
         ); 
 
@@ -79,7 +79,7 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
                     <br>
                     Usage
                 </div>
-                <div class="box-css-table">
+                <div class="box-css">
                     <span style="font-size:40px;">' . self::toHours( $data['settings']['cost']['billed'] ) . '</span>
                     <br>
                     hrs 
