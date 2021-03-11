@@ -71,11 +71,23 @@ class Workplace_Workspace_ManageTools extends Workplace_Workspace_Insights
 
                 $fieldset->addElement( 
                     array( 
+                    'name' => 'tools', 
+                    'label' => 'Workspace Tools', 
+                    'multiple' => 'multiple', 
+                    'type' => 'MultipleInputText', 
+                    'value' => $data['settings']['tools'] 
+                    )
+                    ,
+                    array_combine( $data['settings']['tools'], $data['settings']['tools'] )
+                ); 
+
+                $fieldset->addElement( 
+                    array( 
                     'name' => 'banned_tools', 
                     'label' => 'Banned Tools', 
                     'config' => array( 
                         'ajax' => array( 
-                            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_SearchTools?article_type=' . $type,
+                            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_SearchTools',
                             'delay' => 1000
                         ),
                         'placeholder' => 'e.g. Microsoft Word',
@@ -95,7 +107,7 @@ class Workplace_Workspace_ManageTools extends Workplace_Workspace_Insights
                     'label' => 'Whitelist Tools', 
                     'config' => array( 
                         'ajax' => array( 
-                            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_SearchTools?article_type=' . $type,
+                            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_SearchTools',
                             'delay' => 1000
                         ),
                         'placeholder' => 'e.g. Microsoft Word',
@@ -108,6 +120,27 @@ class Workplace_Workspace_ManageTools extends Workplace_Workspace_Insights
                     ,
                     array_combine( $data['settings']['whitelist_tools'], $data['settings']['whitelist_tools'] )
                 ); 
+
+                $fieldset->addElement( 
+                    array( 
+                    'name' => 'tracked_tools', 
+                    'label' => 'Productive Tools', 
+                    'config' => array( 
+                        'ajax' => array( 
+                            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_SearchTools',
+                            'delay' => 1000
+                        ),
+                        'placeholder' => 'e.g. Microsoft Word',
+                        'minimumInputLength' => 2,   
+                    ), 
+                    'multiple' => 'multiple', 
+                    'type' => 'Select2', 
+                    'value' => $data['settings']['tracked_tools'] 
+                    )
+                    ,
+                    array_combine( $data['settings']['tracked_tools'], $data['settings']['tracked_tools'] )
+                ); 
+
                 $form->addFieldset( $fieldset );
                 $this->setViewContent( $form->view() );
                 $this->setViewContent( $this->includeTitle( $data ) ); 
@@ -116,6 +149,8 @@ class Workplace_Workspace_ManageTools extends Workplace_Workspace_Insights
 
                 $data['settings']['whitelist_tools'] = $values['whitelist_tools'];
                 $data['settings']['banned_tools'] = $values['banned_tools'];
+                $data['settings']['tracked_tools'] = $values['tracked_tools'];
+                $data['settings']['tools'] = $values['tools'];
                 
                 if( $this->updateDb( $data ) )
                 { 

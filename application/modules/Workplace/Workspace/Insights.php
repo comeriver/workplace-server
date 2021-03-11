@@ -303,12 +303,12 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 </div>
             </div>
                 ' . $timePanel . ' 
-            <div class="section-divider">Recent Team Activities</div>
+            <div class="section-divider">Members</div>
             <div style="display:flex; flex-wrap:wrap;">
                 ' . $chat . ' 
                 ' . $memberList . '
             </div>
-            <div class="section-divider">Recent Tools & Activities</div>
+            <div class="section-divider">Tools</div>
             ' . self::showScreenshots( $screenshots, $data ) . '
 
             <div class="wk-space"></div>

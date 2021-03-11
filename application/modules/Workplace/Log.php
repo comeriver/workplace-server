@@ -40,6 +40,21 @@ class Workplace_Log extends Workplace
     public static function sanitizeToolName( $software )
     { 
         
+        //  Fix notification dynamic title
+        if( stripos( $software, '(' ) !== false )
+        {
+            //  e.g. 
+            //  (1) MyMedicalBank | Slack
+            //  (+) MyMedicalBank | Slack
+            $software = preg_replace( '|\(.*\)|', '', $software );
+        }
+
+        if( stripos( $software, '[' ) !== false )
+        {  
+            $software = preg_replace( '|\[.*\]|', '', $software );
+        }
+        $software = trim( $software, '-| ' );
+
         if( 
             stripos( $software, ' @ ' ) !== false 
             && stripos( $software, '%' ) !== false 
@@ -53,9 +68,12 @@ class Workplace_Log extends Workplace
 
         if( stripos( $software, ' - ' ) !== false )
         {
-            if( $softwareA = array_map( 'trim', explode( ' - ', $software ) ) )
+            if( $sa = array_map( 'trim', explode( ' - ', $software ) ) )
             {
-                $software = array_pop( $softwareA );
+                if( $a = array_pop( $sa ) )
+                {
+                    $software = $a;
+                }
             }
 
         }
@@ -70,26 +88,13 @@ class Workplace_Log extends Workplace
                 //  $software = array_unshift( $softwareA );
             }
         }
-
-        //  Fix notification dynamic title
-        if( stripos( $software, '(' ) !== false )
-        {
-            //  e.g. 
-            //  (1) MyMedicalBank | Slack
-            //  (+) MyMedicalBank | Slack
-            $software = preg_replace( '|\(.*\)|', '', $software );
-        }
-
-        if( stripos( $software, '[' ) !== false )
-        {  
-            $software = preg_replace( '|\[.*\]|', '', $software );
-        }
         
         //  files
         if( stripos( $software, '\\' ) !== false || stripos( $software, '/' ) !== false )
         {
             $software = 'File Explorer';
         }
+
         if( 
             stripos( $software, '%' ) !== false 
         )
@@ -99,6 +104,7 @@ class Workplace_Log extends Workplace
         }
 
         $software = trim( $software );
+        $software = trim( $software, ' - | ' );
 
         return $software;
     }
@@ -109,7 +115,7 @@ class Workplace_Log extends Workplace
      */
      public function init()
      {    
-          try
+        try
 		{ 
             //  Code that runs the widget goes here...
             //  Output demo content to screen
@@ -320,6 +326,10 @@ class Workplace_Log extends Workplace
                     }
                     $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
                     $updated['tools'] = array_unique( $updated['tools'] );
+
+                    $workspace['settings']['tools'] = array_merge( $tools, ( is_array( $workspace['settings']['tools'] ) ? $workspace['settings']['tools'] : array() ) );;     
+                    $workspace['settings']['tools'] = array_unique( $workspace['settings']['tools'] );
+
                 }
 
                 $renumeration = Workplace_Workspace_Abstract::getTotalPayout( $updated );
@@ -352,7 +362,7 @@ class Workplace_Log extends Workplace
                     $workspace['settings']['online'][$dayX][] = $userInfo['email'];
                 }
                 $notOnline = array_diff( $workspace['members'], $workspace['settings']['online'][$dayX] );
-                if( $notOnline && ( empty( $updated['last_seen'] ) || $time - $updated['last_seen'] > 3600 ) )
+                if( $notOnline && ( empty( $updated['last_seen'] ) || $time - $updated['last_seen'] > 43200 ) )
                 {
                     $notOnline = implode( ', ', $notOnline );
                     $mailInfo['to'] = '' . $notOnline . '';
@@ -384,7 +394,7 @@ class Workplace_Log extends Workplace
 
                 $billedTime = intval( $workspace['settings']['cost']['billed_time'] );
 
-                if( $moneyDue >= $minBill && $time - $billedTime > 86400 )
+                if( $moneyDue >= $minBill && $time - $billedTime > 864000 )
                 {                        
                     if( ! self::pay( $data, $ownerInfo['username'] ) )
                     {

@@ -119,17 +119,17 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                             $isWorking = true;
                         }
 
-                        if( @$_GET['restart'] )
+                        if( @$_GET['restart'] || ! $isWorking )
                         {
                             $isWorking = false;
-                            $yOption[$data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_task']]['tasks_id'] = null;
+                            unset( $yOption[$data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_task']]['tasks_id'] );
                         }
 
                         $form = new Ayoola_Form( array( 'name' => $this->getObjectName(), 'data-not-playable' => true ) );
                         $form->submitValue = $isWorking ? 'Share Update...' : 'Start work...';
                         $fieldset = new Ayoola_Form_Element();
 
-        
+
                         $fieldset->addElement( 
                             array(
                                 'name' => 'task',

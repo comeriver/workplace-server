@@ -144,9 +144,9 @@ class Workplace_Workspace_Abstract extends Workplace
         $adminOptions = '';
         if( self::isWorkspaceAdmin( $data ) )
         {
-            $bills = '<p class="">
-            Usage Bill: ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Clear Bill</a>
-            </p>';
+            $bills = '
+            <i class="fa fa-credit-card pc_give_space"></i> ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Clear Bill</a>
+            ';
             $adminOptions = '
             <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Payroll <i class="fa fa-dollar pc_give_space"></i></a>
             <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i>  Top Up <i class="fa fa-credit-card pc_give_space"></i></a>
@@ -155,10 +155,10 @@ class Workplace_Workspace_Abstract extends Workplace
 
         return '
         <div class="wk_title">
-            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '"><h2 class="">' . $data['name'] . '  </h2></a>       
-            <p class="">Current Time: ' . date( 'g:ia, D jS M Y' ) . '</p>
-            ' . $bills . '
-            <a  class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_List"> <i class="fa fa-chevron-right pc_give_space"></i> Home <i class="fa fa-home pc_give_space"></i></a>
+            <p class=""><i class="fa fa-clock-o pc_give_space"></i> ' . date( 'g:ia, D jS M Y' ) . '' . $bills . '</p>
+            
+            <a  class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_List"> <i class="fa fa-home pc_give_space"></i></a>
+            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> ' . $data['name'] . ' <i class="fa fa-briefcase pc_give_space"></i></a>
             <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Work <i class="fa fa-tasks pc_give_space"></i></a>
             <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Reports <i class="fa fa-bar-chart pc_give_space"></i></a>
             ' . $adminOptions . '
@@ -208,11 +208,21 @@ class Workplace_Workspace_Abstract extends Workplace
                 {
                     padding-bottom: 300px;
                 }
+                .btn
+                {
+                    padding: 0 !important;
+                    font-size: 12px !important;
+                }
                 .wk_title a, .box-css a, .box-css-table a, a.box-css-table, a.box-css
                 {
                     color: #fff;
                     text-decoration:none;
                 }
+                .wk_title h2, .wk_title p
+                {
+                    font-size:12px;
+                }
+
                 .box-css a:hover, .wk_title a:hover, a.box-css:hover
                 {
                     color: white;
