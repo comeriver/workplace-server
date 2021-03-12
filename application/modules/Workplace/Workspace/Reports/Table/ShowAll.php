@@ -63,8 +63,9 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
 
         $this->setViewContent(  '' . self::__( '<h2 class="pc_give_space_top_bottom">Reports</h2>' ) . '', true  ); 
         $this->setViewContent(  '
-        <div class="pc_give_space_top_bottom"> <a class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports/?workspace_id=' . $data['workspace_id'] . '">' . 
-        self::__( 'Create a report' ) . '</a></div>'  ); 
+        <div class="pc_give_space_top_bottom"> 
+            <a class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports/?workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-chevron-right pc_give_space ' .  "\r\n" . '"></i>' . self::__( 'Create a report' ) . '<i class="fa fa-bar-chart pc_give_space ' .  "\r\n" . '"></i></a>
+        </div>'  ); 
 
         $reports = $this->getDbData();
 

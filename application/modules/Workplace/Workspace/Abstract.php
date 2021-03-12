@@ -235,6 +235,11 @@ class Workplace_Workspace_Abstract extends Workplace
                     color: #333;
                     text-align:center;
                 }
+                .btn-default
+                {
+                    color: black !important;
+                    background: white !important;
+                }
                 .wk_title
                 {
                     max-height: 50vh;

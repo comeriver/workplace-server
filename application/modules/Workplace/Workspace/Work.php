@@ -109,10 +109,10 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                                 Task: ' . $yOption[$data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_task']]['task'] . '
                                 <br><br>
                                 <a class="btn btn-success" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/ProjectManager_Tasks_Editor/?tasks_id=' . $yOption[$data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_task']]['tasks_id'] . '&task_edit_mode=completion\', \'page_refresh\' );">
-                                    Mark as Complete <i class="fa fa-check"></i>
+                                <i class="fa pc_give_space"></i> Mark as Complete <i class="fa fa-check pc_give_space"></i>
                                 </a>
                                 <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&restart=1" >
-                                    Do something else <i class="fa fa-refresh"></i>
+                                <i class="fa pc_give_space"></i> Do something else <i class="fa fa-refresh pc_give_space"></i>
                                 </a>
                                 
                             </div>' ); 
@@ -219,7 +219,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                             <br><br>
                             <div class="wk-50">
                                 <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&start=1">
-                                    <i class="fa fa-chevron-right pc_give_space"></i>' . self::__( 'Share update' ) . '<i class="fa fa-refresh pc_give_space"></i>
+                                    <i class="fa fa-chevron-right pc_give_space ' .  "\r\n" . '"></i>' . self::__( 'Share update' ) . '<i class="fa fa-refresh pc_give_space"></i>
                                 </a>
                             </div>' ); 
 
