@@ -223,14 +223,22 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                                 </a>
                             </div>' ); 
 
+
                             $emails = implode( ',', $yOption[$formValues['task']]['email_address'] );
                             $mailInfo['to'] = Ayoola_Application::getUserInfo( 'email' ) . ',' . $emails;
-                            $mailInfo['subject'] = 'An update on ' . $xOption[$formValues['task']] . '';
-                            $mailInfo['body'] = 'Work on ' . $xOption[$formValues['task']] . ' on ' . $data['name'] . ' has been updated.' . "\r\n\r\n";
-                            
-                            
-                            $mailInfo['body'] .= 'Comment: ' . $formValues['comment'] . "\r\n\r\n"; 
-                            $mailInfo['body'] .= 'Check out the work activities here: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_UserInsights?username=' . Ayoola_Application::getUserInfo( 'username' )  . "\r\n\r\n";
+                            if( ! empty( $yOption[$data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_task']]['tasks_id'] ) )
+                            {
+                                $mailInfo['subject'] = 'Update on task ' . $xOption[$formValues['task']] . '';
+                                $mailInfo['body'] = 'Update on work on ' . $xOption[$formValues['task']] . ' task has been shared by ' . Ayoola_Application::getUserInfo( 'username' ) . ' in ' . $data['name'] . "\r\n\r\n";
+                                $mailInfo['body'] .= 'Comment: ' . $formValues['comment'] . "\r\n\r\n"; 
+                            }
+                            else
+                            {
+                                $mailInfo['subject'] = 'Task ' . $xOption[$formValues['task']] . ' started';
+                                $mailInfo['body'] = '' . $xOption[$formValues['task']] . ' task has been marked as started by ' . Ayoola_Application::getUserInfo( 'username' ) . ' in ' . $data['name'] . "\r\n\r\n";
+                            }
+                            $mailInfo['body'] .= 'Check out the work activities and further updates here: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_UserInsights?username=' . Ayoola_Application::getUserInfo( 'username' )  . "\r\n\r\n";
+
                             @self::sendMail( $mailInfo );
     
             

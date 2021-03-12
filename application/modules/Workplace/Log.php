@@ -415,7 +415,7 @@ class Workplace_Log extends Workplace
 
                 if( $moneyDue >= $minBill && $time - $billedTime > 864000 )
                 {                        
-                    if( ! self::pay( $data, $ownerInfo['username'] ) )
+                    if( ! Workplace_Workspace_Billing::pay( $data, $ownerInfo['username'] ) )
                     {
                         $currency = ( Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '' );
                         $mailInfo['to'] = $adminEmails;
