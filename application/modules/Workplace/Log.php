@@ -41,19 +41,14 @@ class Workplace_Log extends Workplace
     { 
         
         //  Fix notification dynamic title
-        if( stripos( $software, '(' ) !== false )
-        {
-            //  e.g. 
-            //  (1) MyMedicalBank | Slack
-            //  (+) MyMedicalBank | Slack
-            $software = preg_replace( '|\(.*\)|', '', $software );
-        }
+  
+        //  e.g. 
+        //  (1) MyMedicalBank | Slack
+        //  (+) MyMedicalBank | Slack
+        #   Autodesk Revit 2020 - [4 BEDROOM - Reflected Ceiling Plan: FF] 
+        $software = preg_replace( array( '|\(.*\)|', '|\[.*\]|', '‎' ), '', $software );
+        
 
-        if( stripos( $software, '[' ) !== false )
-        {  
-            $software = preg_replace( '|\[.*\]|', '', $software );
-        }
-        $software = trim( $software, '-| ' );
 
         if( 
             stripos( $software, ' @ ' ) !== false 
@@ -65,18 +60,21 @@ class Workplace_Log extends Workplace
             $software =  'Adobe Photoshop';
             return $software;
         }
+        $software = trim( $software, '-| ' );
 
+        # 
         if( stripos( $software, ' - ' ) !== false )
         {
-            if( $sa = array_map( 'trim', explode( ' - ', $software ) ) )
+            if( $sa = array_map( 'trim', explode( '-', $software ) ) )
             {
+                var_export( $sa );
                 if( $a = array_pop( $sa ) )
                 {
                     $software = $a;
                 }
             }
-
         }
+
 
         //  Fix slack dynamic title
         if( stripos( $software, ' | ' ) !== false )
@@ -117,6 +115,11 @@ class Workplace_Log extends Workplace
      {    
         try
 		{ 
+            if( @$_GET['test'] )
+            {
+                echo self::sanitizeToolName( $_GET['test'] );
+                return false;
+            }
             //  Code that runs the widget goes here...
             //  Output demo content to screen
             if( $_POST )
@@ -280,14 +283,14 @@ class Workplace_Log extends Workplace
                     $mailInfo['body'] = 'The following banned tools has been used by ' . $userInfo['username'] . ' in ' . $workspace['name'] . ':' .  "\r\n" . '' .  "\r\n" . '';
 
                     $mailInfo['body'] .= '' . self::arrayToString( $bannedTools ) . '.' .  "\r\n" . '' .  "\r\n" . '';
-                    $mailInfo['body'] .= 'The entry has been removed from work session time in ' . $workspace['name'] . '.' . "\r\n" . '' .  "\r\n" . '';
+                    $mailInfo['body'] .= 'The entry has been removed from the work session time in ' . $workspace['name'] . '.' . "\r\n" . '' .  "\r\n" . '';
 
                     $mailInfo['body'] .= 'Manage Workspace Tool Preference for ' . $workspace['name'] . ': ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_ManageTools?workspace_id=' . $workspace['workspace_id'] . '.' .  "\r\n" . '';
 
                     @self::sendMail( $mailInfo );
 
                     //  report to self
-                    $mailInfo['to'] = $adminEmails;
+                    $mailInfo['to'] = Ayoola_Application::getUserInfo( 'user_id' );
                     $mailInfo['subject'] = '' . $bannedTools[0] . ' is not allowed on ' . $workspace['name'] . '';
                     $mailInfo['body'] = 'We noticed you have used ' . $bannedTools[0] . ' while working in ' . $workspace['name'] . ' recently. This tool is not allowed while working.' . "\r\n" . "\r\n" . '';
                     $mailInfo['body'] .= 'This activity will not be recorded as a productive or active work session in  ' . $workspace['name'] . '.' . "\r\n" . "\r\n" . '';
