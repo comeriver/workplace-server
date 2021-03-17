@@ -74,6 +74,20 @@ class Workplace_Log extends Workplace
                 {
                     $software = $a;
                 }
+                if( stripos( $software, 'Microsoft Excel' ) === 0 )
+                {
+                    $software =  'Microsoft Excel';
+                }
+                elseif( stripos( $software, 'Material Browser' ) === 0 )
+                {
+                    $software =  'Material Browser';
+                }
+                elseif( stripos( $software, ' on Twitter: ' ) !== false )
+                {
+                    $software =  'Twitter';
+                }
+        
+        
             }
         }
 
@@ -85,7 +99,7 @@ class Workplace_Log extends Workplace
             {
                 //  I think we should leave slack with the name of organization intact
                 //  Works well as a name of team being a tool itself.
-                //  $software = array_unshift( $softwareA );
+                $software = array_unshift( $softwareA );
             }
         }
         
@@ -214,19 +228,20 @@ class Workplace_Log extends Workplace
 
             // Save Screenshot
             //  Workplace_Screenshot_Save::viewInLine();
+            $time = time();
+            $year = date( 'Y' );
+            $month = date( 'M' );
+            $day = date( 'd' );
+
             if( $postData['screenshot'] )
             {
                 $screenshot = base64_decode( $postData['screenshot'] );
-                $postData['filename'] = '/workplace/screenshots/' . Ayoola_Application::getUserInfo( 'user_id' ) . '/' . md5( $postData['window_title'] ) . '_' . time() . '.jpg';
+                $postData['filename'] = '/workplace/screenshots/' . $year . '/' . $month . '/' . $day . '/' . md5( $postData['window_title'] ) . '_' . time() . '.jpg';
                 $path = Ayoola_Doc::getDocumentsDirectory() . $postData['filename'];
                 Ayoola_Doc::createDirectory( dirname( $path ) );
                 file_put_contents( $path, $screenshot );
             }
         
-            $time = time();
-            $year = date( 'Y' );
-            $month = date( 'M' );
-            $day = date( 'd' );
 
             //var_export( $postData );
             //var_export( $where );
