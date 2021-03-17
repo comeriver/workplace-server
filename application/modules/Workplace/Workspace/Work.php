@@ -57,13 +57,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                     $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false;
                 }
-/*              if( ! self::isWorkspaceAdmin( $data ) )
-                {
-                    $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
-                    $this->setViewContent( $this->includeTitle( $data ) ); 
-                    return false;
-                }        
- */                if( self::isOwingTooMuch( $data ) )
+                if( self::isOwingTooMuch( $data ) )
                 {
                     $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
                     $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
@@ -71,7 +65,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                 }        
     
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Work Online' ) . '</h3>', true  ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom xpc-notify-info wk-50">' . self::__( 'Do some task-based work. This allows you to log your work into the system without having to install any software tool. ' ) . '</p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom xpc-notify-info wk-50">' . self::__( 'Do some task-based work. This allows you to log your work into the system without having to install any software tool. To begin work, tap on "Work on a task".' ) . '</p>'  ); 
 
                 $taskClass = new ProjectManager_Tasks_List( array( 'project_name' => $data['workspace_id'], 'no_list_options' => true ) );
                 $options = $taskClass->getDbData();
@@ -271,10 +265,6 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                         <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&start=1" >
                             <i class="fa fa-chevron-right pc_give_space"></i>' . self::__( 'Work on a task' ) . '<i class="fa fa-tasks pc_give_space"></i>
                         </a>
-
-                        <a class="btn btn-default" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/ProjectManager_Goals_Creator?article_url=' . $data['workspace_id'] . '\', \'page_refresh\' );" >
-                            <i class="fa fa-xchevron-right pc_give_space"></i>' . self::__( 'Set a goal' ) . '<i class="fa fa-bullseye pc_give_space"></i>
-                        </a>
                         <a class="btn btn-default" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/ProjectManager_Tasks_Creator?article_url=' . $data['workspace_id'] . '\', \'page_refresh\' );" >
                             <i class="fa xfa-chevron-right pc_give_space"></i>' . self::__( 'Create a task' ) . '<i class="fa fa-plus pc_give_space"></i>
                         </a>
@@ -283,6 +273,15 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                 ); 
                 $this->setViewContent( 
                     $taskClass->view() 
+                ); 
+                $this->setViewContent(  '
+                    <br>
+                    <p class="pc_give_space_top_bottom">
+
+                        <a class="btn btn-default" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/ProjectManager_Goals_Creator?article_url=' . $data['workspace_id'] . '\', \'page_refresh\' );" >
+                            <i class="fa fa-xchevron-right pc_give_space"></i>' . self::__( 'Set a goal' ) . '<i class="fa fa-bullseye pc_give_space"></i>
+                        </a>
+                    </p>'  
                 ); 
 
                 $this->setViewContent( 
