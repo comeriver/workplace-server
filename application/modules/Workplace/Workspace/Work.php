@@ -268,26 +268,27 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                 $this->setViewContent(  '
                     <br>
                     <p class="pc_give_space_top_bottom">
-                        <a class="btn btn-warning" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/ProjectManager_Goals_Creator?article_url=' . $data['workspace_id'] . '\', \'page_refresh\' );" >
-                            <i class="fa fa-chevron-right pc_give_space"></i>' . self::__( 'Set a goal' ) . '<i class="fa fa-bullseye pc_give_space"></i>
+                        <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&start=1" >
+                            <i class="fa fa-chevron-right pc_give_space"></i>' . self::__( 'Work on a task' ) . '<i class="fa fa-tasks pc_give_space"></i>
+                        </a>
+
+                        <a class="btn btn-default" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/ProjectManager_Goals_Creator?article_url=' . $data['workspace_id'] . '\', \'page_refresh\' );" >
+                            <i class="fa fa-xchevron-right pc_give_space"></i>' . self::__( 'Set a goal' ) . '<i class="fa fa-bullseye pc_give_space"></i>
                         </a>
                         <a class="btn btn-default" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/ProjectManager_Tasks_Creator?article_url=' . $data['workspace_id'] . '\', \'page_refresh\' );" >
                             <i class="fa xfa-chevron-right pc_give_space"></i>' . self::__( 'Create a task' ) . '<i class="fa fa-plus pc_give_space"></i>
                         </a>
-                        <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&start=1" >
-                            <i class="fa xfa-chevron-right pc_give_space"></i>' . self::__( 'Work on a task' ) . '<i class="fa fa-tasks pc_give_space"></i>
-                        </a>
 
                     </p>'  
+                ); 
+                $this->setViewContent( 
+                    $taskClass->view() 
                 ); 
 
                 $this->setViewContent( 
                     ProjectManager_Goals_List::viewInLine( array( 'project_name' => $data['workspace_id'], 'no_list_options' => true ) ) 
                 ); 
 
-                $this->setViewContent( 
-                    $taskClass->view() 
-                ); 
 
 
                 $this->setViewContent( $this->includeTitle( $data ) ); 
