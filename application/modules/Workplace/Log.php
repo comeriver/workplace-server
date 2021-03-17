@@ -47,11 +47,8 @@ class Workplace_Log extends Workplace
         //  (+) MyMedicalBank | Slack
         #   Autodesk Revit 2020 - [4 BEDROOM - Reflected Ceiling Plan: FF] 
         //$software = preg_replace( array( '|\(.*\)|', '|\[.*\]|', '‎' ), '', $software );
-        // ‎‏
-        $software = preg_replace( array( '|\(.*\)|', '|\[.*\]|', '/[^\PCc^\PCn^\PCs]/u' ), '', $software );
-        //$software = str_replace( '‎', '', $software );
-
-
+        //  Autodesk Revit 2020 - [4 BEDROOM - Floor Plan: GF]
+        $software = preg_replace( array( '|\(.*\)|', '#\[.*\]#', '/[^\PCc^\PCn^\PCs]/u' ), '', $software );
 
         if( 
             stripos( $software, ' @ ' ) !== false 
