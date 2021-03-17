@@ -71,7 +71,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                 }        
     
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Work Online' ) . '</h3>', true  ); 
-                $this->setViewContent(  '<p class="pc-notify-info wk-50">' . self::__( 'Log your work online without having to use installed software. ' ) . '</p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom xpc-notify-info wk-50">' . self::__( 'Do some task-based work. This allows you to log your work into the system without having to install any software tool. ' ) . '</p>'  ); 
 
                 $taskClass = new ProjectManager_Tasks_List( array( 'project_name' => $data['workspace_id'], 'no_list_options' => true ) );
                 $options = $taskClass->getDbData();
@@ -97,7 +97,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                         //  var_export( $options );
                         if( empty( $xOption ) )
                         {
-                            $this->setViewContent(  '<p class="badnews">' . self::__( 'Add a task first to begin work...' ) . '</p>'  ); 
+                            $this->setViewContent(  '<p class="badnews">' . self::__( 'Create a task first before you begin work...' ) . '</p>'  ); 
                             break;
                         }
                         $xc = time() - intval( $data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_activity'] );
