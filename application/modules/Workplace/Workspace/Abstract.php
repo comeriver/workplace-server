@@ -212,6 +212,7 @@ class Workplace_Workspace_Abstract extends Workplace
                 {
                     padding: 0 !important;
                     font-size: 12px !important;
+                    margin-bottom: 0.5em;
                 }
                 .wk_title a, .box-css a, .box-css-table a, a.box-css-table, a.box-css
                 {

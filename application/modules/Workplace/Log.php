@@ -41,13 +41,16 @@ class Workplace_Log extends Workplace
     { 
         
         //  Fix notification dynamic title
-  
+
         //  e.g. 
         //  (1) MyMedicalBank | Slack
         //  (+) MyMedicalBank | Slack
         #   Autodesk Revit 2020 - [4 BEDROOM - Reflected Ceiling Plan: FF] 
-        $software = preg_replace( array( '|\(.*\)|', '|\[.*\]|', '‎' ), '', $software );
-        
+        //$software = preg_replace( array( '|\(.*\)|', '|\[.*\]|', '‎' ), '', $software );
+        // ‎‏
+        $software = preg_replace( array( '|\(.*\)|', '|\[.*\]|', '/[^\PCc^\PCn^\PCs]/u' ), '', $software );
+        //$software = str_replace( '‎', '', $software );
+
 
 
         if( 
@@ -67,7 +70,6 @@ class Workplace_Log extends Workplace
         {
             if( $sa = array_map( 'trim', explode( '-', $software ) ) )
             {
-                var_export( $sa );
                 if( $a = array_pop( $sa ) )
                 {
                     $software = $a;
@@ -102,7 +104,9 @@ class Workplace_Log extends Workplace
         }
 
         $software = trim( $software );
+
         $software = trim( $software, ' - | ' );
+
 
         return $software;
     }
