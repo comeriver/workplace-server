@@ -31,7 +31,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
      * 
      * @var string 
      */
-    protected static $_objectTitle = 'Workspace Payout Documentation Tool'; 
+    protected static $_objectTitle = 'Work on a Task'; 
 
     /**
      * Performs the whole widget running process
