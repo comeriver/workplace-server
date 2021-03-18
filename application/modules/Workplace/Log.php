@@ -146,9 +146,13 @@ class Workplace_Log extends Workplace
                 //$_POST = $_REQUEST = json_decode( file_get_contents( 'data.json' ), true );
             }
 
-            if( ! $userInfo = Ayoola_Application::getUserInfo() ? : $this->authenticate() )
+            if( ! $userInfo = Ayoola_Application::getUserInfo() )
             {
-                return false;
+                $this->authenticate();
+                if( ! $userInfo = Ayoola_Application::getUserInfo() )
+                {
+                    return false;
+                }
             }
 
             $postData = $_POST;
