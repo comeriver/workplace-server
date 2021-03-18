@@ -64,7 +64,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                     return false;
                 }        
     
-                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Work Online' ) . '</h3>', true  ); 
+                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Work on a Task' ) . '</h3>', true  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom xpc-notify-info wk-50">' . self::__( 'Do some task-based work. This allows you to log your work into the system without having to install any software tool. To begin work, tap on "Work on a task".' ) . '</p>'  ); 
 
                 $taskClass = new ProjectManager_Tasks_List( array( 'project_name' => $data['workspace_id'], 'no_list_options' => true ) );
