@@ -80,7 +80,7 @@ class Workplace_Workspace_Reports extends Workplace_Workspace_Insights
                 $fieldset = new Ayoola_Form_Element();
 
 
-                $fieldset->addElement( 
+                $fieldset->addElement(
                     array( 
                     'name' => 'titles', 
                     'label' => 'Reference Titles', 
