@@ -126,8 +126,8 @@ class Workplace_Log extends Workplace
      * Performs the whole widget running process
      * 
      */
-     public function init()
-     {    
+    public function init()
+    {
         try
 		{ 
             if( @$_GET['test'] )
@@ -145,17 +145,22 @@ class Workplace_Log extends Workplace
             {
                 //$_POST = $_REQUEST = json_decode( file_get_contents( 'data.json' ), true );
             }
-
-            if( ! $userInfo = Ayoola_Application::getUserInfo() )
+            if( ! $userInfo = $this->authenticate() )
             {
-                $this->authenticate();
                 if( ! $userInfo = Ayoola_Application::getUserInfo() )
                 {
                     return false;
                 }
             }
+            else
+            {
+                Ayoola_Access_Login::login( $userInfo );
+            }
 
             $postData = $_POST;
+            //var_export( $postData );
+            //var_export( Ayoola_Application::getUserInfo() );
+
             if( $this->getParameter( 'log') )
             {
                 $postData = $this->getParameter( 'log');
@@ -174,10 +179,12 @@ class Workplace_Log extends Workplace
             //  keylog 
 
             $tools = array();
-            if( ! empty( $postData['software'] ) )
+            if( ! empty( self::sanitizeToolName( $postData['window_title'] ) ) )
             {
-                if( $tool = self::sanitizeToolName( $postData['software'] ) )
-                $tools[] = $tool;
+                if( $tool = self::sanitizeToolName( $postData['window_title'] ) )
+                {
+                    $tools[] = $tool;
+                }
             }
             $idleTime = true;
 
@@ -192,11 +199,14 @@ class Workplace_Log extends Workplace
                 foreach( $keys as $software => $softwareContent )
                 {
                     //  Fix browsers dynamic title
-                    if( $realToolName = self::sanitizeToolName( $software ) )
-                    $tools[] = $realToolName;
     
                     foreach( $softwareContent as $title => $content )
                     {
+                        if( $realToolName = self::sanitizeToolName( $title ) )
+                        {
+                            $tools[] = $realToolName;
+                        }
+    
                         $content = trim( $content );
                         if( ! empty( $content ) )
                         {
@@ -245,11 +255,12 @@ class Workplace_Log extends Workplace
         
 
             //var_export( $postData );
-            //var_export( $where );
+            //var_export( $postData['software'] );
+            //var_export( self::sanitizeToolName( $postData['software'] ) );
             $toSave = array( 
                 'filename' => $postData['filename'], 
                 'user_id' => Ayoola_Application::getUserInfo( 'user_id' ), 
-                'software' => self::sanitizeToolName( $postData['software'] ), 
+                'software' => self::sanitizeToolName( $postData['window_title'] ), 
                 'workspace_id' => $where['workspace_id'], 
                 'window_title' => $postData['window_title'],
                 'goals_id' => $postData['goals_id'],
@@ -286,7 +297,7 @@ class Workplace_Log extends Workplace
                 {
                     $bannedTools = array_diff( $tools, $workspace['settings']['whitelist_tools'] );
                 }
-                else
+                elseif( ! empty( $workspace['settings']['banned_tools'] )  )
                 {
                     $bannedTools = array_intersect( $workspace['settings']['banned_tools'], $tools );
                 }
@@ -336,14 +347,6 @@ class Workplace_Log extends Workplace
                         $updated['lastest_activity'] = $time;
                         $updated['lastest_task'] = $postData['tasks_id'];
 
-                        if( $trackedTools = array_intersect( $workspace['settings']['tracked_tools'], $tools ) )
-                        {
-                            foreach( $trackedTools as $eachTracked )
-                            {
-                                $updated['tracked_tools'][$eachTracked][$year][$month][$day] += $logsToCount;
-                            }
-                            $updated['productive_time'][$eachTracked][$year][$month][$day] += $logsToCount;
-                        }
                     }
                     elseif( ! empty( $idleTime ) && ! empty( $updated['lastest_activity'] ) )
                     {
@@ -364,13 +367,24 @@ class Workplace_Log extends Workplace
                     }
                     else
                     {
+                        if( ! empty( $workspace['settings']['tracked_tools'] ) AND $trackedTools = array_intersect( $workspace['settings']['tracked_tools'], $tools ) )
+                        {
+                            foreach( $trackedTools as $eachTracked )
+                            {
+                                $updated['tracked_tools'][$eachTracked][$year][$month][$day] += $logsToCount;
+                            }
+                            $updated['productive_time'][$eachTracked][$year][$month][$day] += $logsToCount;
+                            $updated['tools'] = array_merge( $trackedTools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
+                            $updated['tools'] = array_unique( $updated['tools'] );
+                        }
                         $updated['active_log'] += $logsToCount;
                     }
-                    $updated['tools'] = array_merge( $tools, ( is_array( $updated['tools'] ) ? $updated['tools'] : array() ) );
-                    $updated['tools'] = array_unique( $updated['tools'] );
 
                     $workspace['settings']['tools'] = array_merge( $tools, ( is_array( $workspace['settings']['tools'] ) ? $workspace['settings']['tools'] : array() ) );;     
                     $workspace['settings']['tools'] = array_unique( $workspace['settings']['tools'] );
+
+                    //  only workspace tool stays as member tool
+                    $updated['tools'] = array_intersect( $workspace['settings']['tools'], $updated['tools'] );
 
                 }
                 unset( $updated['time'] );

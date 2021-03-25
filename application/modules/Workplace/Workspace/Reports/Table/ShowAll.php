@@ -58,6 +58,10 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
         $this->_dbWhereClause['workspace_id'] = $_REQUEST['workspace_id'];    
         if( ! self::isWorkspaceAdmin( $data ) )
         {
+            $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+        }        
+        elseif( isset( $_REQUEST['user_id'] ) )
+        {
             $this->_dbWhereClause['user_id'] = $_REQUEST['user_id'];    
         }        
 

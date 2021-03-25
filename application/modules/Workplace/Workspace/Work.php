@@ -200,7 +200,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                                     'log' => array(
                                                     'workspace_id' => $data['workspace_id'],
                                                     'filename' => $formValues['proof'],
-                                                    'window_title' => $xOption[$formValues['task']],
+                                                    'window_title' => '' . $xOption[$formValues['task']] . ' - Task',
                                                     'software' => 'Tasks',
                                                     'active_time' => true,
                                                     'tasks_id' => $formValues['task'],
