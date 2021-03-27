@@ -36,3 +36,4 @@ application/documents/public/*
 application/databases/Application/settings.xml
 application/databases/ProjectManager/tasks.xml
 application/databases/Workplace/Workspace/Work/table.xml
+application/databases/ProjectManager/goals.xml

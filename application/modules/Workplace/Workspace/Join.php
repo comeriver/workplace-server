@@ -129,6 +129,7 @@ class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
             
             <li ' . $doneCss . '>Download/Install Workplace Client to your Work Computer. <a  target="_blank" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Downloads"> Go to Downloads</a></li>
             <li ' . $doneCss . '>Login to Workplace Client tool on your work computer everytime you want to work</li>
+            <li ' . $doneCss . '>Go back to <a  target="_blank" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/Workplace_Workspace_List"> Workplace Dashboard</a></li>
             ';
     
             $html = '
