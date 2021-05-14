@@ -55,14 +55,14 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
             return false;
         }        
 
-        $this->_dbWhereClause['workspace_id'] = $_REQUEST['workspace_id'];    
+        $where['workspace_id'] = $_REQUEST['workspace_id'];    
         if( ! self::isWorkspaceAdmin( $data ) )
         {
             $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
         }        
         elseif( isset( $_REQUEST['user_id'] ) )
         {
-            $this->_dbWhereClause['user_id'] = $_REQUEST['user_id'];    
+            $where['user_id'] = $_REQUEST['user_id'];    
         }        
 
         $this->setViewContent(  '' . self::__( '<h2 class="pc_give_space_top_bottom">Reports</h2>' ) . '', true  ); 
@@ -71,18 +71,25 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
             <a class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports/?workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-chevron-right pc_give_space ' .  "\r\n" . '"></i>' . self::__( 'Create a report' ) . '<i class="fa fa-bar-chart pc_give_space ' .  "\r\n" . '"></i></a>
         </div>'  ); 
 
-        $reports = $this->getDbData();
+        //$reports = $this->getDbData();
+        $options = array( 'record_search_limit' => 10000, 'limit' => 50 );
+        $reports = Workplace_Workspace_Reports_Table::getInstance()->select( null, $where, $options );
 
         $html = '';
+
         foreach( $reports as $report )
         {
-            $where = array( 'window_title' => $report['titles'], 'workspace_id' => $report['workspace_id'] );
-            $options = array( 'row_id_column' => 'window_title', 'limit' => count( $report['titles'] ) );
-            if( ! self::isWorkspaceAdmin( $data ) )
+            $screenshots = array();
+            if( ! empty( $report['titles'] ) && is_array( $report['titles'] ) )
             {
-                $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
-            }        
-            $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
+                $where = array( 'window_title' => $report['titles'], 'workspace_id' => $report['workspace_id'] );
+                $options = array( 'row_id_column' => 'window_title', 'record_search_limit' => 1000, 'limit' => is_array( $report['titles'] ) ? count( $report['titles'] ) : 0 );
+                if( ! self::isWorkspaceAdmin( $data ) )
+                {
+                    $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+                }        
+                $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
+            }
 
             $this->setViewContent( '
 
