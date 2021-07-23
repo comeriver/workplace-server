@@ -132,22 +132,22 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                 </div>
                 ' 
                 
-            );
+                );
 
 
 
-                if( $due && $balance - $due > 0 )
+                if( $moneyDue && $balance - $moneyDue > 0 )
                 {
                     if( empty( $_REQUEST['paid'] ) )
                     {
-                        $this->setViewContent( '<a class="btn btn-primary wk-50" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing_Table_List?paid=1&workspace_id=' . $data['workspace_id'] . '">Clear Bill <i class="fa fa-check pc_give_space"></i></a>' );
+                        $this->setViewContent( '<a class="btn btn-primary wk-50" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?paid=1&workspace_id=' . $data['workspace_id'] . '">Clear Bill <i class="fa fa-check pc_give_space"></i></a>' );
                     }
                     else
                     {
                         if( self::pay( $data, Ayoola_Application::getUserInfo( 'username' ) ) )
                         {
-                            $value['settings']['cost']['paid'] += $due;
-                            $value['settings']['cost']['last_paid_time'] = time();
+                            $values['settings']['cost']['paid'] += $due;
+                            $values['settings']['cost']['last_paid_time'] = time();
                             if( $values !== $data && $this->updateDb( $values ) )
                             {
                                 $this->setViewContent( '<div class="goodnews wk-50">Bill successfully cleared <i class="fa fa-chevron-right pc_give_space"></i></div>' );
