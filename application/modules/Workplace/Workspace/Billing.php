@@ -37,7 +37,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
      * Performs the whole widget running process
      * 
      */
-	public static function pay( $data, $username )
+	public static function pay( & $data, $username )
     {
         $due = intval( $data['settings']['cost']['billed'] ) - intval( $data['settings']['cost']['paid'] );
         $cost = Workplace_Settings::retrieve( 'cost' );
@@ -59,6 +59,14 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                     'hours' => $hoursDue,
                 )
             );
+
+            $data['settings']['cost']['paid'] += $due;
+            $data['settings']['cost']['last_paid_time'] = time();
+
+            $where = array( 'workspace_id' => $data['workspace_id'] );
+
+            $result = Workplace_Workspace::getInstance()->update( array( 'settings' => $data['settings'] ), $where );
+
             $currency = ( Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '' );
             $ownerInfo = self::getUserInfo( array( 'user_id' => $data['user_id'] ) );
             $mailInfo = array();
@@ -110,10 +118,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                 $balance = (float) Ayoola_Application::getUserInfo( 'wallet_balance' );
                 $currency = ( Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '' );
                 $wallet .= '' . $currency . $balance . '';
-        
-
-                $values = $data;
-                
+                        
                 $due = doubleval( $data['settings']['cost']['billed'] ) - doubleval( $data['settings']['cost']['paid'] );
                 $cost = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
                 $hoursDue = self::toHours( $due );
@@ -146,13 +151,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                     {
                         if( self::pay( $data, Ayoola_Application::getUserInfo( 'username' ) ) )
                         {
-                            $values['settings']['cost']['paid'] += $due;
-                            $values['settings']['cost']['last_paid_time'] = time();
-                            if( $values !== $data && $this->updateDb( $values ) )
-                            {
-                                $this->setViewContent( '<div class="goodnews wk-50">Bill successfully cleared <i class="fa fa-chevron-right pc_give_space"></i></div>' );
-                            } 
-            
+                            $this->setViewContent( '<div class="goodnews wk-50">Bill successfully cleared <i class="fa fa-chevron-right pc_give_space"></i></div>' );
                         }
                         else
                         {
