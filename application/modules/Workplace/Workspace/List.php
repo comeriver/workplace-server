@@ -34,7 +34,11 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
      */	
     public function init()
     {
-        //if( ! self::hasPriviledge( 98 ) )
+        if( self::hasPriviledge( 98 ) && isset( $_GET['sudo'] ) )
+        {
+            //  sudo mode
+        }
+        else
         {
             $this->_dbWhereClause['members'] = strval( Ayoola_Application::getUserInfo( 'email' ) );
         }
