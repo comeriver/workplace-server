@@ -110,7 +110,13 @@ class Workplace extends PageCarton_Widget
     {
         if( ! $userInfo = Application_User_Abstract::getUserInfo( $identifier ) )
         {
-            return false;
+            $access = new Ayoola_Access();
+            $identifier = array( $_GET['identifier'] => $_GET['value'] );
+            $userInfo = $access->getUserInfoByIdentifier( $identifier );
+            if( ! $userInfo )
+            {
+                return false;
+            }
         }
 
         $userInfo['user_id'] = strval( $userInfo['user_id'] );
