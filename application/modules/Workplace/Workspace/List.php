@@ -34,7 +34,7 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
      */	
     public function init()
     {
-        //if( ! self::hasPriviledge( 98 ) )
+        if( ! self::hasPriviledge( 98 ) || empty( $_REQUEST['show_all'] ) )
         {
             $this->_dbWhereClause['members'] = strval( Ayoola_Application::getUserInfo( 'email' ) );
         }
