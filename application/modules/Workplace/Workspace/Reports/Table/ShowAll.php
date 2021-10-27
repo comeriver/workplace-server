@@ -52,7 +52,7 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
         {
             $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
             $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
-            return false;
+            //return false;
         }        
 
         $where['workspace_id'] = $_REQUEST['workspace_id'];    

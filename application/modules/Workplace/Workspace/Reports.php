@@ -54,7 +54,7 @@ class Workplace_Workspace_Reports extends Workplace_Workspace_Insights
                 {
                     $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
                     $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
-                    return false;
+                    //return false;
                 }        
     
                 $previousTitles = array();
