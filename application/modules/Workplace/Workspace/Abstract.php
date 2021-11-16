@@ -303,6 +303,11 @@ class Workplace_Workspace_Abstract extends Workplace
                     border: 0.5px solid #666;
                     overflow: auto;
                 }
+                .box-css i
+                {
+                    font-size: 12px;
+                }
+
                 .wk-50, .box-css-wk-50
                 {
                     width: 50%;

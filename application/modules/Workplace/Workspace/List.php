@@ -63,8 +63,9 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
             } 
             else
             {
-                $options .= '<a class="pc_give_space" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Delete/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-trash" aria-hidden="true"></i></a>';
                 $options .= '<a class="pc_give_space"  onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Editor/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+                $options .= '<a class="pc_give_space" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Delete/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+
             }       
             $html .= '
             <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
@@ -73,6 +74,7 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
                     <a class="" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '">
                         <span style="font-size:40px;">' . $data['name'] . '</span>
                     </a>
+                    <br>
                     <br>
                     ' . count( $data['members'] ) . ' members ' . $options . '
 
@@ -88,6 +90,11 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
                     hrs 
                 </div>
             </div>
+                <div style="background: orange; padding:1em; text-align: center; ">
+                    <a class="pc_give_space" style="width:100%;padding:1em; color:#333;"  href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Insights/?workspace_id=' . $data['workspace_id'] . '">View Workspace</a>
+                </div>
+
+
             ';
             if( $screen = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'limit' => 1 ) ) )
             {

@@ -52,7 +52,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             {
                 $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is beyond your account limit. Please settle this bill now to avoid service disruption. </div>' ) . '', true  ); 
                 $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
-                return false;
+                //return false;
             }        
 
             self::includeScripts();
@@ -149,6 +149,10 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 if( $time - $memberData['last_seen'] < 120 )
                 {
                     $onlineMembers[] = $userInfo['email'];
+                }
+                elseif( ! empty( $_GET['online'] ) )
+                {
+                    continue;
                 }
                 if( is_array( $memberData['tools'] ) )
                 {
@@ -283,17 +287,30 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 }
     
             }
+            $options = null;
+            $options .= '<a class="pc_give_space" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Insights/?workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+            $options .= '<a class="pc_give_space" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Invite/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-share" aria-hidden="true"></i></a>';
+            if( ! self::isWorkspaceAdmin( $data ) )
+            {
+                
+            } 
+            else
+            {
+                $options .= '<a class="pc_give_space"  onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Editor/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+
+                $options .= '<a class="pc_give_space" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Delete/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+            }       
 
             $html = '
             <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
                 <div class="box-css small-box-css">
                     <span style="font-size:40px;">' . count( $data['members'] ) . '</span><br>
-                    <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Editor?workspace_id=' . $data['workspace_id'] . '">Members</a>
+                   Members ' . $options . '
 
                 </div>
                 <div class="box-css small-box-css">
                     <span style="font-size:40px;">' . count( $onlineMembers ) . '</span><br>
-                    <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '">Online</a>
+                    <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&online=1">Online Now</a>
 
                 </div>
                 <div class="box-css small-box-css">
