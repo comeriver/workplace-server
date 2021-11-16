@@ -225,7 +225,7 @@ class Workplace_Workspace_Abstract extends Workplace
                 }
                 .wk_title a, .box-css a, .box-css-table a, a.box-css-table, a.box-css
                 {
-                    color: #fff;
+                    color: orange;
                     text-decoration:none;
                 }
                 .wk_title h2, .wk_title p
@@ -241,9 +241,11 @@ class Workplace_Workspace_Abstract extends Workplace
                 }
                 .section-divider
                 {
-                    padding: 2em;
+                    padding: 1em;
                     color: #333;
                     text-align:center;
+                    background: #fff;
+                    font-size: smaller;
                 }
                 .btn-default
                 {
@@ -293,7 +295,7 @@ class Workplace_Workspace_Abstract extends Workplace
                 .box-css, .small-box-css, .chat-box-css, .box-css-table, .box-css-wk-50
                 {
                     padding:2em; 
-                    background-color:grey; 
+                    background-color:#333; 
                     color:white; 
                     flex-basis:25%; 
                     text-align: center; 

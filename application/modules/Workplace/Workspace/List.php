@@ -44,7 +44,10 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
             <p class="pc_give_space_top_bottom">
                 <a class="btn btn-primary pc_give_space_top_bottom" href="' . Ayoola_Application::getUrlPrefix() . '/"><i class="fa fa-home pc_give_space"></i></a>
                 <a class="btn btn-primary pc_give_space_top_bottom" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Creator/\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa pc_give_space"></i> Create a new Workspace <i class="fa fa-plus pc_give_space"></i></a>
-            </p>' 
+            </p>
+            <br>
+            ' 
+            
         ); 
 
         $html = null;

@@ -172,11 +172,11 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 {
                     if( $counter === $breakPoint  )
                     {
-                        $screenCss .= 'flex-basis:100%;';
+                     //   $screenCss .= 'flex-basis:100%;';
                     }
                     else
                     {
-                        $screenCss .= $breakLineCss;
+                    //    $screenCss .= $breakLineCss;
                     }
                 }
                 $counter++;
@@ -214,7 +214,6 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             $totalTime = $intervals;
             $tools = array_unique( $tools );
 
-            $sendMessage = Workplace_Workspace_Broadcast_Creator::viewInLine();
 
             $where = array( 'workspace_id' => $data['workspace_id'] );
             if( empty( $viewAll ) )
@@ -223,6 +222,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             }
 
             $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'row_id_column' => 'software', 'limit' => 12 ) );
+            $sendMessage = Workplace_Workspace_Broadcast_Creator::viewInLine();
 
             $chat = '
                 <div class="box-css chat-box-css">
@@ -305,12 +305,13 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 </div>
             </div>
                 ' . $timePanel . ' 
-            <div class="section-divider">Members</div>
+            <div class="section-divider">Team Members Overview</div>
             <div style="display:flex; flex-wrap:wrap;">
-                ' . $chat . ' 
                 ' . $memberList . '
+                ' . $chat . ' 
+
             </div>
-            <div class="section-divider">Tools</div>
+            <div class="section-divider">Tools Overview</div>
             ' . self::showScreenshots( $screenshots, $data ) . '
 
             <div class="wk-space"></div>
