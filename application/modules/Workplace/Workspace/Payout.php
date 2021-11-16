@@ -59,7 +59,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                 }        
                 if( self::isOwingTooMuch( $data ) )
                 {
-                    $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
+                    $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is beyond your account limit. Please settle this bill now to avoid service disruption. </div>' ) . '', true  ); 
                     $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
                     return false;
                 }        
@@ -81,7 +81,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                     $totalHours = intval( $data['member_data'][$member]['active_log'] );
                     $totalPaid = intval( $data['member_data'][$member]['paid'] );
                     $totalDue = $totalHours - $totalPaid;
-                    $totalDueTime = self::toHours( $totalDue );
+                    $totalDueTime = self::toHours( $totalDue, true );
             
                     $renumeration = self::getTotalPayout( $data['member_data'][$member] );
                     $targetRenumeration = doubleval( $data['max_renumeration'][$key] );

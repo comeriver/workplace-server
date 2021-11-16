@@ -57,7 +57,7 @@ class Workplace_Workspace_Abstract extends Workplace
         $totalHours = intval( $memberData['active_log'] );
         $totalPaid = intval( $memberData['paid'] );
         $totalDue = $totalHours - $totalPaid;
-        $totalDue = self::toHours( $totalDue );
+        $totalDue = self::toHours( $totalDue, true );
         $renumeration = doubleval( $memberData['renumeration'] ) ? : 1;
         return $totalDue * $renumeration;
     }
@@ -65,10 +65,14 @@ class Workplace_Workspace_Abstract extends Workplace
     /**
      * 
      */
-	public static function toHours( $noOfLogs )  
+	public static function toHours( $noOfLogs, $returnInt = false )  
     {
         $logIntervals = Workplace_Settings::retrieve( 'log_interval' ) ? : 60;
         $hours = round( ( $noOfLogs * $logIntervals ) / 3600, 2 );
+        if( empty( $returnInt ) )
+        {
+            $hours = self::formatNumberWithSuffix( $hours );
+        }
         return $hours;
     }
 
@@ -80,7 +84,7 @@ class Workplace_Workspace_Abstract extends Workplace
         $minBill = doubleval( Workplace_Settings::retrieve( 'min_bill' ) ? : 1000 );
         $due = doubleval( $data['settings']['cost']['billed'] ) - doubleval( $data['settings']['cost']['paid'] );
         $cost = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
-        $hoursDue = doubleval( Workplace_Workspace_Abstract::toHours( $due ) );
+        $hoursDue = doubleval( Workplace_Workspace_Abstract::toHours( $due, true ) );
         $moneyDue = $hoursDue * $cost;
 
         if( $moneyDue >= $minBill )
@@ -93,12 +97,17 @@ class Workplace_Workspace_Abstract extends Workplace
     /**
      * 
      */
-	public static function getWorkspaceBalance( $data )  
+	public static function getWorkspaceBalance( $data, $returnInt = false )  
     {
         $rate = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
         $balance  = doubleval( $data['settings']['cost']['billed'] ) - doubleval( $data['settings']['cost']['paid'] );
-        $balanceHours = doubleval( self::toHours( $balance ) );
+
+        $balanceHours = doubleval( self::toHours( $balance, true ) );
         $credit = $balanceHours * $rate;
+        if( empty( $returnInt ) )
+        {
+            $credit = self::formatNumberWithSuffix( $credit );
+        }
         return $credit;
     }
 

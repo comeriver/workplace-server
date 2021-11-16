@@ -41,7 +41,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
     {
         $due = intval( $data['settings']['cost']['billed'] ) - intval( $data['settings']['cost']['paid'] );
         $cost = Workplace_Settings::retrieve( 'cost' );
-        $hoursDue = self::toHours( $due );
+        $hoursDue = self::toHours( $due, true );
         $moneyDue = $hoursDue * $cost;
 
         $transfer = array(
@@ -109,10 +109,10 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                 {
                     $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
                     $this->setViewContent( $this->includeTitle( $data ) ); 
-                }        
+                } 
     
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Workspace Bills' ) . '</h3>', true  ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'Check your workspace bills and top up your account to be able to enjoy all the productivity features of Workspace' ) . '</p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'Top up your account so you can continue to enjoy all the productivity features of Workspace.' ) . '</p>'  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check top-up history' ) . '</a></p>'  ); 
 
                 $balance = (float) Ayoola_Application::getUserInfo( 'wallet_balance' );
@@ -121,13 +121,14 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                         
                 $due = doubleval( $data['settings']['cost']['billed'] ) - doubleval( $data['settings']['cost']['paid'] );
                 $cost = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
-                $hoursDue = self::toHours( $due );
+                $hoursDue = self::toHours( $due, true );
                 $moneyDue = $hoursDue * $cost;
+                $moneyDueX = self::formatNumberWithSuffix( $moneyDue );
                 
                 $this->setViewContent( '
                 <div style="display:flex;flex-wrap:wrap;">
                     <div class="box-css">
-                        <div style="font-size: 40px;">' . $currency . '' . $moneyDue . '</div>
+                        <div style="font-size: 40px;">' . $currency . '' . $moneyDueX . '</div>
                         <div>Current Bill</div>
                     </div>
                     <div class="box-css">
@@ -167,7 +168,11 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                 {
                     $this->setViewContent( '<div class="pc-notify-info wk-50">Add funds so bills can be settled automatically. <i class="fa fa-chevron-right pc_give_space"></i></div>' );
                 }
-                $this->setViewContent( '<div class="wk-50">' . Application_Wallet_Fund::viewInLine() . '</div>' ); 
+                $xAmount = strval( intval( $moneyDue + ($moneyDue / 2) ) );
+                $len = strlen( $xAmount );
+
+                $yAmount = str_pad( $xAmount[0], $len, '0', STR_PAD_RIGHT );
+                $this->setViewContent( '<div class="wk-50">' . Application_Wallet_Fund::viewInLine( array( 'amount' => $yAmount  ) ) . '</div>' ); 
                 $this->setViewContent( $this->includeTitle( $data ) ); 
 
                 // end of widget process

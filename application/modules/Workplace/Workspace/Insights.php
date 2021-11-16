@@ -50,7 +50,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             }
             if( self::isOwingTooMuch( $data ) )
             {
-                $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is too much. Please settle this bill now</div>' ) . '', true  ); 
+                $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is beyond your account limit. Please settle this bill now to avoid service disruption. </div>' ) . '', true  ); 
                 $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
                 return false;
             }        
@@ -127,9 +127,11 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             {
                 $viewAll = false;
             }
+            //var_export( $data['member_data'] );
 
             foreach( $data['members'] as $member )
             {
+                $member = strtolower( $member );
                 if( ! $userInfo = self::getUserInfo( array( 'email' => strtolower( $member ) ) ) )
                 {
                  //   continue;
@@ -143,7 +145,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                     continue;
                 }
 
-                $memberData = $data['member_data'][$userInfo['email']];
+                $memberData = $data['member_data'][$member];
                 if( $time - $memberData['last_seen'] < 120 )
                 {
                     $onlineMembers[] = $userInfo['email'];

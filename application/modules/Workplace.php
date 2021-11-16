@@ -80,6 +80,36 @@ class Workplace extends PageCarton_Widget
     }
 
     /**
+     * 1000 to 1k
+     * 
+     * @param int
+     * @return string
+     * 
+     */
+	public static function formatNumberWithSuffix($input)
+    {
+        $suffixes = array('', 'k', 'm', 'g', 't');
+        $suffixIndex = 0;
+
+        while(abs($input) >= 1000 && $suffixIndex < sizeof($suffixes))
+        {
+            $suffixIndex++;
+            $input /= 1000;
+        }
+
+        $result = (
+            $input > 0
+                // precision of 3 decimal places
+                ? floor($input * 10) / 10
+                : ceil($input * 10) / 10
+            )
+            . $suffixes[$suffixIndex];
+
+
+        return $result;
+    }
+
+    /**
      * Returns user info from auth token
      * 
      * @param void
@@ -93,7 +123,7 @@ class Workplace extends PageCarton_Widget
         $workspaces = Workplace_Workspace::getInstance()->select( null, $where );
         foreach( $workspaces as $workspace )
         {
-            if( ! empty( $workspace['member_data'][$email]['authorized'] ) )
+            //if( ! empty( $workspace['member_data'][$email]['authorized'] ) )
             {
                 $activeWorkspaces[] = $workspace;
             }

@@ -288,7 +288,9 @@ class Workplace_Log extends Workplace
             {
                 if( empty( $workspace['member_data'][$userInfo['email']]['authorized'] ) )
                 {
-                    continue;
+                    //  They should still log even if they are not authorized
+                    //  So if we have db issue, data isn't lost
+                    //continue;
                 }
                 $count++;
                 $updated = $workspace['member_data'][$userInfo['email']];

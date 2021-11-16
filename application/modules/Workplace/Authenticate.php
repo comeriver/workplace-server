@@ -48,13 +48,10 @@ class Workplace_Authenticate extends Workplace
             'user_id' => $authInfo['user_id'],
             'auth_token' => $authInfo['auth_token'],
         );
-    //    var_export( $userIdentifier  );
-    //    var_export( $table->select()  );
         if( ! $auth = $table->selectOne( null, $userIdentifier ) )
         {
             return false;
         }
-    //    var_export( Application_User_Abstract::getUserInfo( array( 'user_id' => $authInfo['user_id'] ) ) );
         $userInfo = self::getUserInfo( array( 'email' => $auth['email'] ) );
         return $userInfo;
     }
@@ -68,7 +65,6 @@ class Workplace_Authenticate extends Workplace
 		try
 		{ 
             //  Code that runs the widget goes here...
-        //    var_export( $_POST );
             if( empty( $_POST['email'] ) || empty( $_POST['password'] ) )
             {
                 //  error
@@ -83,11 +79,9 @@ class Workplace_Authenticate extends Workplace
                 'password' => $_POST['password'],
             );
 
-        //    var_export( $authInfo );
            
             if( $userInfo = Ayoola_Access_Login::localLogin( $authInfo ) )
             {
-            //    var_export( $userInfo );
                 $userInfo['email'] = strtolower( $userInfo['email'] );
                 $authToken = md5( uniqid( json_encode( $authInfo ), true ) );
 
@@ -100,7 +94,6 @@ class Workplace_Authenticate extends Workplace
                     'auth_token' => $authToken,
                     'device_info' => $_POST['device_info'],
                 );
-            //    var_export( $authInfoToSave );
 
                 $table->insert( $authInfoToSave );
                 $myWorkspaces = array();
@@ -119,7 +112,6 @@ class Workplace_Authenticate extends Workplace
                 $this->_objectData += $userInfo;
                 $this->_objectData += $settings;
                 $this->_objectData += $otherSettings;
-            //    var_export( $this->_objectData  );
 
             }
             else
