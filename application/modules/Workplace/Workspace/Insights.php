@@ -52,7 +52,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             {
                 $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is beyond your account limit. Please settle this bill now to avoid service disruption. </div>' ) . '', true  ); 
                 $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
-                //return false;
+                return false;
             }        
 
             self::includeScripts();
@@ -258,8 +258,8 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                         <span>Today</span>
                     </div>
                     <div class="box-css small-box-css ">
-                        <span style="font-size:40px;">' . self::toHours( ( $timeToday - $idleToday ) ) . '</span><br>
-                         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Active Today</a>
+                        <span style="font-size:40px;">' . self::toHours( $idleToday ) . '</span><br>
+                         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Idle Time</a>
                     </div>
                 </div>';
                 if( ! empty( $_REQUEST['idle_time'] ) )
