@@ -281,7 +281,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                         </div>
                         <div class="box-css small-box-css ">
                             <span style="font-size:40px;">' . self::toHours( ( @$totalIdle ) ) . '</span><br>
-                            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">All time</a>
+                            All time
                         </div>
                     </div>';
                 }
@@ -328,9 +328,6 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 ' . $chat . ' 
 
             </div>
-            <div class="section-divider">Tools Overview</div>
-            ' . self::showScreenshots( $screenshots, $data ) . '
-
             <div class="wk-space"></div>
             <div class="wk-space"></div>
             ';

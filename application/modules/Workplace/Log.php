@@ -306,7 +306,11 @@ class Workplace_Log extends Workplace
 
                 $ownerInfo = self::getUserInfo( array( 'user_id' => $workspace['user_id'] ) );
                 $mailInfo = array();
-                $adminEmails = '' . $ownerInfo['email'] . ',' . implode( ',', $workspace['settings']['admins'] );
+                $adminEmails = null;
+                if( ! empty( $workspace['settings']['admins'] ) )
+                {
+                    $adminEmails = '' . $ownerInfo['email'] . ',' . implode( ',', $workspace['settings']['admins'] );
+                }
 
                 if( ! empty( $bannedTools ) && ( empty( $updated['banned_usage_time'] ) || $time - $updated['banned_usage_time'] > 43200 ) )
                 {
@@ -386,7 +390,8 @@ class Workplace_Log extends Workplace
                     $workspace['settings']['tools'] = array_unique( $workspace['settings']['tools'] );
 
                     //  only workspace tool stays as member tool
-                    $updated['tools'] = array_intersect( $workspace['settings']['tools'], $updated['tools'] );
+                    
+                    $updated['tools'] = array_intersect( $workspace['settings']['tools'] ? : array(), $updated['tools'] ? : array() );
 
                 }
                 unset( $updated['time'] );
@@ -445,12 +450,12 @@ class Workplace_Log extends Workplace
 
                 $workspace['settings']['cost']['billed'] += $logsToCount;     
                 
-                $due = intval( $workspace['settings']['cost']['billed'] ) - intval( $workspace['settings']['cost']['paid'] );
-                $cost = Workplace_Settings::retrieve( 'cost' );
-                $hoursDue = Workplace_Workspace_Abstract::toHours( $due );
+                $due = doubleval( $workspace['settings']['cost']['billed'] ) - doubleval( $workspace['settings']['cost']['paid'] );
+                $cost = doubleval( Workplace_Settings::retrieve( 'cost' ) ) ? : 1;
+                $hoursDue = doubleval( Workplace_Workspace_Abstract::toHours( $due, true ) );
                 $moneyDue = $hoursDue * $cost;
 
-                $billedTime = intval( $workspace['settings']['cost']['billed_time'] );
+                $billedTime = doubleval( $workspace['settings']['cost']['billed_time'] );
 
                 if( $moneyDue >= $minBill && $time - $billedTime > 864000 )
                 {                        
