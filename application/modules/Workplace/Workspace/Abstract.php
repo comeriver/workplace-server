@@ -82,7 +82,7 @@ class Workplace_Workspace_Abstract extends Workplace
 	public static function isOwingTooMuch( $data )  
     {
         $minBill = doubleval( Workplace_Settings::retrieve( 'min_bill' ) ? : 1000 );
-        $due = doubleval( $data['settings']['cost']['billed'] ) - doubleval( $data['settings']['cost']['paid'] );
+        $due = doubleval( @$data['settings']['cost']['billed'] ) - doubleval( @$data['settings']['cost']['paid'] );
         $cost = doubleval( Workplace_Settings::retrieve( 'cost' ) ? : 20 );
         $hoursDue = doubleval( Workplace_Workspace_Abstract::toHours( $due, true ) );
         $moneyDue = $hoursDue * $cost;
