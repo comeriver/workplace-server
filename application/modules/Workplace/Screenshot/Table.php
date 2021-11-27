@@ -28,6 +28,13 @@ class Workplace_Screenshot_Table extends PageCarton_Table
     protected $_tableVersion = '0.9';  
 
     /**
+     * Time to hold the cache before refreshing
+     *
+     * @param int
+     */
+    public static $insertDelay = 60;
+
+    /**
      * Table data types and declaration
      * array( 'fieldname' => 'DATATYPE' )
      *

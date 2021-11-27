@@ -27,6 +27,15 @@ class Workplace_Workspace extends PageCarton_Table
      */
     protected $_tableVersion = '0.8';  
 
+    
+    /**
+     * Time to hold the cache before refreshing
+     *
+     * @param int
+     */
+    public static $insertDelay = 30;
+
+
     /**
      * Table data types and declaration
      * array( 'fieldname' => 'DATATYPE' )
