@@ -53,7 +53,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                 if( empty( $data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['authorized'] ) )
                 {
                     $this->setViewContent(  '<div class="badnews pc_give_space_top_bottom">' . self::__( 'Sorry, you need to authorize your data on this workspace before you can view it.' ) . '</div>', true  ); 
-                    $this->setViewContent(  '<div class="pc_give_space_top_bottom"><a href="' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . Ayoola_Application::getUserInfo( 'email' ) . '&auth_token=' . $data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['auth_token'] . '">Authorize this Workspace</a></div>'  ); 
+                    $this->setViewContent(  '<div class="pc_give_space_top_bottom"><a href="' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . Ayoola_Application::getUserInfo( 'email' ) . '&auth_token=' . $data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['auth_token'] . '&workspace_id=' . $data['workspace_id'] . '">Authorize this Workspace</a></div>'  ); 
                     $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false;
                 }

@@ -75,7 +75,7 @@ class Workplace_Workspace_Join extends Workplace_Workspace_Abstract
             {
                 foreach( $workspaces as $workspace )
                 {
-                    if( $workspace['member_data'][$email]['auth_token'] === $_REQUEST['auth_token'] )
+                    if( @$workspace['member_data'][$email]['auth_token'] === @$_REQUEST['auth_token'] || @$_REQUEST['workspace_id'] === $workspace['workspace_id'] )
                     {
                         if( @$_REQUEST['authorized'] )
                         {

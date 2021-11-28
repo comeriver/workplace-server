@@ -65,7 +65,7 @@ class Workplace_Screenshot extends Workplace_Workspace_Insights
                 
                 if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
                 {
-                    break;
+                    //break;
                 }
                 $memberData = $data['member_data'][$userInfo['email']];
                 //    var_export( $userInfo );
