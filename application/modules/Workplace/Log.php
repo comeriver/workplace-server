@@ -443,7 +443,7 @@ class Workplace_Log extends Workplace
                     $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace. ' . "\r\n" . '' . "\r\n" . '' . $notOnline . ' are all currently offline.' . "\r\n" . '';
                     
                     $mailInfo['body'] .= 'You may check out work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List' . "\r\n" . '';
-                    @self::sendMail( $mailInfo );
+                    //@self::sendMail( $mailInfo );
                 }
                 $updated['last_seen'] = $time;                    
                 $workspace['member_data'][$userInfo['email']] = $updated;
