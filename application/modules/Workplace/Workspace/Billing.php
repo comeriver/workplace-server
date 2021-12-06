@@ -116,7 +116,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
     
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Workspace Bills' ) . '</h3>'  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'Top up your account so you can continue to enjoy all the productivity features of Workspace.' ) . '</p>'  ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Billing_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check top-up history' ) . '</a></p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check top-up history' ) . '</a></p>'  ); 
 
                 $balance = (float) Ayoola_Application::getUserInfo( 'wallet_balance' );
                 $currency = ( Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '' );
@@ -149,7 +149,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                 {
                     if( empty( $_REQUEST['paid'] ) )
                     {
-                        $this->setViewContent( '<a class="btn btn-primary wk-50" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Billing?paid=1&workspace_id=' . $data['workspace_id'] . '">Clear Bill <i class="fa fa-check pc_give_space"></i></a>' );
+                        $this->setViewContent( '<a class="btn btn-primary wk-50" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?paid=1&workspace_id=' . $data['workspace_id'] . '">Clear Bill <i class="fa fa-check pc_give_space"></i></a>' );
                     }
                     else
                     {

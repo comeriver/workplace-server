@@ -67,7 +67,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
 
                 $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Process Payout Documentation' ) . '</h3>'  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'This is to provide payment advice for team members, based on the number of hours of work and based on amount set as renumeration for team members. ' ) . '</p>'  ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Payout_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check payout history' ) . '</a></p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check payout history' ) . '</a></p>'  ); 
 
                 $options = array();
 
@@ -111,7 +111,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                         </div>
                         <div class="box-css-table">' . $totalDueTime . ' hrs </div>
                         <div class="box-css-table">' . $renumeration . '</div>
-                        <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Payout?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
+                        <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
                     }
                     elseif( $renumeration  )
                     {
@@ -124,7 +124,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                             </div>
                             <div class="box-css-table">' . $totalDueTime . ' hrs </div>
                             <div class="box-css-table">' . $renumeration . '</div>
-                            <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Payout?paid=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
+                            <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?paid=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
                         }
                         else
                         {
@@ -135,7 +135,7 @@ class Workplace_Workspace_Payout extends Workplace_Workspace_Insights
                             </div>
                             <div class="box-css-table">' . $totalDueTime . ' hrs </div>
                             <div class="box-css-table">' . $renumeration . '</div>
-                            <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Payout?paid=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
+                            <a class="box-css-table" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?paid=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-check"></i></a>';
                         }
                     }
                     elseif( empty( $totalDueTime )  )

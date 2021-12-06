@@ -157,8 +157,8 @@ class Workplace_Workspace_Abstract extends Workplace
             <i class="fa fa-credit-card pc_give_space"></i> ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '">  Clear Bill</a>
             ';
             $adminOptions = '
-            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Payroll <i class="fa fa-dollar pc_give_space"></i></a>
-            <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i>  Top Up <i class="fa fa-credit-card pc_give_space"></i></a>
+            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Payroll <i class="fa fa-dollar pc_give_space"></i></a>
+            <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i>  Top Up <i class="fa fa-credit-card pc_give_space"></i></a>
             ';
         }  
         
@@ -181,11 +181,11 @@ class Workplace_Workspace_Abstract extends Workplace
             ) + $menuOptionsX,
             array( 
                 'option_name' => 'Task Manager', 
-                'url' => '/widgets/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '', 
+                'url' => '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '', 
             ) + $menuOptionsX,
             array( 
                 'option_name' => 'Reports', 
-                'url' => '/widgets/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '', 
+                'url' => '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '', 
             ) + $menuOptionsX,
 
         );
@@ -193,11 +193,11 @@ class Workplace_Workspace_Abstract extends Workplace
         {
             $menuOptions[] = array( 
                 'option_name' => 'Billing', 
-                'url' => '/widgets/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '', 
+                'url' => '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '', 
             ) + $menuOptionsX;
             $menuOptions[] = array( 
                 'option_name' => 'Payroll Management', 
-                'url' => '/widgets/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '', 
+                'url' => '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '', 
             ) + $menuOptionsX;
         }  
 
@@ -334,7 +334,7 @@ class Workplace_Workspace_Abstract extends Workplace
                         <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '&window_title=1" title="View ' . htmlentities( $screenshot['window_title'] ) . '">
                             <i class="fa fa-eye pc_give_space"></i>
                         </a>
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Reports?workspace_id=' . $data['workspace_id'] . '&window_title=' . urlencode( $screenshot['window_title'] ) . '" title="Write a report on this ' . htmlentities( $screenshot['window_title'] ) . '" >
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports?workspace_id=' . $data['workspace_id'] . '&window_title=' . urlencode( $screenshot['window_title'] ) . '" title="Write a report on this ' . htmlentities( $screenshot['window_title'] ) . '" >
                             <i class="fa fa-bar-chart pc_give_space"></i>
                         </a>
                         <br>
@@ -384,7 +384,7 @@ If you agree to join this team, you will need to install a software on your work
 
 To deny this invitation, just ignore this email. 
 
-To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', click this link: ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?email=' . $email . '&auth_token=' . $workspaceInfo['member_data'][$email]['auth_token'] . '&. 
+To accept this invitaton and get started with ' . $workspaceInfo['name'] . ', click this link: ' . Ayoola_Page::getHomePageUrl() . '/tools/classplayer/get/name/Workplace_Workspace_Join?email=' . $email . '&auth_token=' . $workspaceInfo['member_data'][$email]['auth_token'] . '&. 
             ';
             self::sendMail( $mailInfo );
         }

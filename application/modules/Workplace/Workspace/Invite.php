@@ -53,7 +53,7 @@ class Workplace_Workspace_Invite extends Workplace_Workspace_Join
             
             $this->setViewContent( self::__( '<h2>Invite Link for ' . $data['name'] . '</h2>' ) ); 
             $this->setViewContent( self::__( '<p>Copy and share this invite link to members for them to join this workspace</p>' ) ); 
-            $link = '' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_Join?workspace_id=' . $data['workspace_id'] . '&workspace_token=' . $data['workspace_token'] . '';
+            $link = '' . Ayoola_Page::getHomePageUrl() . '/tools/classplayer/get/name/Workplace_Workspace_Join?workspace_id=' . $data['workspace_id'] . '&workspace_token=' . $data['workspace_token'] . '';
             $this->setViewContent( '<textarea style="width:100%; padding:1em;margin:1em 0;" rows="1">' . $link . '</textarea>' );
             $this->setViewContent( '<a href="javascript:" onclick="location.search=location.search + \'&x_revoke=1\'" class="pc-btn">Revoke Link</a>' ); 
             

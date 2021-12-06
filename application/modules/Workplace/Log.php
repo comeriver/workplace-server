@@ -425,6 +425,21 @@ class Workplace_Log extends Workplace
                 {
                     $workspace['settings']['online'][$dayX][] = $userInfo['email'];
                     $notOnline = array_diff( $workspace['members'], $workspace['settings']['online'][$dayX] );
+
+                    Workplace_Clock::getInstance()->insert( array(
+                        'user_id' => $userInfo['user_id'],
+                        'username' => $userInfo['username'],
+                        'workspace_id' => $workspace['workspace_id'],
+                    ) );
+
+                    $notOnline = implode( ', ', $notOnline );
+                    $mailInfo['to'] = $userInfo['email'];
+                    $mailInfo['subject'] = 'You clocked-in on ' . $workspace['name'] . '';
+                    $mailInfo['body'] = 'You are successfuly logged in on ' . $workspace['name'] . ' workspace.' . "\r\n" . '' . "\r\n";
+                    
+                    $mailInfo['body'] .= 'You may check out a preview of your work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List' . "\r\n" . '';
+                    @self::sendMail( $mailInfo );
+
                     //self::v( $workspace['settings']['online'][$dayX] );
                 }
                 if( $notOnline && ( empty( $updated['last_seen'] ) || $time - $updated['last_seen'] > 43200 ) )
@@ -437,11 +452,6 @@ class Workplace_Log extends Workplace
                     $mailInfo['body'] .= 'It seems like you are currently offline. Log in to the workplace and start a session to join in. You may check out work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List' . "\r\n" . '';
                     @self::sendMail( $mailInfo );
 
-                    Workplace_Clock::getInstance()->insert( array(
-                        'user_id' => $userInfo['user_id'],
-                        'username' => $userInfo['username'],
-                        'workspace_id' => $workspace['workspace_id'],
-                    ) );
 
                     //  admin
                     $mailInfo['to'] = $adminEmails;
