@@ -63,8 +63,9 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                     $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
                     return false;
                 }        
-    
-                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Work on a Task' ) . '</h3>', true  ); 
+                $this->setViewContent( $this->includeTitle( $data ) ); 
+
+                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Work on a Task' ) . '</h3>'  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom xpc-notify-info wk-50">' . self::__( 'Do some task-based work. This allows you to log your work into the system without having to install any software tool. To begin work, tap on "Work on a task".' ) . '</p>'  ); 
 
                 $taskClass = new ProjectManager_Tasks_List( array( 'project_name' => $data['workspace_id'], 'no_list_options' => true ) );
@@ -102,10 +103,10 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                             <div class="wk-50">
                                 Task: ' . $yOption[$data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_task']]['task'] . '
                                 <br><br>
-                                <a class="btn btn-success" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/ProjectManager_Tasks_Editor/?tasks_id=' . $yOption[$data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_task']]['tasks_id'] . '&task_edit_mode=completion\', \'page_refresh\' );">
+                                <a class="btn btn-success" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/ProjectManager_Tasks_Editor/?tasks_id=' . $yOption[$data['member_data'][Ayoola_Application::getUserInfo( 'email' )]['lastest_task']]['tasks_id'] . '&task_edit_mode=completion\', \'page_refresh\' );">
                                 <i class="fa pc_give_space"></i> Mark as Complete <i class="fa fa-check pc_give_space"></i>
                                 </a>
-                                <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&restart=1" >
+                                <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&restart=1" >
                                 <i class="fa pc_give_space"></i> Do something else <i class="fa fa-refresh pc_give_space"></i>
                                 </a>
                                 
@@ -212,7 +213,7 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                             $this->setViewContent( '
                             <br><br>
                             <div class="wk-50">
-                                <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&start=1">
+                                <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&start=1">
                                     <i class="fa fa-chevron-right pc_give_space ' .  "\r\n" . '"></i>' . self::__( 'Share update' ) . '<i class="fa fa-refresh pc_give_space"></i>
                                 </a>
                             </div>' ); 
@@ -263,10 +264,10 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                 $this->setViewContent(  '
                     <br>
                     <p class="pc_give_space_top_bottom">
-                        <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&start=1" >
+                        <a class="btn btn-warning" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&start=1" >
                             <i class="fa fa-chevron-right pc_give_space"></i>' . self::__( 'Work on a task' ) . '<i class="fa fa-tasks pc_give_space"></i>
                         </a>
-                        <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_TaskCreator?workspace_id=' . $data['workspace_id'] . '&article_url=' . $data['workspace_id'] . '" >
+                        <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_TaskCreator?workspace_id=' . $data['workspace_id'] . '&article_url=' . $data['workspace_id'] . '" >
                             <i class="fa xfa-chevron-right pc_give_space"></i>' . self::__( 'Create a task' ) . '<i class="fa fa-plus pc_give_space"></i>
                         </a>
 
@@ -279,10 +280,10 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                     <br>
                     <p class="pc_give_space_top_bottom">
 
-                        <a class="btn btn-default" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/ProjectManager_Goals_Creator?article_url=' . $data['workspace_id'] . '\', \'page_refresh\' );" >
+                        <a class="btn btn-default" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/widgets/name/ProjectManager_Goals_Creator?article_url=' . $data['workspace_id'] . '\', \'page_refresh\' );" >
                             <i class="fa fa-xchevron-right pc_give_space"></i>' . self::__( 'Set a goal' ) . '<i class="fa fa-bullseye pc_give_space"></i>
                         </a>
-                        <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&all_tasks=1" >
+                        <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&all_tasks=1" >
                             <i class="fa xfa-chevron-right pc_give_space"></i>' . self::__( 'Show completed tasks' ) . '<i class="fa fa-check pc_give_space"></i>
                         </a>
                     </p>'  
@@ -291,7 +292,6 @@ class Workplace_Workspace_Work extends Workplace_Workspace_Insights
                 $this->setViewContent( 
                     ProjectManager_Goals_List::viewInLine( array( 'project_name' => $data['workspace_id'], 'no_list_options' => true ) ) 
                 ); 
-                $this->setViewContent( $this->includeTitle( $data ) ); 
                 // end of widget process
             
             }  

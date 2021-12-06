@@ -154,25 +154,61 @@ class Workplace_Workspace_Abstract extends Workplace
         if( self::isWorkspaceAdmin( $data ) )
         {
             $bills = '
-            <i class="fa fa-credit-card pc_give_space"></i> ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '">  Clear Bill</a>
+            <i class="fa fa-credit-card pc_give_space"></i> ' . $currency . '' . $balance . ' <a style="font-size:8px;" href="' . Ayoola_Application::getUrlPrefix() . '">  Clear Bill</a>
             ';
             $adminOptions = '
-            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Payroll <i class="fa fa-dollar pc_give_space"></i></a>
-            <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i>  Top Up <i class="fa fa-credit-card pc_give_space"></i></a>
+            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Payroll <i class="fa fa-dollar pc_give_space"></i></a>
+            <a class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i>  Top Up <i class="fa fa-credit-card pc_give_space"></i></a>
             ';
-        }        
+        }  
+        
+        $menuOptionsX = array( 
+            'option_name' => '<i class="fa fa-home pc_give_space"></i>', 
+            'url' => '' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_List', 
+            'logged_in' => 1, 
+            'logged_out' => 1, 
+            'enabled' => 1, 
+            'auth_level' => 0, 
+            'menu_id' => 0, 
+            'option_id' => 0, 
+            'link_options' => array( 'logged_in','logged_out' )
+        );
 
-        return '
-        <div class="wk_title">
-            <p class=""><i class="fa fa-clock-o pc_give_space"></i> ' . date( 'g:ia, D jS M Y' ) . '' . $bills . '</p>
-            
-            <a  class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_List"> <i class="fa fa-home pc_give_space"></i></a>
-            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> ' . $data['name'] . ' <i class="fa fa-briefcase pc_give_space"></i></a>
-            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Work <i class="fa fa-tasks pc_give_space"></i></a>
-            <a  class="btn btn-default" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '"> <i class="fa fa-chevron-right pc_give_space"></i> Reports <i class="fa fa-bar-chart pc_give_space"></i></a>
-            ' . $adminOptions . '
-            </div>
-        '; 
+        $menuOptions = array(
+            array( 
+                'option_name' => ' ' . $data['name'] . ' ', 
+                'url' => '/widgets/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '', 
+            ) + $menuOptionsX,
+            array( 
+                'option_name' => 'Task Manager', 
+                'url' => '/widgets/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '', 
+            ) + $menuOptionsX,
+            array( 
+                'option_name' => 'Reports', 
+                'url' => '/widgets/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '', 
+            ) + $menuOptionsX,
+
+        );
+        if( self::isWorkspaceAdmin( $data ) )
+        {
+            $menuOptions[] = array( 
+                'option_name' => 'Billing', 
+                'url' => '/widgets/name/Workplace_Workspace_Billing?workspace_id=' . $data['workspace_id'] . '', 
+            ) + $menuOptionsX;
+            $menuOptions[] = array( 
+                'option_name' => 'Payroll Management', 
+                'url' => '/widgets/name/Workplace_Workspace_Payout?workspace_id=' . $data['workspace_id'] . '', 
+            ) + $menuOptionsX;
+        }  
+
+        $html = Ayoola_Menu::viewInLine( array( 
+                'menu_name' => 'workspace', 
+                'menu_label' => 'Workspace Menu', 
+                'template_name' => 'HorizontalWhite',
+                'raw-options' => $menuOptions 
+            )
+        );
+        return $html;
     }
 
 
@@ -181,184 +217,8 @@ class Workplace_Workspace_Abstract extends Workplace
      */
 	public static function includeScripts()  
     {
-        Application_Javascript::addCode(
-            '
-					
-            var timeOut = null;
-            var activityMade = function(){
-            
-            clearInterval(timeOut); //first clears the interval
-              timeOut = setInterval(
-
-                function()
-                { 
-                    location.href = location.href;
-                }
-                  
-                  , 180000); 
-              //logs to the console at every 3 seconds of inactivity
-            }
-            
-            var bindEvents = function(){
-              var body = document.body;
-              // bind click move and scroll event to body
-              body.addEventListener("click", activityMade);
-              body.addEventListener("mousemove", activityMade);
-              body.addEventListener("scroll", activityMade);
-              activityMade(); // assume activivity has done at page init
-            }
-            bindEvents();
-
-                        '
-        );
-        Application_Style::addCode(
-            '
-                body
-                {
-                    padding-bottom: 300px;
-                }
-                .btn
-                {
-                    padding: 0 !important;
-                    font-size: 12px !important;
-                    margin-bottom: 0.5em;
-                }
-                .wk_title a, .box-css a, .box-css-table a, a.box-css-table, a.box-css
-                {
-                    color: orange;
-                    text-decoration:none;
-                }
-                .wk_title h2, .wk_title p
-                {
-                    font-size:12px;
-                }
-
-                .box-css a:hover, .wk_title a:hover, a.box-css:hover
-                {
-                    color: white;
-                    text-decoration:none;
-
-                }
-                .section-divider
-                {
-                    padding: 1em;
-                    color: #333;
-                    text-align:center;
-                    background: #fff;
-                    font-size: smaller;
-                }
-                .btn-default
-                {
-                    color: black !important;
-                    background: white !important;
-                }
-                .wk_title
-                {
-                    max-height: 50vh;
-                    overflow: auto;
-                    position: fixed;
-                    bottom: 2%;
-                    padding: 2em;
-                    background: rgba( 100, 100, 100, 0.3 );
-                    color: #fff;
-                    border-radius: 1em;
-                    
-                }
-                .wk-space
-                {
-                    margin-bottom: 10em;;
-                }
-                .wk-screenshot
-                {
-                    padding: 1em;
-                    height: 50vh;
-                }
-                #Workplace_Workspace_Broadcast_Creator_form_id input[type=submit]
-                {
-                    padding: 0.5em;
-                    font-size: x-small;
-                    margin: 0.5em;
-                    float: right;
-                    font-size: x-small;
-                    box-shadow: inset 0px 1px 0px 0px #eee;
-                    background-color: #ccc;
-                    border: 1px solid #ddd;
-                }
-                #Workplace_Workspace_Broadcast_Creator_form_id textarea
-                {
-                    margin:0;
-                }
-                #Workplace_Workspace_Broadcast_Creator_form_id
-                {
-                    padding: 0;
-                }
-                .box-css, .small-box-css, .chat-box-css, .box-css-table, .box-css-wk-50
-                {
-                    padding:2em; 
-                    background-color:#333; 
-                    color:white; 
-                    flex-basis:25%; 
-                    text-align: center; 
-                    font-size:x-small;
-                    border: 0.5px solid #666;
-                    overflow: auto;
-                }
-                .box-css i
-                {
-                    font-size: 12px;
-                }
-
-                .wk-50, .box-css-wk-50
-                {
-                    width: 50%;
-                    flex-basis:50%; 
-
-                }
-                .chat-box-css
-                {
-                    flex-basis:25%;
-                    font-size:small;
-                    height:50vh;
-                    display: flex;
-                    flex-direction: column;
-                    text-align:unset;  
-                    overflow:auto;
-                    padding:0;
-                }
-                .box-css-x3
-                {
-                    flex-basis:33.333%;
-                }
-                @media only screen and (max-width: 900px) {
-                    .chat-box-75, .chat-box-css, .small-box-css
-                    {
-                        flex-basis: 50%;
-                    }    
-                    .wk-50, .box-css-wk-50
-                    {
-                        width: 100%;
-                    }
-                    body
-                    {
-                        padding-bottom: 600px;
-                    }
-        
-                }
-
-                @media only screen and (max-width: 600px) {
-                    .chat-box-75, .box-css, .chat-box-css
-                    {
-                        flex-basis: 100%;
-                    }
-                    .small-box-css
-                    {
-                        flex-basis: 50%;
-                    }
-                }
-
-
-            '
-        );
+        Application_Javascript::addFile( '/js/workplace.js' );
+        Application_Style::addFile( '/css/workplace.css' );
     }
 
     /**
@@ -458,23 +318,23 @@ class Workplace_Workspace_Abstract extends Workplace
             $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.4), rgba( 0, 0, 0, 0.7 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $img . ' ); background-size:cover;';
             $shots .= 
             ( 
-                '<div class="box-css wk-screenshot" style="' . $bg . ';' . $flexStyle . '; display:flex;align-content:space-between; justify-content: space-between;flex-direction:column;">
+                '<div class="box-css wk-screenshot box-mg" style="' . $bg . ';' . $flexStyle . '; display:flex;align-content:space-between; justify-content: space-between;flex-direction:column;">
 
                     <div>
                     ' . $screenshot['software'] . '
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="View ' . $screenshot['software'] . '">
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="View ' . $screenshot['software'] . '">
                         <i class="fa fa-eye pc_give_space"></i>
                         </a>
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_BanTool?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="Ban ' . $screenshot['software'] . '">
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_BanTool?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="Ban ' . $screenshot['software'] . '">
                         <i class="fa fa-ban pc_give_space"></i>
                         </a>
                     </div>
                     <div>
                     ' . $screenshot['window_title'] . '
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '&window_title=1" title="View ' . htmlentities( $screenshot['window_title'] ) . '">
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '&window_title=1" title="View ' . htmlentities( $screenshot['window_title'] ) . '">
                             <i class="fa fa-eye pc_give_space"></i>
                         </a>
-                        <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports?workspace_id=' . $data['workspace_id'] . '&window_title=' . urlencode( $screenshot['window_title'] ) . '" title="Write a report on this ' . htmlentities( $screenshot['window_title'] ) . '" >
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Reports?workspace_id=' . $data['workspace_id'] . '&window_title=' . urlencode( $screenshot['window_title'] ) . '" title="Write a report on this ' . htmlentities( $screenshot['window_title'] ) . '" >
                             <i class="fa fa-bar-chart pc_give_space"></i>
                         </a>
                         <br>

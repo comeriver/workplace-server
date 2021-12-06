@@ -64,11 +64,12 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
         {
             $where['user_id'] = $_REQUEST['user_id'];    
         }        
+        $this->setViewContent( $this->includeTitle( $data ) ); 
 
-        $this->setViewContent(  '' . self::__( '<h2 class="pc_give_space_top_bottom">Reports</h2>' ) . '', true  ); 
+        $this->setViewContent(  '' . self::__( '<h2 class="pc_give_space_top_bottom">Reports</h2>' ) . ''  ); 
         $this->setViewContent(  '
         <div class="pc_give_space_top_bottom"> 
-            <a class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports/?workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-chevron-right pc_give_space ' .  "\r\n" . '"></i>' . self::__( 'Create a report' ) . '<i class="fa fa-bar-chart pc_give_space ' .  "\r\n" . '"></i></a>
+            <a class="btn btn-primary" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/Workplace_Workspace_Reports/?workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-chevron-right pc_give_space ' .  "\r\n" . '"></i>' . self::__( 'Create a report' ) . '<i class="fa fa-bar-chart pc_give_space ' .  "\r\n" . '"></i></a>
         </div>'  ); 
 
         //$reports = $this->getDbData();
@@ -97,8 +98,8 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
                 <div class="xwk-50" >
                     <p class="pc_give_space_top_bottom section-divider">
                         By: ' . $report['username'] . ' (' . date( 'd M Y', $report['creation_time'] ) . ')
-                        <a style="margin:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports_Table_Delete/?table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                        <a style="margin:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Reports/?workspace_id=' . $report['workspace_id'] . '&table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                        <a style="margin:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/Workplace_Workspace_Reports_Table_Delete/?table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a style="margin:1em;" href="javascript:" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/Workplace_Workspace_Reports/?workspace_id=' . $report['workspace_id'] . '&table_id=' . $report['table_id'] . '\', \'' . $this->getObjectName() . '\' );"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
 
                     </p>
                     <div class="pc_give_space_top_bottom" style="text-align: justify;
@@ -116,7 +117,6 @@ class Workplace_Workspace_Reports_Table_ShowAll extends Workplace_Workspace_Repo
         }
 
         $this->setViewContent( $html );	
-        $this->setViewContent( $this->includeTitle( $data ) ); 
     } 
 	
 	// END OF CLASS

@@ -64,7 +64,9 @@ class Workplace_Workspace_TaskCreator extends Workplace_Workspace_Insights
                     return false;
                 }        
     
-                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Create a task' ) . '</h3>', true  ); 
+                $this->setViewContent( $this->includeTitle( $data ) ); 
+
+                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Create a task' ) . '</h3>'  ); 
                 //$this->setViewContent(  '<p class="pc_give_space_top_bottom xpc-notify-info wk-50">' . self::__( 'Do some task-based work. This allows you to log your work into the system without having to install any software tool. To begin work, tap on "Work on a task".' ) . '</p>'  ); 
 
                 //var_export( $data['members'] );
@@ -75,10 +77,9 @@ class Workplace_Workspace_TaskCreator extends Workplace_Workspace_Insights
                 ); 
                 if( $taskClass->getForm()->getValues() )
                 {
-                    header( 'Location: ' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&' );
+                    header( 'Location: ' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Work?workspace_id=' . $data['workspace_id'] . '&' );
                     exit();
                 }
-                $this->setViewContent( $this->includeTitle( $data ) ); 
                 // end of widget process
             
             }  

@@ -31,7 +31,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
      * 
      * @var string 
      */
-	protected static $_objectTitle = 'Workspace Payout Documentation Tool'; 
+	protected static $_objectTitle = 'Workspace Billing'; 
 
     /**
      * Performs the whole widget running process
@@ -49,6 +49,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
             'from' => $username,
             'amount' => $moneyDue,
         );
+        
         if( Application_Wallet::transfer( $transfer ) )
         {
             Workplace_Workspace_Billing_Table::getInstance()->insert(
@@ -110,10 +111,12 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                     $this->setViewContent(  '<div class="badnews">' . self::__( 'Sorry, you do not have permissions to update anything on this workspace.' ) . '</div>', true  ); 
                     $this->setViewContent( $this->includeTitle( $data ) ); 
                 } 
+                $this->setViewContent( $this->includeTitle( $data ) ); 
+
     
-                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Workspace Bills' ) . '</h3>', true  ); 
+                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Workspace Bills' ) . '</h3>'  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'Top up your account so you can continue to enjoy all the productivity features of Workspace.' ) . '</p>'  ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check top-up history' ) . '</a></p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Billing_Table_List?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check top-up history' ) . '</a></p>'  ); 
 
                 $balance = (float) Ayoola_Application::getUserInfo( 'wallet_balance' );
                 $currency = ( Application_Settings_Abstract::getSettings( 'Payments', 'default_currency' ) ? : '' );
@@ -146,7 +149,7 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
                 {
                     if( empty( $_REQUEST['paid'] ) )
                     {
-                        $this->setViewContent( '<a class="btn btn-primary wk-50" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Billing?paid=1&workspace_id=' . $data['workspace_id'] . '">Clear Bill <i class="fa fa-check pc_give_space"></i></a>' );
+                        $this->setViewContent( '<a class="btn btn-primary wk-50" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Billing?paid=1&workspace_id=' . $data['workspace_id'] . '">Clear Bill <i class="fa fa-check pc_give_space"></i></a>' );
                     }
                     else
                     {
@@ -173,7 +176,6 @@ class Workplace_Workspace_Billing extends Workplace_Workspace_Insights
 
                 $yAmount = str_pad( $xAmount[0], $len, '0', STR_PAD_RIGHT );
                 $this->setViewContent( '<div class="wk-50">' . Application_Wallet_Fund::viewInLine( array( 'amount' => $yAmount  ) ) . '</div>' ); 
-                $this->setViewContent( $this->includeTitle( $data ) ); 
 
                 // end of widget process
               

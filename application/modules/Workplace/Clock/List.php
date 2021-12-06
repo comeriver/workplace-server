@@ -16,7 +16,7 @@
  * @see PageCarton_Widget
  */
 
-class Workplace_Clock_List extends Workplace_Clock_Abstract
+class Workplace_Clock_List extends Workplace_Workspace_UserInsights
 {
  	
     /**
@@ -24,7 +24,7 @@ class Workplace_Clock_List extends Workplace_Clock_Abstract
      * 
      * @var string 
      */
-	  protected static $_objectTitle = 'List';   
+	  protected static $_objectTitle = 'Clock in time history';   
 
     /**
      * Performs the creation process
@@ -34,7 +34,39 @@ class Workplace_Clock_List extends Workplace_Clock_Abstract
      */	
     public function init()
     {
-      $this->setViewContent( $this->getList() );		
+        if( ! $data = $this->getIdentifierData() )
+        { 
+            $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid workspace data</div>' ) . '', true  ); 
+            $this->setViewContent( $this->includeTitle( $data ) ); 
+            return false; 
+        }
+        if( self::isOwingTooMuch( $data ) )
+        {
+            $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is beyond your account limit. Please settle this bill now to avoid service disruption. </div>' ) . '', true  ); 
+            $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
+            $this->setViewContent( $this->includeTitle( $data ) ); 
+            return false;
+        }        
+
+        self::includeScripts();
+        $userInfo = self::getUserInfo( array( 'username' => strtolower( $_REQUEST['username'] ) ) );
+        if( empty( $userInfo ) )
+        {
+            $this->setViewContent(  '' . self::__( '<div class="badnews">Invalid user selected</div>' ) . '', true  ); 
+            $this->setViewContent( $this->includeTitle( $data ) ); 
+            return false;
+        }
+        
+        if( empty( $data['member_data'][$userInfo['email']]['authorized'] ) )
+        {
+            $this->setViewContent(  '' . self::__( '<div class="badnews">User has not authorized workspace</div>' ) . '', true  ); 
+            $this->setViewContent( $this->includeTitle( $data ) ); 
+            return false;
+        }
+
+        $this->setViewContent( $this->includeTitle( $data ) ); 
+
+        $this->setViewContent( $this->getList() );		
     } 
 	
     /**
@@ -46,23 +78,26 @@ class Workplace_Clock_List extends Workplace_Clock_Abstract
 		require_once 'Ayoola/Paginator.php';
 		$list = new Ayoola_Paginator();
 		$list->pageName = $this->getObjectName();
-		$list->listTitle = self::getObjectTitle();
-		$list->setData( $this->getDbData() );
+		$list->listTitle = null;
+		$list->hideCheckbox = self::getObjectTitle();
+
+
+        $clocks = Workplace_Clock::getInstance()->select( null, array( 'username' => strtolower( $_REQUEST['username'] ), 'workspace_id' => $_REQUEST['workspace_id'] ) );
+
+
+		$list->setData( $clocks );
 		$list->setListOptions( 
 								array( 
-							//			'Sub Domains' => '<a rel="spotlight;" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Application_Domain_SubDomainList/\' );" title="">Sub Domains</a>',    
-									) 
+										'Creator' => ' ',    
+									)
 							);
 		$list->setKey( $this->getIdColumn() );
-		$list->setNoRecordMessage( 'No data added to this table yet.' );
+		$list->setNoRecordMessage( 'User do not have any record of clock-in yet.' );
 		
 		$list->createList
 		(
 			array(
-                    'user_id' => array( 'field' => 'user_id', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     'in' => array( 'field' => 'in', 'value' =>  '%FIELD%', 'filter' =>  '' ),                     'out' => array( 'field' => 'out', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
-                    'Added' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time' ), 
-                    '' => '%FIELD% <a style="font-size:smaller;" rel="shadowbox;changeElementId=' . $this->getObjectName() . '" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Clock_Editor/?' . $this->getIdColumn() . '=%KEY%"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>', 
-                    ' ' => '%FIELD% <a style="font-size:smaller;" rel="shadowbox;changeElementId=' . $this->getObjectName() . '" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Clock_Delete/?' . $this->getIdColumn() . '=%KEY%"><i class="fa fa-trash" aria-hidden="true"></i></a>', 
+                    'Clocked in' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time', 'filter_autofill' =>  array( 'mode' => 'full' ) ), 
 				)
 		);
 		return $list;

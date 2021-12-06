@@ -25,7 +25,14 @@ class Workplace_Clock extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.0';  
+    protected $_tableVersion = '0.1';  
+    
+    /**
+     * Time to hold the cache before refreshing
+     *
+     * @param int
+     */
+    public static $insertDelay = 30;
 
     /**
      * Table data types and declaration
@@ -35,7 +42,10 @@ class Workplace_Clock extends PageCarton_Table
      */
 	protected $_dataTypes = array (
   'user_id' => 'INPUTTEXT',
+  'username' => 'INPUTTEXT',
+  'workspace_id' => 'INPUTTEXT',
   'in' => 'INPUTTEXT',
+  'hours' => 'INPUTTEXT',
   'out' => 'INPUTTEXT',
 );
 

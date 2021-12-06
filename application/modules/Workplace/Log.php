@@ -437,6 +437,12 @@ class Workplace_Log extends Workplace
                     $mailInfo['body'] .= 'It seems like you are currently offline. Log in to the workplace and start a session to join in. You may check out work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List' . "\r\n" . '';
                     @self::sendMail( $mailInfo );
 
+                    Workplace_Clock::getInstance()->insert( array(
+                        'user_id' => $userInfo['user_id'],
+                        'username' => $userInfo['username'],
+                        'workspace_id' => $workspace['workspace_id'],
+                    ) );
+
                     //  admin
                     $mailInfo['to'] = $adminEmails;
                     $mailInfo['subject'] = '' . $userInfo['username'] . ' is online on ' . $workspace['name'] . '';

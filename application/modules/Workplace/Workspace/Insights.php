@@ -186,7 +186,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 $counter++;
                 $intervals += $memberData['log'];
                 $name = ( $userInfo['firstname'] ? : $userInfo['username'] ) ? : strtolower( $member );
-                $memberList .= ( '<a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"  class="box-css" style="' . $screenCss . '">' . $name . $lastSeen . ' </a>' );
+                $memberList .= ( '<a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '"  class="box-css box-mg" style="' . $screenCss . '">' . $name . $lastSeen . ' </a>' );
 
                 if( ! empty( $_REQUEST['time'] ) && ! empty( $memberData['work_time'][$year] ) )
                 {
@@ -229,7 +229,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
             $sendMessage = Workplace_Workspace_Broadcast_Creator::viewInLine();
 
             $chat = '
-                <div class="box-css chat-box-css">
+                <div class="box-css chat-box-css box-mg">
                     <div style="background:white; color:#333;display: flex;flex-direction: column; flex-flow: column-reverse; overflow:auto;flex-basis:100%">
                         ' . Workplace_Workspace_Broadcast_List::viewInLine() .  '
                     </div>
@@ -259,7 +259,7 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                     </div>
                     <div class="box-css small-box-css ">
                         <span style="font-size:40px;">' . self::toHours( $idleToday ) . '</span><br>
-                         <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Idle Time</a>
+                         <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Idle Time</a>
                     </div>
                 </div>';
                 if( ! empty( $_REQUEST['idle_time'] ) )
@@ -288,17 +288,17 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
     
             }
             $options = null;
-            $options .= '<a class="pc_give_space" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Insights/?workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-eye" aria-hidden="true"></i></a>';
-            $options .= '<a class="pc_give_space" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Invite/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-share" aria-hidden="true"></i></a>';
+            $options .= '<a class="pc_give_space hide-mb" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/Workplace_Workspace_Insights/?workspace_id=' . $data['workspace_id'] . '"><i class="fa fa-eye" aria-hidden="true"></i></a>';
+            $options .= '<a class="pc_give_space hide-mb" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/Workplace_Workspace_Invite/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-share" aria-hidden="true"></i></a>';
             if( ! self::isWorkspaceAdmin( $data ) )
             {
                 
             } 
             else
             {
-                $options .= '<a class="pc_give_space"  onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Editor/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
+                $options .= '<a class="pc_give_space hide-mb"  onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/Workplace_Workspace_Editor/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>';
 
-                $options .= '<a class="pc_give_space" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/object_name/Workplace_Workspace_Delete/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-trash" aria-hidden="true"></i></a>';
+                $options .= '<a class="pc_give_space hide-mb" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/Workplace_Workspace_Delete/?workspace_id=' . $data['workspace_id'] . '\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa fa-trash" aria-hidden="true"></i></a>';
             }       
 
             $html = '
@@ -310,15 +310,15 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 </div>
                 <div class="box-css small-box-css">
                     <span style="font-size:40px;">' . count( $onlineMembers ) . '</span><br>
-                    <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&online=1">Online Now</a>
+                    <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&online=1">Online Now</a>
 
                 </div>
                 <div class="box-css small-box-css">
                     <span style="font-size:40px;">' . self::toHours( $totalTime ) . '</span><br>
-                    <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1">Hours</a>
+                    <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Insights?workspace_id=' . $data['workspace_id'] . '&time=1">Hours</a>
                 </div>
                 <div class="box-css small-box-css">
-                    <span style="font-size:40px;">' . count( $tools ) . '</span><br><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?workspace_id=' . $data['workspace_id'] . '">Tools</a>
+                    <span style="font-size:40px;">' . count( $tools ) . '</span><br><a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Tools?workspace_id=' . $data['workspace_id'] . '">Tools</a>
                 </div>
             </div>
                 ' . $timePanel . ' 

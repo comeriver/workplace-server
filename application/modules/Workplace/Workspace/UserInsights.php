@@ -54,6 +54,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                 {
                     $this->setViewContent(  '' . self::__( '<div class="badnews">This workspace bill is beyond your account limit. Please settle this bill now to avoid service disruption. </div>' ) . '', true  ); 
                     $this->setViewContent( Workplace_Workspace_Billing::viewInLine()  ); 
+                    $this->setViewContent( $this->includeTitle( $data ) ); 
                     return false;
                 }        
     
@@ -109,7 +110,12 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
 
                     $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
 
-                    
+                    $timePanel = null;
+                    if( ! empty( $_REQUEST['history'] ) )
+                    {
+                        $timePanel .= Workplace_Clock_List::viewInLine();
+                    }
+
                     if( ! empty( $_REQUEST['time'] ) )
                     {
                         $timeToday = intval( $memberData['work_time'][$year][$month][$day] );
@@ -132,7 +138,7 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                             }
                         }
     
-                        $timePanel = '
+                        $timePanel .= '
                         <div class="section-divider">Work Time Breakdown (in Hrs)</div>
                         <div style="display:flex;align-content:space-between;flex-wrap:wrap;" >
                             <div class="box-css small-box-css ">
@@ -149,9 +155,10 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                             </div>
                             <div class="box-css small-box-css ">
                                 <span style="font-size:40px;">' . self::toHours( $timeToday - $idleToday ) . '</span><br>
-                                <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Active Today</a>
+                                <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '&time=1&idle_time=1">Active Today</a>
                             </div>
                         </div>';
+
                         if( ! empty( $_REQUEST['idle_time'] ) )
                         {
                             $timePanel .= '
@@ -185,16 +192,16 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                             <span style="font-size:40px;">' . $name . '</span><br>' . ( $userInfo['email'] ) . '
                         </div>
                         <div class="box-css">
-                            <span style="font-size:40px;">' . ( $filter->filter( $memberData['last_seen'] ) ? : '...' ) . '</span><br>Last Seen
+                            <span style="font-size:40px;">' . ( $filter->filter( $memberData['last_seen'] ) ? : '...' ) . '</span><br><a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '&history=1">Last Seen</a>
                         </div>
                         <div class="box-css small-box-css">
                             <span style="font-size:40px;">' . self::toHours( $memberData['log'] ) . '</span><br>
-                            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '&time=1">Hours</a>
+                            <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_UserInsights?username=' . $userInfo['username'] . '&workspace_id=' . $data['workspace_id'] . '&time=1">Hours</a>
 
                         </div>
                         <div class="box-css small-box-css">
                             <span style="font-size:40px;">' . count( $memberData['tools'] ) . '</span><br>
-                            <a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Tools?user_id=' . $userInfo['user_id'] . '&workspace_id=' . $data['workspace_id'] . '">Tools</a>
+                            <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Tools?user_id=' . $userInfo['user_id'] . '&workspace_id=' . $data['workspace_id'] . '">Tools</a>
 
                         </div>
                     </div>

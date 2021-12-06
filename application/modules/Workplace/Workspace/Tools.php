@@ -67,7 +67,7 @@
                 $preference = null;
                 if( self::isWorkspaceAdmin( $data ) )
                 {
-                    $preference = '<a target="" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a></div>';
+                    $preference = '<a target="" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a></div>';
                 }
                 if( ! $toolInfo['screenshots'] )
                 { 
@@ -172,7 +172,7 @@
                 }        
                 else
                 {
-                    $preference = '<a target="" href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a></div>';
+                    $preference = '<a target="" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a></div>';
                 }
                 return array( 
                     'screenshots' => Workplace_Screenshot_Table::getInstance()->select( null, $where, $options ),

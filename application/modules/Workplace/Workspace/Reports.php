@@ -70,10 +70,11 @@ class Workplace_Workspace_Reports extends Workplace_Workspace_Insights
                     $previousTitles = array_merge( $previousTitles, $report['titles'] );
                 }
                 //var_export( $report );
-        
-                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Reports' ) . '</h3>', true  ); 
+                $this->setViewContent( $this->includeTitle( $data ) ); 
+
+                $this->setViewContent(  '<h3 class="pc_give_space_top_bottom">' . self::__( 'Reports' ) . '</h3>'  ); 
                 $this->setViewContent(  '<p class="pc_give_space_top_bottom">' . self::__( 'Share a report on work done' ) . '</p>' ); 
-                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/tools/classplayer/get/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check previous reports' ) . '</a></p>'  ); 
+                $this->setViewContent(  '<p class="pc_give_space_top_bottom"><a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Reports_Table_ShowAll?workspace_id=' . $data['workspace_id'] . '">' . self::__( 'Check previous reports' ) . '</a></p>'  ); 
 
                 $form = new Ayoola_Form();
                 $form->submitValue = 'Save Report';
@@ -112,7 +113,6 @@ class Workplace_Workspace_Reports extends Workplace_Workspace_Insights
                 
                 $form->addFieldset( $fieldset );
                 $this->setViewContent( $form->view() );
-                $this->setViewContent( $this->includeTitle( $data ) ); 
 
                 if( ! $values = $form->getValues() ){ return false; }
 
