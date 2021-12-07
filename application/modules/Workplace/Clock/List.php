@@ -75,10 +75,21 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
             {
                 foreach( $mValues as $day => $dValue )
                 {
-                    $date = $day . '-' . $month . '-' . $year;
+                    $hours = self::toHours( $dValue );
                     $idle = $data['member_data'][$userInfo['email']]['idle_time'][$year][$month][$day];
+                    if( $hours > 24 )
+                    {
+                        $dValue = 0;
+                        $hours = 0;
+                        $idle = 0;
+                    }
+                    $date = $day . '-' . $month . '-' . $year;
                     $pIdle = round( ($idle/$dValue) * 100 );
-                    $userData[] = array( 'day' => $date, 'hours' => self::toHours( $dValue ), 'idle_time' => $pIdle . '%'   );
+                    if( $pIdle > 99 )
+                    {
+                        $pIdle = 0;
+                    }
+                    $userData[] = array( 'day' => $date, 'hours' => $hours, 'idle_time' => $pIdle . '%'   );
                 }
             }
         }
