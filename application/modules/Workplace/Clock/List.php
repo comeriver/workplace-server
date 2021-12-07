@@ -85,7 +85,7 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
                     }
                     $date = $day . '-' . $month . '-' . $year;
                     $pIdle = round( ($idle/$dValue) * 100 );
-                    if( $pIdle > 99 )
+                    if( $pIdle > 100 )
                     {
                         $pIdle = 0;
                     }
