@@ -76,7 +76,9 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
                 foreach( $mValues as $day => $dValue )
                 {
                     $date = $day . '-' . $month . '-' . $year;
-                    $userData[] = array( 'day' => $date, 'hours' => self::toHours( $dValue )   );
+                    $idle = $data['member_data'][$userInfo['email']]['idle_time'][$year][$month][$day];
+                    $pIdle = ($idle/$dValue) * 100;
+                    $userData[] = array( 'day' => $date, 'hours' => self::toHours( $dValue ), 'idle_time' => $pIdle . '%'   );
                 }
             }
         }
@@ -98,6 +100,7 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
             array(
                     'Day' => array( 'field' => 'day', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                     'Hours' => array( 'field' => 'hours', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
+                    'Idle Time' => array( 'field' => 'idle_time', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
                 )
         );
                                         

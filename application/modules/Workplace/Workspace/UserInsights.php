@@ -159,7 +159,6 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                             </div>
                         </div>';
 
-                        $timePanel .= Workplace_Clock_List::viewInLine();
 
 
                         if( ! empty( $_REQUEST['idle_time'] ) )
@@ -185,6 +184,8 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                                 </div>
                             </div>';
                         }
+                        $timePanel .= Workplace_Clock_List::viewInLine();
+
             
                     }
 
