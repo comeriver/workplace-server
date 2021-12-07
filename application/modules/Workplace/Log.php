@@ -130,10 +130,10 @@ class Workplace_Log extends Workplace
     {
         try
 		{ 
-            if( @$_GET['test'] )
+            //if( @$_GET['test'] )
             {
-                echo self::sanitizeToolName( $_GET['test'] );
-                return false;
+                //echo self::sanitizeToolName( $_GET['test'] );
+                //return false;
             }
             //  Code that runs the widget goes here...
             //  Output demo content to screen
@@ -177,7 +177,6 @@ class Workplace_Log extends Workplace
             }
 
             //  keylog 
-
             $tools = array();
             if( ! empty( self::sanitizeToolName( $postData['window_title'] ) ) )
             {
@@ -186,6 +185,7 @@ class Workplace_Log extends Workplace
                     $tools[] = $tool;
                 }
             }
+
             $idleTime = true;
 
             if( $postData['active_time'] )
@@ -256,7 +256,7 @@ class Workplace_Log extends Workplace
             $dName = self::sanitizeToolName( $postData['window_title'] );
             $whereA = array( 'other_names' => strtolower( trim( $dName ) ) );
 
-            $toolName = 'Others';
+            $toolName = 'Unknown Tool';
             if( $toolInfo = Workplace_Tool::getInstance()->selectOne( null, $whereA ) )
             {
                 $toolName = $toolInfo['tool_name'];
@@ -445,7 +445,6 @@ class Workplace_Log extends Workplace
                         'creation_time' => time(),
                     ) );  
                     //var_export( $xc );
-                    $notOnline = implode( ', ', $notOnline );
                     $mailInfo['to'] = $userInfo['email'];
                     $mailInfo['subject'] = 'You clocked-in on ' . $workspace['name'] . '';
                     $mailInfo['body'] = 'You are successfuly logged in on ' . $workspace['name'] . ' workspace.' . "\r\n" . '' . "\r\n";
@@ -454,6 +453,7 @@ class Workplace_Log extends Workplace
                     @self::sendMail( $mailInfo );
 
                 }
+
                 if( $notOnline && ( empty( $updated['last_seen'] ) || $time - $updated['last_seen'] > 43200 ) )
                 {
                     $notOnline = implode( ', ', $notOnline );

@@ -97,6 +97,8 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
 		$list = new Ayoola_Paginator();
 		$list->pageName = $this->getObjectName();
 		$list->listTitle = 'Daily Work Hour';
+		$list->showPagination = false;
+		$list->noPerPage = 100;
 		$list->hideCheckbox = self::getObjectTitle();
 		$list->setData( $userData );
 
