@@ -77,7 +77,7 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
                 {
                     $date = $day . '-' . $month . '-' . $year;
                     $idle = $data['member_data'][$userInfo['email']]['idle_time'][$year][$month][$day];
-                    $pIdle = ($idle/$dValue) * 100;
+                    $pIdle = round( ($idle/$dValue) * 100 );
                     $userData[] = array( 'day' => $date, 'hours' => self::toHours( $dValue ), 'idle_time' => $pIdle . '%'   );
                 }
             }
