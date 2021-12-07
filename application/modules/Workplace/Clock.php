@@ -32,7 +32,7 @@ class Workplace_Clock extends PageCarton_Table
      *
      * @param int
      */
-    public static $insertDelay = 30;
+    //public static $insertDelay = 30;
 
     /**
      * Table data types and declaration

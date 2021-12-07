@@ -432,13 +432,14 @@ class Workplace_Log extends Workplace
                     $workspace['settings']['online'][$dayX][] = $userInfo['email'];
                     $notOnline = array_diff( $workspace['members'], $workspace['settings']['online'][$dayX] );
 
-                    Workplace_Clock::getInstance()->insert( array(
+                    $xc = Workplace_Clock::getInstance()->insert( array(
                         'user_id' => $userInfo['user_id'],
                         'username' => $userInfo['username'],
                         'workspace_id' => $workspace['workspace_id'],
                         'creation_time' => time(),
                     ) );
 
+                    //var_export( $xc );
                     $notOnline = implode( ', ', $notOnline );
                     $mailInfo['to'] = $userInfo['email'];
                     $mailInfo['subject'] = 'You clocked-in on ' . $workspace['name'] . '';
