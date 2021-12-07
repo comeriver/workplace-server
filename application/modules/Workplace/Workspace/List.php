@@ -97,6 +97,11 @@ class Workplace_Workspace_List extends Workplace_Workspace_Abstract
 
         }
         $this->includeScripts(); 
+        if( empty( $workspaces ) )
+        {
+            $html = '<p class="pc-notify-info">You have not created any Workspace. <a class="btn btn-primary pc_give_space_top_bottom" onClick="ayoola.spotLight.showLinkInIFrame( \'' . Ayoola_Application::getUrlPrefix() . '/widgets/object_name/Workplace_Workspace_Creator/\', \'' . $this->getObjectName() . '\' );" href="javascript:"><i class="fa pc_give_space"></i> Create a new Workspace <i class="fa fa-plus pc_give_space"></i></a></p>'; 
+        }
+
         $this->setViewContent( $html ); 
     } 
 
