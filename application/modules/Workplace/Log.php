@@ -252,15 +252,22 @@ class Workplace_Log extends Workplace
                 Ayoola_Doc::createDirectory( dirname( $path ) );
                 file_put_contents( $path, $screenshot );
             }
-        
 
-            //var_export( $postData );
-            //var_export( $postData['software'] );
-            //var_export( self::sanitizeToolName( $postData['software'] ) );
+            $dName = self::sanitizeToolName( $postData['window_title'] );
+            $whereA = array( 'other_names' => strtolower( trim( $dName ) ) );
+
+            $toolName = 'Others';
+            if( $toolInfo = Workplace_Tool::getInstance()->selectOne( null, $whereA ) )
+            {
+                $toolName = $toolInfo['tool_name'];
+            }
+
+        
             $toSave = array( 
                 'filename' => $postData['filename'], 
                 'user_id' => Ayoola_Application::getUserInfo( 'user_id' ), 
-                'software' => self::sanitizeToolName( $postData['window_title'] ), 
+                'software' => $dName, 
+                'tool_name' => $toolName, 
                 'workspace_id' => $where['workspace_id'], 
                 'window_title' => $postData['window_title'],
                 'goals_id' => $postData['goals_id'],
@@ -390,7 +397,6 @@ class Workplace_Log extends Workplace
                     $workspace['settings']['tools'] = array_unique( $workspace['settings']['tools'] );
 
                     //  only workspace tool stays as member tool
-                    
                     $updated['tools'] = array_intersect( $workspace['settings']['tools'] ? : array(), $updated['tools'] ? : array() );
 
                 }
@@ -430,6 +436,7 @@ class Workplace_Log extends Workplace
                         'user_id' => $userInfo['user_id'],
                         'username' => $userInfo['username'],
                         'workspace_id' => $workspace['workspace_id'],
+                        'creation_time' => time(),
                     ) );
 
                     $notOnline = implode( ', ', $notOnline );

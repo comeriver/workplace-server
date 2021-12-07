@@ -282,10 +282,7 @@ class Workplace_Workspace_Abstract extends Workplace
 
         if( empty( $screenshots ) )
         {
-            return 
-            '<div class="badnews">
-                No records of activities here yet.
-            </div>';
+            return false;
         }
         $flexStyle = null;
         switch( count( $screenshots ) )
@@ -316,17 +313,25 @@ class Workplace_Workspace_Abstract extends Workplace
                 $img .= '?width=600&height=600';
             }
             $bg = 'background-image: linear-gradient( rgba( 0, 0, 0, 0.4), rgba( 0, 0, 0, 0.7 ) ), url( ' . Ayoola_Application::getUrlPrefix() . '' . $img . ' ); background-size:cover;';
+            
+            if( empty( $screenshot['tool_name'] ) )
+            {
+                $screenshot['tool_name'] = $screenshot['software'];
+            }
             $shots .= 
             ( 
                 '<div class="box-css wk-screenshot box-mg" style="' . $bg . ';' . $flexStyle . '; display:flex;align-content:space-between; justify-content: space-between;flex-direction:column;">
 
                     <div>
-                    ' . $screenshot['software'] . '
+                    ' . $screenshot['tool_name'] . '
                         <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_Tools?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="View ' . $screenshot['software'] . '">
                         <i class="fa fa-eye pc_give_space"></i>
                         </a>
                         <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_BanTool?table_id=' . $screenshot['table_id'] . '&workspace_id=' . $data['workspace_id'] . '" title="Ban ' . $screenshot['software'] . '">
                         <i class="fa fa-ban pc_give_space"></i>
+                        </a>
+                        <a href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Tool_Add?tool_name=' . $screenshot['software'] . '" title="Add as a tool ' . $screenshot['software'] . '">
+                        <i class="fa fa-plus pc_give_space"></i>
                         </a>
                     </div>
                     <div>

@@ -46,6 +46,7 @@ class Workplace_Screenshot_Table extends PageCarton_Table
   'window_title' => 'INPUTTEXT',
   'workspace_id' => 'JSON',
   'software' => 'INPUTTEXT',
+  'tool_name' => 'INPUTTEXT',
   'goals_id' => 'INPUTTEXT',
   'session' => 'INPUTTEXT',
   'tasks_id' => 'INPUTTEXT',
