@@ -351,6 +351,11 @@ class Workplace_Log extends Workplace
                 }
                 else
                 {
+                    if( empty( $updated['work_time'][$year][$month][$day] ) )
+                    {
+    
+                    }
+
                     $updated['log'] += $logsToCount;
                     $updated['work_time'][$year][$month][$day] += $logsToCount;
                     //$updated['time'][$year][$month][$day]['session'] += $logsToCount;
@@ -425,9 +430,10 @@ class Workplace_Log extends Workplace
                 {
                     //  reset this DB
                     $workspace['settings']['online'] = array();
+                    $workspace['settings']['online'][$dayX] = array();
                 }
                 $notOnline = array();
-                if( ! empty( $workspace['settings']['online'][$dayX] ) && ! in_array( $userInfo['email'], $workspace['settings']['online'][$dayX] ) )
+                if( ! in_array( $userInfo['email'], $workspace['settings']['online'][$dayX] ) )
                 {
                     $workspace['settings']['online'][$dayX][] = $userInfo['email'];
                     $notOnline = array_diff( $workspace['members'], $workspace['settings']['online'][$dayX] );
@@ -437,8 +443,7 @@ class Workplace_Log extends Workplace
                         'username' => $userInfo['username'],
                         'workspace_id' => $workspace['workspace_id'],
                         'creation_time' => time(),
-                    ) );
-
+                    ) );  
                     //var_export( $xc );
                     $notOnline = implode( ', ', $notOnline );
                     $mailInfo['to'] = $userInfo['email'];
@@ -448,7 +453,6 @@ class Workplace_Log extends Workplace
                     $mailInfo['body'] .= 'You may check out a preview of your work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List' . "\r\n" . '';
                     @self::sendMail( $mailInfo );
 
-                    //self::v( $workspace['settings']['online'][$dayX] );
                 }
                 if( $notOnline && ( empty( $updated['last_seen'] ) || $time - $updated['last_seen'] > 43200 ) )
                 {
