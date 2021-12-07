@@ -66,7 +66,43 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
 
         $this->setViewContent( $this->includeTitle( $data ) ); 
 
-        $this->setViewContent( $this->getList() );		
+        $this->setViewContent( $this->getList() );	
+        
+        $userData = array();
+        foreach( $data['member_data'][$userInfo['email']]['work_time'] as $year => $yValues )
+        {
+            foreach( $yValues as $month => $mValues )
+            {
+                foreach( $mValues as $day => $dValue )
+                {
+                    $date = $day . '-' . $month . '-' . $year;
+                    $userData[] = array( 'day' => $date, 'hours' => self::toHours( $dValue )   );
+                }
+            }
+        }
+        krsort( $userData );
+		$list = new Ayoola_Paginator();
+		$list->pageName = $this->getObjectName();
+		$list->listTitle = 'Daily Work Hour';
+		$list->hideCheckbox = self::getObjectTitle();
+		$list->setData( $userData );
+
+		$list->setListOptions( 
+								array( 
+										'Creator' => ' ',    
+									)
+							);
+
+        $list->createList
+        (
+            array(
+                    'Day' => array( 'field' => 'day', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
+                    'Hours' => array( 'field' => 'hours', 'value' =>  '%FIELD%', 'filter' =>  '' ), 
+                )
+        );
+                                        
+        $this->setViewContent( $list );	
+
     } 
 	
     /**
@@ -78,7 +114,7 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
 		require_once 'Ayoola/Paginator.php';
 		$list = new Ayoola_Paginator();
 		$list->pageName = $this->getObjectName();
-		$list->listTitle = null;
+		$list->listTitle = 'Daily Clock-in Time';
 		$list->hideCheckbox = self::getObjectTitle();
 
 
