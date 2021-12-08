@@ -149,7 +149,7 @@ class Workplace_Clock_List extends Workplace_Workspace_UserInsights
 		$list->createList
 		(
 			array(
-                    'Clocked in' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time', 'filter_autofill' =>  array( 'mode' => 'full' ) ), 
+                    'Clocked in Time' => array( 'field' => 'creation_time', 'value' =>  '%FIELD%', 'filter' =>  'Ayoola_Filter_Time', 'filter_autofill' =>  array( 'mode' => 'full' ) ), 
 				)
 		);
 		return $list;
