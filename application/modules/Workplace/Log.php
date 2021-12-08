@@ -33,6 +33,8 @@ class Workplace_Log extends Workplace
      */
 	protected static $_objectTitle = 'Log Employee Data'; 
 
+    protected $_playMode = self::PLAY_MODE_JSON;
+
     /**
      * 
      * 
