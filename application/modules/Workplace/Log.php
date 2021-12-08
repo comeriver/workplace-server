@@ -440,7 +440,7 @@ class Workplace_Log extends Workplace
 
                     $xc = Workplace_Clock::getInstance()->insert( array(
                         'user_id' => $userInfo['user_id'],
-                        'username' => $userInfo['username'],
+                        'username' => strotolower( $userInfo['username'] ),
                         'workspace_id' => $workspace['workspace_id'],
                         'creation_time' => time(),
                     ) );  
