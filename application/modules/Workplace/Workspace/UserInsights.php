@@ -103,11 +103,6 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     {
                         $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
                     }        
-                    //if( $screen = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'limit' => 1 ) ) )
-                    {
-
-                    }
-
                     $screen = array();
                     if( $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options ) )
                     {
@@ -118,9 +113,6 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                             $screen[] = array_shift( $screenshots );
                         }
                     }
-
-                    //var_export( $screenshots );
-
                     $timePanel = null;
                     if( ! empty( $_REQUEST['history'] ) )
                     {

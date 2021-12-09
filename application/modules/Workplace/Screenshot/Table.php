@@ -25,7 +25,7 @@ class Workplace_Screenshot_Table extends PageCarton_Table
      *
      * @param string
      */
-    protected $_tableVersion = '0.9';  
+    protected $_tableVersion = '0.10';  
 
     /**
      * Time to hold the cache before refreshing
