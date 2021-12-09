@@ -68,9 +68,13 @@ class Workplace extends PageCarton_Widget
      * @return mixed
      * 
      */
-	public function authenticate()
+	public function authenticate( $data = null )
     {
-        if( $x = Workplace_Authenticate::getAuthUserInfo( $_REQUEST ) )
+        if( empty( $data ) )
+        {
+            $data = $_REQUEST;
+        }
+        if( $x = Workplace_Authenticate::getAuthUserInfo( $data ) )
         {
             $this->_objectData['authenticated'] = true;
             return $x;

@@ -69,7 +69,7 @@
                 {
                     $preference = '<a target="" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a></div>';
                 }
-                if( ! $toolInfo['screenshots'] )
+                if( ! $toolInfo['screenshots'] && ! $toolInfo['spotlight'] )
                 { 
                     $this->setViewContent(  '' . self::__( '<div class="badnews">No tools added yet. ' . $preference . '</div>' ) . ''  ); 
                     return false; 
@@ -103,11 +103,13 @@
             try
             { 
 
+
                 $where = array( 'workspace_id' => $data['workspace_id'] );
 
                 $options = array( 'row_id_column' => 'software', 'limit' => 60 );
 
                 $screenOut = null;
+                $screenX = array();
                 if( ! empty( $tableId ) )
                 {
                     $whereX = array( 'table_id' => $tableId, 'workspace_id' => $data['workspace_id'] );
@@ -153,16 +155,27 @@
                 {
                     $where['user_id'] = $userId;
                 }
+                if( ! self::isWorkspaceAdmin( $data ) )
+                {
+                    $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
+                }
                 $userInfo = array();
                 if( ! empty( $where['user_id'] ) )
                 {
                     $userInfo = self::getUserInfo( array( 'user_id' => strtolower( $where['user_id'] ) ) );
                 }
-                if( ! empty( $userInfo ) )
+                if( $screenOut && ! empty( $userInfo ) )
                 {
                     $screenOut .= '<div class="pc-notify-info">Showing Highlights for "' . $userInfo['username'] . '" only</div>';
                 }
 
+
+
+                $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
+                if( count( $screenX ) == count( $screenshots ) )
+                {
+                    $screenshots = array();
+                }
                 
                 $preference = null;
                 if( ! self::isWorkspaceAdmin( $data ) )
@@ -174,7 +187,7 @@
                     $preference = '<a target="" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a></div>';
                 }
                 return array( 
-                    'screenshots' => Workplace_Screenshot_Table::getInstance()->select( null, $where, $options ),
+                    'screenshots' => $screenshots,
                     'spotlight' => $screenOut,
                 );
                 // end of widget process

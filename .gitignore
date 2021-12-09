@@ -37,3 +37,12 @@ application/databases/Application/settings.xml
 application/databases/ProjectManager/tasks.xml
 application/databases/Workplace/Workspace/Work/table.xml
 application/databases/ProjectManager/goals.xml
+application/modules/ThirdPartyAuth.php
+application/modules/ThirdPartyAuth/DoAuth.php
+application/modules/ThirdPartyAuth/GetAuth.php
+application/modules/ThirdPartyAuth/GetUserHook.php
+application/modules/ThirdPartyAuth/GetUserInfo.php
+application/modules/ThirdPartyAuth/Settings.php
+application/modules/ThirdPartyAuth/SignInHook.php
+application/modules/ThirdPartyAuth/Table.php
+application/modules/ThirdPartyAuth/VerifyAuth.php

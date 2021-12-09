@@ -32,7 +32,7 @@ class Workplace_Screenshot_Table extends PageCarton_Table
      *
      * @param int
      */
-    public static $insertDelay = 60;
+    //public static $insertDelay = 60;
 
     /**
      * Table data types and declaration

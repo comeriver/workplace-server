@@ -33,7 +33,7 @@ class Workplace_Workspace extends PageCarton_Table
      *
      * @param int
      */
-    public static $insertDelay = 30;
+    //public static $insertDelay = 30;
 
 
     /**

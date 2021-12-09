@@ -255,7 +255,7 @@ class Workplace_Workspace_Abstract extends Workplace
             {
                 $values['settings']['admins'][] = $values['members'][$id];
             }
-            elseif( $values['privileges'][$id] === 'admin' )
+            elseif( $values['privileges'][$id] === 'owner' )
             {
                 $values['settings']['admins'][] = $values['members'][$id];
                 $values['settings']['owners'][] = $values['members'][$id];
@@ -285,13 +285,16 @@ class Workplace_Workspace_Abstract extends Workplace
             return false;
         }
         $flexStyle = null;
+        $boxmg = 'box-mg';
+
         switch( count( $screenshots ) )
         {
             case 1:
                 $flexStyle = '; flex-basis:100%;    height: 100vh;
                 width: 100%;
                 left: 0;';
-                
+                $boxmg = '';
+            
             break;
             case 2:
                 $flexStyle = '; flex-basis:50%;';
@@ -301,7 +304,7 @@ class Workplace_Workspace_Abstract extends Workplace
             break;
             default:
 
-            
+
             break;
         }
 
@@ -320,7 +323,7 @@ class Workplace_Workspace_Abstract extends Workplace
             }
             $shots .= 
             ( 
-                '<div class="box-css wk-screenshot box-mg" style="' . $bg . ';' . $flexStyle . '; display:flex;align-content:space-between; justify-content: space-between;flex-direction:column;">
+                '<div class="box-css wk-screenshot ' . $boxmg . '" style="' . $bg . ';' . $flexStyle . '; display:flex;align-content:space-between; justify-content: space-between;flex-direction:column;">
 
                     <div>
                     ' . $screenshot['tool_name'] . '

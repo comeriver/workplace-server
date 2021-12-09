@@ -140,10 +140,6 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 {
                 //    continue;
                 }
-                if( strtolower( Ayoola_Application::getUserInfo( 'email' ) ) !== strtolower( $member ) && empty( $viewAll ) )
-                {
-                    continue;
-                }
 
                 $memberData = $data['member_data'][$member];
                 if( $time - $memberData['last_seen'] < 120 )
@@ -154,12 +150,20 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 {
                     continue;
                 }
+                if( strtolower( Ayoola_Application::getUserInfo( 'email' ) ) !== strtolower( $member ) && empty( $viewAll ) )
+                {
+                    continue;
+                }
+
                 if( is_array( $memberData['tools'] ) )
                 {
                     $tools = array_merge( $tools, $memberData['tools'] );
                 }
 
-                $screenshot = Workplace_Screenshot_Table::getInstance()->selectOne( null, array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] ) );
+                $whereR = array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] );
+                $screenshot = Workplace_Screenshot_Table::getInstance()->selectOne( null, $whereR );
+                //var_export( $userInfo );
+                //var_export( $screenshot );
                 if( empty( $screenshot['filename'] ) )
                 {
                 //    $screenshot['filename'] = '/img/logo.png';
@@ -225,7 +229,8 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                 $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
             }
 
-            $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'row_id_column' => 'software', 'limit' => 12 ) );
+            //$screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'row_id_column' => 'software', 'limit' => 10 ) );
+            //var_export( $screenshots );
             $sendMessage = Workplace_Workspace_Broadcast_Creator::viewInLine();
 
             $chat = '
@@ -254,7 +259,6 @@ class Workplace_Workspace_Insights extends Workplace_Workspace_Abstract
                         <span>This Month</span>
                     </div>
                     <div class="box-css small-box-css ">
-                        <span style="font-size:40px;">' . self::toHours( ( $timeToday ) ) . '</span><br>
                         <span>Today</span>
                     </div>
                     <div class="box-css small-box-css ">

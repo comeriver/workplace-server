@@ -103,12 +103,23 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     {
                         $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
                     }        
-                    if( $screen = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'limit' => 1 ) ) )
+                    //if( $screen = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'limit' => 1 ) ) )
                     {
 
                     }
 
-                    $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options );
+                    $screen = array();
+                    if( $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options ) )
+                    {
+                        
+                        $screen[] = array_shift( $screenshots );
+                        if( count( $screenshots ) < 2 )
+                        {
+                            $screen[] = array_shift( $screenshots );
+                        }
+                    }
+
+                    //var_export( $screenshots );
 
                     $timePanel = null;
                     if( ! empty( $_REQUEST['history'] ) )
@@ -210,10 +221,10 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                         </div>
                     </div>
                     ' . $timePanel . ' 
-                    ' . self::showScreenshots( $screen, $data ) ? : 
+                    ' . ( self::showScreenshots( $screen, $data ) ? : 
                     '<div class="badnews">
                         No records of activities here yet.
-                    </div>' . '
+                    </div>' ) . '
 
                     ' . self::showScreenshots( $screenshots, $data ) . '
                     ';
