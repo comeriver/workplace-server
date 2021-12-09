@@ -162,7 +162,7 @@ class Workplace_Log extends Workplace
                 {
                     file_put_contents( 'data.json', json_encode( $_POST ) );
                 }
-                elseif( time() - filemtime( 'data.json' ) > 1 )
+                elseif( time() - filemtime( 'data.json' ) > 20 )
                 {
                     
                     $logs = Ayoola_Doc::getFilesRecursive( $dir, array( 'no_cache' => true ) );
