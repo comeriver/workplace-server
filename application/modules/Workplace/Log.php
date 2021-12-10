@@ -139,9 +139,9 @@ class Workplace_Log extends Workplace
             }
             //  Code that runs the widget goes here...
             //  Output demo content to screen
-            if( is_file( 'data-x.json' ) )
+            //if( is_file( 'data-x.json' ) )
             {
-                $_POST = $_REQUEST = json_decode( file_get_contents( 'data-x.json' ), true );
+            //    $_POST = $_REQUEST = json_decode( file_get_contents( 'data-x.json' ), true );
             }
 
             if( $_POST )
@@ -150,7 +150,7 @@ class Workplace_Log extends Workplace
                 {
                     if( ! $userInfo = Ayoola_Application::getUserInfo() )
                     {
-                        //return false;
+                        return false;
                     }
                 }
         
@@ -212,7 +212,7 @@ class Workplace_Log extends Workplace
         {
             if( ! $userInfo = Ayoola_Application::getUserInfo() )
             {
-                //return false;
+                return false;
             }
         }
         if( $userInfo )
@@ -285,7 +285,7 @@ class Workplace_Log extends Workplace
                     }
                     $data = array( 
                                     'texts' => $content, 
-                                    'user_id' => Ayoola_Application::getUserInfo( 'user_id' ),
+                                    'user_id' => $postData['user_id'],
                                     'workspace_id' => $where['workspace_id'],
                                     'software' => $realToolName,
                                     'window_title' => $title,
@@ -329,10 +329,9 @@ class Workplace_Log extends Workplace
             $toolName = $toolInfo['tool_name'];
         }
     
-        //var_export( Ayoola_Application::getUserInfo() );
         $toSave = array( 
             'filename' => $postData['filename'], 
-            'user_id' => Ayoola_Application::getUserInfo( 'user_id' ), 
+            'user_id' => $postData['user_id'], 
             'software' => $dName, 
             'tool_name' => $toolName, 
             'workspace_id' => $where['workspace_id'], 
@@ -405,7 +404,7 @@ class Workplace_Log extends Workplace
                 @self::sendMail( $mailInfo );
 
                 //  report to self
-                $mailInfo['to'] = Ayoola_Application::getUserInfo( 'user_id' );
+                $mailInfo['to'] = $postData['user_id'];
                 $mailInfo['subject'] = '' . $bannedTools[0] . ' is not allowed on ' . $workspace['name'] . '';
                 $mailInfo['body'] = 'We noticed you have used ' . $bannedTools[0] . ' while working in ' . $workspace['name'] . ' recently. This tool is not allowed while working.' . "\r\n" . "\r\n" . '';
                 $mailInfo['body'] .= 'This activity will not be recorded as a productive or active work session in  ' . $workspace['name'] . '.' . "\r\n" . "\r\n" . '';
@@ -517,7 +516,7 @@ class Workplace_Log extends Workplace
 
 
                 $xc = Workplace_Clock::getInstance()->insert( array(
-                    'user_id' => $userInfo['user_id'],
+                    'user_id' => $postData['user_id'],
                     'username' => strtolower( $userInfo['username'] ),
                     'workspace_id' => $workspace['workspace_id'],
                     'creation_time' => time(),
@@ -545,8 +544,6 @@ class Workplace_Log extends Workplace
                 $mailInfo['body'] = '' . $userInfo['username'] . ' is logged in on ' . $workspace['name'] . ' workspace.' . "\r\n" . '' . "\r\n";
                 
                 $mailInfo['body'] .= 'It seems like you are currently offline. Log in to the workplace and start a session to join in. You may check out work activities in real-time online by login into ' . Ayoola_Page::getHomePageUrl() . '/widgets/Workplace_Workspace_List' . "\r\n" . '';
-
-                //var_export( $mailInfo );
 
                 @self::sendMail( $mailInfo );
 

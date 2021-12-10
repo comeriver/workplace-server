@@ -98,21 +98,27 @@ class Workplace_Workspace_UserInsights extends Workplace_Workspace_Insights
                     }
                     $memberData = $data['member_data'][$userInfo['email']];
                     $where = array( 'user_id' => $userInfo['user_id'], 'workspace_id' => $data['workspace_id'] );
-                    $options = array( 'row_id_column' => 'tool_name', 'limit' => 100 );
+                    $options = array( 'row_id_column' => 'tool_name', 'limit' => 20 );
                     if( ! self::isWorkspaceAdmin( $data ) )
                     {
                         $where['user_id'] = Ayoola_Application::getUserInfo( 'user_id' );
                     }        
-                    $screen = array();
-                    if( $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options ) )
+                    //if( $screen = Workplace_Screenshot_Table::getInstance()->select( null, $where, array( 'limit' => 1 ) ) )
                     {
-                        
+
+                    }
+
+                    $screen = array();
+
+                    if( $screenshots = Workplace_Screenshot_Table::getInstance()->select( null, $where, $options ) )
+                    {   
                         $screen[] = array_shift( $screenshots );
-                        if( count( $screenshots ) < 2 )
+                        if( $screenshots && count( $screenshots ) < 2 )
                         {
                             $screen[] = array_shift( $screenshots );
                         }
                     }
+
                     $timePanel = null;
                     if( ! empty( $_REQUEST['history'] ) )
                     {
