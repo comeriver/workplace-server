@@ -184,7 +184,7 @@
                 }        
                 else
                 {
-                    $preference = '<a target="" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a></div>';
+                    $preference = '<a target="" href="' . Ayoola_Application::getUrlPrefix() . '/widgets/name/Workplace_Workspace_ManageTools?workspace_id=' . $data['workspace_id'] . '">(preferences)</a>';
                 }
                 return array( 
                     'screenshots' => $screenshots,
